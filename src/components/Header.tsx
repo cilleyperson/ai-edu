@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Cpu, BookOpen, ShieldAlert, Award, HelpCircle, Menu, X, BookOpenCheck } from "lucide-react";
+import { Cpu, BookOpen, ShieldAlert, Award, HelpCircle, Menu, X, BookOpenCheck, Terminal, FileText } from "lucide-react";
 
 export default function Header() {
   const pathname = usePathname();
@@ -39,8 +39,11 @@ export default function Header() {
     { name: "Staff Path", href: "/learn/staff", icon: BookOpen, badge: "staff" },
     { name: "Management Path", href: "/learn/management", icon: Award, badge: "mgmt" },
     { name: "Board Path", href: "/learn/board", icon: ShieldAlert, badge: "board" },
+    { name: "Prompt Lab", href: "/playground", icon: Terminal },
+    { name: "RAG Visualizer", href: "/rag-sandbox", icon: Cpu },
     { name: "Agent Sandbox", href: "/simulator", icon: Cpu },
     { name: "Risk Matrix", href: "/risk-matrix", icon: ShieldAlert },
+    { name: "Vendor Auditor", href: "/vendor-auditor", icon: FileText },
     { name: "Glossary", href: "/glossary", icon: HelpCircle },
   ];
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Award, BookOpen, ShieldAlert, Sparkles, CheckCircle2 } from "lucide-react";
+import { Award, BookOpen, ShieldAlert, Sparkles, CheckCircle2, Terminal, Cpu, FileText } from "lucide-react";
 
 interface PathProgress {
   staff: boolean;
@@ -11,6 +11,9 @@ interface PathProgress {
   managementScore: number;
   boardScore: number;
   riskMatrixUsed: boolean;
+  playgroundScore: number;
+  ragUsed: boolean;
+  vendorAudited: boolean;
 }
 
 export default function ProgressTracker() {
@@ -22,6 +25,9 @@ export default function ProgressTracker() {
     managementScore: 0,
     boardScore: 0,
     riskMatrixUsed: false,
+    playgroundScore: 0,
+    ragUsed: false,
+    vendorAudited: false,
   });
 
   useEffect(() => {
@@ -35,6 +41,9 @@ export default function ProgressTracker() {
       const boardScoreVal = parseInt(localStorage.getItem("cu_ai_score_board") || "0", 10);
       
       const riskMatrixVal = localStorage.getItem("cu_ai_risk_completed") === "true";
+      const playgroundScoreVal = parseInt(localStorage.getItem("cu_ai_score_playground") || "0", 10);
+      const ragVal = localStorage.getItem("cu_ai_rag_used") === "true";
+      const vendorVal = localStorage.getItem("cu_ai_vendor_audited") === "true";
 
       setProgress({
         staff: staffVal,
@@ -44,6 +53,9 @@ export default function ProgressTracker() {
         managementScore: mgmtScoreVal,
         boardScore: boardScoreVal,
         riskMatrixUsed: riskMatrixVal,
+        playgroundScore: playgroundScoreVal,
+        ragUsed: ragVal,
+        vendorAudited: vendorVal,
       });
     };
 
@@ -66,7 +78,7 @@ export default function ProgressTracker() {
       id: "curious",
       title: "First Steps",
       description: "Began learning Credit Union Agentic AI",
-      unlocked: progress.staff || progress.management || progress.board,
+      unlocked: progress.staff || progress.management || progress.board || progress.playgroundScore > 0 || progress.ragUsed || progress.vendorAudited,
       icon: Sparkles,
       color: "#06b6d4",
     },
@@ -95,6 +107,22 @@ export default function ProgressTracker() {
       color: "#a855f7",
     },
     {
+      id: "prompt_badge",
+      title: "Prompt Expert",
+      description: "Scored 70%+ in Prompt Engineering Lab",
+      unlocked: progress.playgroundScore >= 70,
+      icon: Terminal,
+      color: "#06b6d4",
+    },
+    {
+      id: "rag_badge",
+      title: "RAG Engineer",
+      description: "Analyzed policy vectors in RAG Sandbox",
+      unlocked: progress.ragUsed,
+      icon: Cpu,
+      color: "#22d3ee",
+    },
+    {
       id: "risk_badge",
       title: "Risk Analyst",
       description: "Evaluated a project in Risk Assessment Matrix",
@@ -103,12 +131,20 @@ export default function ProgressTracker() {
       color: "#f59e0b",
     },
     {
+      id: "vendor_badge",
+      title: "Vendor Auditor",
+      description: "Checked contracts in Vendor Governance scorecard",
+      unlocked: progress.vendorAudited,
+      icon: FileText,
+      color: "#f43f5e",
+    },
+    {
       id: "master",
       title: "Platform Master",
       description: "Unlocked all credit union AI credentials",
-      unlocked: progress.staff && progress.management && progress.board && progress.riskMatrixUsed,
+      unlocked: progress.staff && progress.management && progress.board && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited,
       icon: Award,
-      color: "#f43f5e",
+      color: "#e11d48",
     },
   ];
 

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ProgressTracker from "@/components/ProgressTracker";
-import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles } from "lucide-react";
+import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles, Terminal, FileText, Database } from "lucide-react";
 
 export default function Home() {
   const [completed, setCompleted] = useState({ staff: false, management: false, board: false });
@@ -180,9 +180,71 @@ export default function Home() {
             Put concepts into practice. Test how safety guardrails scrub unmasked PII, and run mock underwriting risk reports.
           </p>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "24px" }} className="labs-grid">
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }} className="labs-grid">
             
-            {/* Lab 1: Sandbox */}
+            {/* Lab 1: Prompt Lab */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "var(--accent-glow)", 
+                  color: "var(--accent)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(6, 182, 212, 0.2)"
+                }}
+              >
+                <Terminal style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Prompt Engineering Lab</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Draft instructions for a credit union MSR chatbot. Test your prompts against customer queries, prompt injection overrides, and privacy requirements.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/playground" className="btn btn-accent" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch Prompt Lab</span>
+                  <Zap style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 2: RAG Sandbox */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "var(--primary-glow)", 
+                  color: "var(--primary)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(99, 102, 241, 0.2)"
+                }}
+              >
+                <Database style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Policy RAG Visualizer</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Trace RAG search loops step-by-step: document paragraph chunking, conceptual vector distance matching, context packing, and LLM text updates.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/rag-sandbox" className="btn btn-primary" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch RAG Sandbox</span>
+                  <ChevronRight style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 3: Agent Sandbox */}
             <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
               <div 
                 style={{ 
@@ -202,7 +264,7 @@ export default function Home() {
               <div>
                 <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Agent Sandbox Simulator</h3>
                 <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                  Simulate an agent&apos;s ReAct (Reasoning + Action) execution loop step-by-step. See how toggling PII scrubbers or Human-in-the-Loop gates prevents privacy leaks and model underwriting errors.
+                  Simulate an agent&apos;s ReAct (Reasoning + Action) execution loop step-by-step. See how toggling PII scrubbers or Human-in-the-Loop gates prevents privacy leaks.
                 </p>
               </div>
               <div style={{ marginTop: "auto" }}>
@@ -213,7 +275,7 @@ export default function Home() {
               </div>
             </div>
 
-            {/* Lab 2: Risk Matrix */}
+            {/* Lab 4: Risk Matrix */}
             <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
               <div 
                 style={{ 
@@ -233,13 +295,44 @@ export default function Home() {
               <div>
                 <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Credit Union Risk Matrix</h3>
                 <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                  Evaluate potential compliance, reputational, data safety, and model security risks of proposed AI agent deployments. Generates customized control reports ready for Board review.
+                  Evaluate potential compliance, reputational, data safety, and model security risks of proposed AI agent deployments. Generates customized reports.
                 </p>
               </div>
               <div style={{ marginTop: "auto" }}>
                 <Link href="/risk-matrix" className="btn btn-primary" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
                   <span>Launch Risk Assessment</span>
                   <Shield style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 5: Vendor Auditor */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "var(--accent-glow)", 
+                  color: "var(--accent)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(6, 182, 212, 0.2)"
+                }}
+              >
+                <FileText style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>AI Vendor Risk Scorecard</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Audit third-party AI SaaS vendors under NCUA Letters and SOC 2 guidelines. Grade safety standards, compile contract gaps, and compile board briefing documents.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/vendor-auditor" className="btn btn-accent" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch Vendor Audit</span>
+                  <Zap style={{ width: 14, height: 14 }} />
                 </Link>
               </div>
             </div>
