@@ -3,11 +3,19 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Cpu, BookOpen, ShieldAlert, Award, HelpCircle, Menu, X, BookOpenCheck, Terminal, FileText } from "lucide-react";
+import { 
+  Cpu, BookOpen, ShieldAlert, Award, HelpCircle, Menu, X, 
+  BookOpenCheck, Terminal, FileText, ChevronDown, Database 
+} from "lucide-react";
 
 export default function Header() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [mobileExpanded, setMobileExpanded] = useState<Record<string, boolean>>({
+    courses: false,
+    labs: false,
+    governance: false
+  });
   const [progress, setProgress] = useState({ staff: false, management: false, board: false });
 
   // Load progress from localStorage
@@ -34,18 +42,40 @@ export default function Header() {
 
   const completedCount = Object.values(progress).filter(Boolean).length;
 
-  const navItems = [
-    { name: "Home", href: "/", icon: Cpu },
-    { name: "Staff Path", href: "/learn/staff", icon: BookOpen, badge: "staff" },
-    { name: "Management Path", href: "/learn/management", icon: Award, badge: "mgmt" },
-    { name: "Board Path", href: "/learn/board", icon: ShieldAlert, badge: "board" },
-    { name: "Prompt Lab", href: "/playground", icon: Terminal },
-    { name: "RAG Visualizer", href: "/rag-sandbox", icon: Cpu },
-    { name: "Agent Sandbox", href: "/simulator", icon: Cpu },
-    { name: "Risk Matrix", href: "/risk-matrix", icon: ShieldAlert },
-    { name: "Vendor Auditor", href: "/vendor-auditor", icon: FileText },
-    { name: "Glossary", href: "/glossary", icon: HelpCircle },
-  ];
+  const toggleMobileCategory = (key: string) => {
+    setMobileExpanded(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  // Grouped Navigation Structure
+  const coursesCategory = {
+    name: "Courses",
+    items: [
+      { name: "Staff Path", href: "/learn/staff", icon: BookOpen, description: "Compliance & PII basics for branch staff" },
+      { name: "Management Path", href: "/learn/management", icon: Award, description: "Underwriting automation & metrics" },
+      { name: "Board Path", href: "/learn/board", icon: ShieldAlert, description: "Fiduciary oversight & regulatory policies" }
+    ]
+  };
+
+  const labsCategory = {
+    name: "Interactive Labs",
+    items: [
+      { name: "Prompt Lab", href: "/playground", icon: Terminal, description: "System prompt instructions engineering" },
+      { name: "RAG Visualizer", href: "/rag-sandbox", icon: Database, description: "Trace policy chunking and similarity" },
+      { name: "Agent Sandbox", href: "/simulator", icon: Cpu, description: "Run step-by-step ReAct execution loops" }
+    ]
+  };
+
+  const governanceCategory = {
+    name: "Governance",
+    items: [
+      { name: "Risk Matrix", href: "/risk-matrix", icon: ShieldAlert, description: "Calculate operational and reputational risk" },
+      { name: "Vendor Auditor", href: "/vendor-auditor", icon: FileText, description: "Diligence third-party SaaS contracts" }
+    ]
+  };
+
+  const isCategoryActive = (category: typeof coursesCategory) => {
+    return category.items.some(item => pathname === item.href);
+  };
 
   return (
     <header className="header-wrapper">
@@ -58,41 +88,142 @@ export default function Header() {
         {/* Desktop Navigation */}
         <nav style={{ display: "none" }} className="desktop-nav">
           <ul className="nav-links">
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    className={`nav-link ${isActive ? "active" : ""}`}
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "6px",
-                      position: "relative",
-                      color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                    }}
-                  >
-                    <Icon style={{ width: 16, height: 16 }} />
-                    <span>{item.name}</span>
-                    {isActive && (
-                      <span
-                        style={{
-                          position: "absolute",
-                          bottom: "-20px",
-                          left: 0,
-                          right: 0,
-                          height: "2px",
-                          background: "linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%)",
-                          borderRadius: "var(--radius-full)",
-                        }}
-                      />
-                    )}
-                  </Link>
-                </li>
-              );
-            })}
+            
+            {/* Home Link */}
+            <li>
+              <Link 
+                href="/" 
+                className={`nav-link ${pathname === "/" ? "active" : ""}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  position: "relative",
+                  color: pathname === "/" ? "var(--text-primary)" : "var(--text-secondary)"
+                }}
+              >
+                <Cpu style={{ width: 16, height: 16 }} />
+                <span>Home</span>
+              </Link>
+            </li>
+
+            {/* Courses Dropdown */}
+            <li className="nav-category-container">
+              <span 
+                className={`nav-link nav-category-trigger ${isCategoryActive(coursesCategory) ? "active" : ""}`}
+                style={{ 
+                  display: "flex", 
+                  alignItems: "center", 
+                  gap: "6px", 
+                  color: isCategoryActive(coursesCategory) ? "var(--text-primary)" : "var(--text-secondary)" 
+                }}
+              >
+                <span>Courses</span>
+                <ChevronDown className="nav-chevron" style={{ width: 14, height: 14 }} />
+              </span>
+              <div className="nav-dropdown">
+                {coursesCategory.items.map((item) => {
+                  const Icon = item.icon;
+                  const isSubActive = pathname === item.href;
+                  return (
+                    <Link key={item.href} href={item.href} className="nav-dropdown-item">
+                      <div className="nav-dropdown-item-icon" style={{ color: isSubActive ? "var(--primary)" : "inherit" }}>
+                        <Icon style={{ width: 16, height: 16 }} />
+                      </div>
+                      <div className="nav-dropdown-item-content">
+                        <span className="nav-dropdown-item-title" style={{ color: isSubActive ? "var(--primary)" : "inherit" }}>{item.name}</span>
+                        <span className="nav-dropdown-item-desc">{item.description}</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </li>
+
+            {/* Interactive Labs Dropdown */}
+            <li className="nav-category-container">
+              <span 
+                className={`nav-link nav-category-trigger ${isCategoryActive(labsCategory) ? "active" : ""}`}
+                style={{ 
+                  display: "flex", 
+                  alignItems: "center", 
+                  gap: "6px", 
+                  color: isCategoryActive(labsCategory) ? "var(--text-primary)" : "var(--text-secondary)" 
+                }}
+              >
+                <span>Labs</span>
+                <ChevronDown className="nav-chevron" style={{ width: 14, height: 14 }} />
+              </span>
+              <div className="nav-dropdown">
+                {labsCategory.items.map((item) => {
+                  const Icon = item.icon;
+                  const isSubActive = pathname === item.href;
+                  return (
+                    <Link key={item.href} href={item.href} className="nav-dropdown-item">
+                      <div className="nav-dropdown-item-icon" style={{ color: isSubActive ? "var(--accent)" : "inherit" }}>
+                        <Icon style={{ width: 16, height: 16 }} />
+                      </div>
+                      <div className="nav-dropdown-item-content">
+                        <span className="nav-dropdown-item-title" style={{ color: isSubActive ? "var(--accent)" : "inherit" }}>{item.name}</span>
+                        <span className="nav-dropdown-item-desc">{item.description}</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </li>
+
+            {/* Governance Dropdown */}
+            <li className="nav-category-container">
+              <span 
+                className={`nav-link nav-category-trigger ${isCategoryActive(governanceCategory) ? "active" : ""}`}
+                style={{ 
+                  display: "flex", 
+                  alignItems: "center", 
+                  gap: "6px", 
+                  color: isCategoryActive(governanceCategory) ? "var(--text-primary)" : "var(--text-secondary)" 
+                }}
+              >
+                <span>Governance</span>
+                <ChevronDown className="nav-chevron" style={{ width: 14, height: 14 }} />
+              </span>
+              <div className="nav-dropdown">
+                {governanceCategory.items.map((item) => {
+                  const Icon = item.icon;
+                  const isSubActive = pathname === item.href;
+                  return (
+                    <Link key={item.href} href={item.href} className="nav-dropdown-item">
+                      <div className="nav-dropdown-item-icon" style={{ color: isSubActive ? "var(--secondary)" : "inherit" }}>
+                        <Icon style={{ width: 16, height: 16 }} />
+                      </div>
+                      <div className="nav-dropdown-item-content">
+                        <span className="nav-dropdown-item-title" style={{ color: isSubActive ? "var(--secondary)" : "inherit" }}>{item.name}</span>
+                        <span className="nav-dropdown-item-desc">{item.description}</span>
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </li>
+
+            {/* Glossary Link */}
+            <li>
+              <Link 
+                href="/glossary" 
+                className={`nav-link ${pathname === "/glossary" ? "active" : ""}`}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "6px",
+                  position: "relative",
+                  color: pathname === "/glossary" ? "var(--text-primary)" : "var(--text-secondary)"
+                }}
+              >
+                <HelpCircle style={{ width: 16, height: 16 }} />
+                <span>Glossary</span>
+              </Link>
+            </li>
+
           </ul>
         </nav>
 
@@ -144,38 +275,137 @@ export default function Header() {
             top: "100%",
             left: 0,
             right: 0,
-            background: "rgba(6, 8, 20, 0.95)",
+            background: "rgba(6, 8, 20, 0.98)",
             backdropFilter: "blur(20px)",
             borderBottom: "1px solid var(--border-color)",
-            padding: "20px 24px",
+            padding: "14px 0",
             zIndex: 99,
           }}
         >
-          <ul style={{ display: "flex", flexDirection: "column", gap: "16px", listStyle: "none" }}>
-            {navItems.map((item) => {
-              const Icon = item.icon;
-              const isActive = pathname === item.href;
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className="nav-link"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "10px",
-                      fontSize: "1.05rem",
-                      padding: "8px 0",
-                      color: isActive ? "var(--text-primary)" : "var(--text-secondary)",
-                    }}
-                  >
-                    <Icon style={{ width: 20, height: 20, color: isActive ? "var(--primary)" : "var(--text-muted)" }} />
-                    <span>{item.name}</span>
-                  </Link>
-                </li>
-              );
-            })}
+          <ul style={{ display: "flex", flexDirection: "column", gap: "4px", listStyle: "none" }}>
+            
+            {/* Mobile: Home */}
+            <li>
+              <Link
+                href="/"
+                onClick={() => setIsOpen(false)}
+                className="nav-link"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  fontSize: "1.05rem",
+                  padding: "12px 20px",
+                  color: pathname === "/" ? "var(--text-primary)" : "var(--text-secondary)",
+                  borderBottom: "1px solid rgba(255, 255, 255, 0.02)"
+                }}
+              >
+                <Cpu style={{ width: 20, height: 20 }} />
+                <span>Home Dashboard</span>
+              </Link>
+            </li>
+
+            {/* Mobile Accordion: Courses */}
+            <li>
+              <div 
+                className="mobile-accordion-header"
+                onClick={() => toggleMobileCategory("courses")}
+              >
+                <span>Courses</span>
+                <ChevronDown style={{ width: 16, height: 16, transform: mobileExpanded.courses ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+              </div>
+              <div className={`mobile-accordion-content ${mobileExpanded.courses ? "expanded" : ""}`}>
+                {coursesCategory.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="mobile-accordion-item"
+                    >
+                      <Icon style={{ width: 18, height: 18, color: "var(--primary)" }} />
+                      <span>{item.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </li>
+
+            {/* Mobile Accordion: Labs */}
+            <li>
+              <div 
+                className="mobile-accordion-header"
+                onClick={() => toggleMobileCategory("labs")}
+              >
+                <span>Interactive Labs</span>
+                <ChevronDown style={{ width: 16, height: 16, transform: mobileExpanded.labs ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+              </div>
+              <div className={`mobile-accordion-content ${mobileExpanded.labs ? "expanded" : ""}`}>
+                {labsCategory.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="mobile-accordion-item"
+                    >
+                      <Icon style={{ width: 18, height: 18, color: "var(--accent)" }} />
+                      <span>{item.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </li>
+
+            {/* Mobile Accordion: Governance */}
+            <li>
+              <div 
+                className="mobile-accordion-header"
+                onClick={() => toggleMobileCategory("governance")}
+              >
+                <span>Governance & Risk</span>
+                <ChevronDown style={{ width: 16, height: 16, transform: mobileExpanded.governance ? "rotate(180deg)" : "none", transition: "transform 0.2s" }} />
+              </div>
+              <div className={`mobile-accordion-content ${mobileExpanded.governance ? "expanded" : ""}`}>
+                {governanceCategory.items.map((item) => {
+                  const Icon = item.icon;
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setIsOpen(false)}
+                      className="mobile-accordion-item"
+                    >
+                      <Icon style={{ width: 18, height: 18, color: "var(--secondary)" }} />
+                      <span>{item.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </li>
+
+            {/* Mobile: Glossary */}
+            <li>
+              <Link
+                href="/glossary"
+                onClick={() => setIsOpen(false)}
+                className="nav-link"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px",
+                  fontSize: "1.05rem",
+                  padding: "12px 20px",
+                  color: pathname === "/glossary" ? "var(--text-primary)" : "var(--text-secondary)",
+                }}
+              >
+                <HelpCircle style={{ width: 20, height: 20 }} />
+                <span>Glossary Reference</span>
+              </Link>
+            </li>
+
           </ul>
         </div>
       )}
