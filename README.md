@@ -1,6 +1,6 @@
-# Acuity AI: Credit Union Agentic AI Learning Platform
+# AI University: Credit Union Agentic AI Learning Platform
 
-Acuity AI is a comprehensive, interactive, web-based educational portal built specifically for credit union staff, management, and board members. The platform translates complex agentic AI concepts (such as ReAct loops, vector search, and token costs) into practical, credit union-specific analogies and workflows, ensuring financial institutions can deploy AI safely, ethically, and in alignment with regulatory guidelines.
+AI University is a comprehensive, interactive, web-based educational portal built specifically for credit union staff, management, and board members. The platform translates complex agentic AI concepts (such as ReAct loops, vector search, and token costs) into practical, credit union-specific analogies and workflows, ensuring financial institutions can deploy AI safely, ethically, and in alignment with regulatory guidelines.
 
 ---
 

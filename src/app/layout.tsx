@@ -18,7 +18,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Acuity AI | Agentic AI Education for Credit Unions",
+  title: "AI University | Agentic AI Education for Credit Unions",
   description: "Interactive online learning platform designed to teach Agentic AI concepts, safety, risk assessment, and governance to Credit Union staff, management, and boards.",
   keywords: "credit union, agentic ai, ai governance, ai risk matrix, artificial intelligence, credit union boards",
 };

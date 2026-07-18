@@ -137,7 +137,7 @@ export default function RiskMatrixPage() {
       recommendations.push("Audit Logging: Pipe all transactions made by the agent into an immutable syslog tracker for NCUA auditing.");
     }
     if (answers.member_interaction >= 50) {
-      recommendations.push("Explicit Disclosure: Disclose AI identity at prompt initialization (e.g. 'I am Acuity AI, an automated assistant...').");
+      recommendations.push("Explicit Disclosure: Disclose AI identity at prompt initialization (e.g. 'I am AI University Assistant, an automated assistant...').");
       recommendations.push("Opt-out Bypass: Provide a one-click escape to a live human employee in the credit union call center.");
     }
     if (answers.manual_fallback >= 50) {

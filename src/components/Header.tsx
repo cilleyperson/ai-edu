@@ -82,7 +82,7 @@ export default function Header() {
       <div className="container header-container">
         <Link href="/" className="logo">
           <Cpu className="gradient-text-indigo" style={{ width: 28, height: 28 }} />
-          <span className="gradient-text" style={{ fontSize: "1.4rem", fontWeight: 800 }}>Acuity AI</span>
+          <span className="gradient-text" style={{ fontSize: "1.4rem", fontWeight: 800 }}>AI University</span>
         </Link>
 
         {/* Desktop Navigation */}
