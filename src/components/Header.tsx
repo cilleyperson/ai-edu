@@ -72,7 +72,8 @@ export default function Header() {
     items: [
       { name: "Risk Matrix", href: "/risk-matrix", icon: ShieldAlert, description: "Calculate operational and reputational risk" },
       { name: "Vendor Auditor", href: "/vendor-auditor", icon: FileText, description: "Diligence third-party SaaS contracts" },
-      { name: "Bias Auditor", href: "/bias-auditor", icon: ShieldAlert, description: "Audit outputs for compliance risk anomalies" }
+      { name: "Bias Auditor", href: "/bias-auditor", icon: ShieldAlert, description: "Audit outputs for compliance risk anomalies" },
+      { name: "Policy Builder", href: "/policy-builder", icon: FileText, description: "Generate custom AI policies & governance models" }
     ]
   };
 
