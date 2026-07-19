@@ -1,12 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import confetti from "canvas-confetti";
 import { 
   ArrowLeft, Download, Printer, Building, Users, CheckSquare, 
-  Shield, ShieldAlert, ClipboardList, Info, FileText, CheckCircle, HelpCircle, 
-  Sparkles, ExternalLink
+  Shield, ShieldAlert, ClipboardList, Info, FileText
 } from "lucide-react";
 
 interface PolicyData {
@@ -36,27 +35,33 @@ export default function PolicyBuilderPage() {
   const [viewMode, setViewMode] = useState<"edit" | "preview">("edit");
   const [showPrintModal, setShowPrintModal] = useState(false);
 
-  // Form State
-  const [formData, setFormData] = useState<PolicyData>({
-    creditUnionName: "Community First Credit Union",
-    assetSize: "$250 Million - $1 Billion",
-    stateJurisdiction: "Washington",
-    version: "1.0",
-    effectiveDate: new Date().toISOString().split("T")[0],
-    boardApprovalDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0], // 30 days from now
-    governingBody: "AI Steering Committee",
-    aiLiaisonRole: "Chief Risk Officer",
-    boardReviewFrequency: "Annually",
-    useCaseChatbot: true,
-    useCaseUnderwriting: false,
-    useCaseFraud: true,
-    useCaseMarketing: true,
-    useCaseDocProcessing: true,
-    allowPublicGenAI: false,
-    piiRestrictions: "Strict Prohibition",
-    hitlRequired: true,
-    biasCheckFrequency: "Quarterly",
-    vendorDiligenceRequired: true
+  // Form State initialized via pure lazy initializer
+  const [formData, setFormData] = useState<PolicyData>(() => {
+    const today = new Date();
+    const future = new Date();
+    future.setDate(today.getDate() + 30);
+    
+    return {
+      creditUnionName: "Community First Credit Union",
+      assetSize: "$250 Million - $1 Billion",
+      stateJurisdiction: "Washington",
+      version: "1.0",
+      effectiveDate: today.toISOString().split("T")[0],
+      boardApprovalDate: future.toISOString().split("T")[0],
+      governingBody: "AI Steering Committee",
+      aiLiaisonRole: "Chief Risk Officer",
+      boardReviewFrequency: "Annually",
+      useCaseChatbot: true,
+      useCaseUnderwriting: false,
+      useCaseFraud: true,
+      useCaseMarketing: true,
+      useCaseDocProcessing: true,
+      allowPublicGenAI: false,
+      piiRestrictions: "Strict Prohibition",
+      hitlRequired: true,
+      biasCheckFrequency: "Quarterly",
+      vendorDiligenceRequired: true
+    };
   });
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -69,7 +74,7 @@ export default function PolicyBuilderPage() {
     }
   };
 
-  const handleSelectRadio = (name: string, value: any) => {
+  const handleSelectRadio = (name: string, value: string | boolean) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
