@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, FileText, AlertTriangle, Printer, Shield, ShieldAlert } from "lucide-react";
+import { ArrowLeft, FileText, AlertTriangle, Printer, Shield, ShieldAlert, Download, Info } from "lucide-react";
 
 interface AuditQuestion {
   id: string;
@@ -148,6 +148,17 @@ export default function VendorAuditor() {
   });
 
   const [showBrief, setShowBrief] = useState(false);
+  const [showPDFTip, setShowPDFTip] = useState(false);
+
+  const handleExportPDF = () => {
+    setShowPDFTip(true);
+    setTimeout(() => {
+      window.print();
+    }, 1000);
+    setTimeout(() => {
+      setShowPDFTip(false);
+    }, 4500);
+  };
 
   const toggleAnswer = (id: string) => {
     setSelectedAnswers(prev => ({ ...prev, [id]: !prev[id] }));
@@ -383,6 +394,29 @@ export default function VendorAuditor() {
               backgroundColor: "#0d0f22"
             }}
           >
+            {showPDFTip && (
+              <div 
+                className="animate-fade-in"
+                style={{ 
+                  padding: "14px 20px", 
+                  borderRadius: "var(--radius-md)", 
+                  backgroundColor: "rgba(99, 102, 241, 0.1)", 
+                  border: "1px solid var(--primary)", 
+                  color: "var(--text-primary)",
+                  fontSize: "0.85rem",
+                  marginBottom: "20px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "10px"
+                }}
+              >
+                <Info style={{ width: 18, height: 18, color: "var(--primary)" }} />
+                <span>
+                  <strong>Tip:</strong> In the browser print window that opens, change the <strong>Destination</strong> to <strong>Save as PDF</strong> (or Microsoft Print to PDF) to download this compliance report.
+                </span>
+              </div>
+            )}
+
             <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "2px solid var(--border-color)", paddingBottom: "20px", marginBottom: "30px", flexWrap: "wrap", gap: "20px" }}>
               <div>
                 <h2 style={{ fontSize: "1.75rem", marginBottom: "4px" }} className="gradient-text">
@@ -393,14 +427,24 @@ export default function VendorAuditor() {
                 </p>
               </div>
               
-              <button 
-                onClick={() => window.print()} 
-                className="btn btn-secondary"
-                style={{ alignSelf: "center" }}
-              >
-                <Printer style={{ width: 16, height: 16 }} />
-                <span>Print Briefing</span>
-              </button>
+              <div style={{ display: "flex", gap: "10px", alignSelf: "center" }}>
+                <button 
+                  onClick={handleExportPDF} 
+                  className="btn btn-primary"
+                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
+                >
+                  <Download style={{ width: 16, height: 16 }} />
+                  <span>Export PDF</span>
+                </button>
+                <button 
+                  onClick={() => window.print()} 
+                  className="btn btn-secondary"
+                  style={{ display: "flex", alignItems: "center", gap: "6px" }}
+                >
+                  <Printer style={{ width: 16, height: 16 }} />
+                  <span>Print</span>
+                </button>
+              </div>
             </div>
 
             {/* Report Content Grid */}
