@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Award, BookOpen, ShieldAlert, Sparkles, CheckCircle2, Terminal, Cpu, FileText } from "lucide-react";
+import { Award, BookOpen, ShieldAlert, Sparkles, CheckCircle2, Terminal, Cpu, FileText, Database, Calculator } from "lucide-react";
 
 interface PathProgress {
   staff: boolean;
@@ -14,6 +14,9 @@ interface PathProgress {
   playgroundScore: number;
   ragUsed: boolean;
   vendorAudited: boolean;
+  embeddingUsed: boolean;
+  tokenizerUsed: boolean;
+  biasAudited: boolean;
 }
 
 export default function ProgressTracker() {
@@ -28,6 +31,9 @@ export default function ProgressTracker() {
     playgroundScore: 0,
     ragUsed: false,
     vendorAudited: false,
+    embeddingUsed: false,
+    tokenizerUsed: false,
+    biasAudited: false,
   });
 
   useEffect(() => {
@@ -44,6 +50,9 @@ export default function ProgressTracker() {
       const playgroundScoreVal = parseInt(localStorage.getItem("cu_ai_score_playground") || "0", 10);
       const ragVal = localStorage.getItem("cu_ai_rag_used") === "true";
       const vendorVal = localStorage.getItem("cu_ai_vendor_audited") === "true";
+      const embeddingVal = localStorage.getItem("cu_ai_progress_embeddings") === "completed";
+      const tokenizerVal = localStorage.getItem("cu_ai_progress_tokenizer") === "completed";
+      const biasVal = localStorage.getItem("cu_ai_progress_bias") === "completed";
 
       setProgress({
         staff: staffVal,
@@ -56,6 +65,9 @@ export default function ProgressTracker() {
         playgroundScore: playgroundScoreVal,
         ragUsed: ragVal,
         vendorAudited: vendorVal,
+        embeddingUsed: embeddingVal,
+        tokenizerUsed: tokenizerVal,
+        biasAudited: biasVal,
       });
     };
 
@@ -78,7 +90,7 @@ export default function ProgressTracker() {
       id: "curious",
       title: "First Steps",
       description: "Began learning Credit Union Agentic AI",
-      unlocked: progress.staff || progress.management || progress.board || progress.playgroundScore > 0 || progress.ragUsed || progress.vendorAudited,
+      unlocked: progress.staff || progress.management || progress.board || progress.playgroundScore > 0 || progress.ragUsed || progress.vendorAudited || progress.embeddingUsed || progress.tokenizerUsed || progress.biasAudited,
       icon: Sparkles,
       color: "#06b6d4",
     },
@@ -123,6 +135,22 @@ export default function ProgressTracker() {
       color: "#22d3ee",
     },
     {
+      id: "embedding_badge",
+      title: "Embedding Analyst",
+      description: "Mapped semantic similarity coordinates in Vector Space",
+      unlocked: progress.embeddingUsed,
+      icon: Database,
+      color: "#818cf8",
+    },
+    {
+      id: "tokenizer_badge",
+      title: "Token Architect",
+      description: "Parsed words and calculated prompt costs in Tokenizer",
+      unlocked: progress.tokenizerUsed,
+      icon: Calculator,
+      color: "#38bdf8",
+    },
+    {
       id: "risk_badge",
       title: "Risk Analyst",
       description: "Evaluated a project in Risk Assessment Matrix",
@@ -139,10 +167,18 @@ export default function ProgressTracker() {
       color: "#f43f5e",
     },
     {
+      id: "bias_badge",
+      title: "Compliance Auditor",
+      description: "Flagged lending bias, CD hallucinations, and SSN leaks",
+      unlocked: progress.biasAudited,
+      icon: ShieldAlert,
+      color: "#f59e0b",
+    },
+    {
       id: "master",
       title: "Platform Master",
       description: "Unlocked all credit union AI credentials",
-      unlocked: progress.staff && progress.management && progress.board && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited,
+      unlocked: progress.staff && progress.management && progress.board && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited,
       icon: Award,
       color: "#e11d48",
     },

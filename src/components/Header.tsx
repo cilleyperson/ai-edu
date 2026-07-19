@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   Cpu, BookOpen, ShieldAlert, Award, HelpCircle, Menu, X, 
-  BookOpenCheck, Terminal, FileText, ChevronDown, Database 
+  BookOpenCheck, Terminal, FileText, ChevronDown, Database, Calculator 
 } from "lucide-react";
 
 export default function Header() {
@@ -61,6 +61,8 @@ export default function Header() {
     items: [
       { name: "Prompt Lab", href: "/playground", icon: Terminal, description: "System prompt instructions engineering" },
       { name: "RAG Visualizer", href: "/rag-sandbox", icon: Database, description: "Trace policy chunking and similarity" },
+      { name: "Vector Plotter", href: "/embedding-visualizer", icon: Database, description: "Map query clusters on coordinate planes" },
+      { name: "Tokenizer", href: "/tokenizer", icon: Calculator, description: "Color-highlight tokens and calculate cost" },
       { name: "Agent Sandbox", href: "/simulator", icon: Cpu, description: "Run step-by-step ReAct execution loops" }
     ]
   };
@@ -69,7 +71,8 @@ export default function Header() {
     name: "Governance",
     items: [
       { name: "Risk Matrix", href: "/risk-matrix", icon: ShieldAlert, description: "Calculate operational and reputational risk" },
-      { name: "Vendor Auditor", href: "/vendor-auditor", icon: FileText, description: "Diligence third-party SaaS contracts" }
+      { name: "Vendor Auditor", href: "/vendor-auditor", icon: FileText, description: "Diligence third-party SaaS contracts" },
+      { name: "Bias Auditor", href: "/bias-auditor", icon: ShieldAlert, description: "Audit outputs for compliance risk anomalies" }
     ]
   };
 

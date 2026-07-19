@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ProgressTracker from "@/components/ProgressTracker";
-import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles, Terminal, FileText, Database } from "lucide-react";
+import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles, Terminal, FileText, Database, Calculator } from "lucide-react";
 
 export default function Home() {
   const [completed, setCompleted] = useState({ staff: false, management: false, board: false });
@@ -307,6 +307,7 @@ export default function Home() {
             </div>
 
             {/* Lab 5: Vendor Auditor */}
+            {/* Lab 5: Vendor Auditor */}
             <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
               <div 
                 style={{ 
@@ -333,6 +334,99 @@ export default function Home() {
                 <Link href="/vendor-auditor" className="btn btn-accent" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
                   <span>Launch Vendor Audit</span>
                   <Zap style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 6: Vector Plotter */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "var(--primary-glow)", 
+                  color: "var(--primary)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(99, 102, 241, 0.2)"
+                }}
+              >
+                <Database style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Vector Embedding Visualizer</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Understand vector space maps. Plot custom queries onto coordinate grids and observe how AI measures semantic similarity.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/embedding-visualizer" className="btn btn-primary" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch Vector Plotter</span>
+                  <ChevronRight style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 7: Tokenizer */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "var(--accent-glow)", 
+                  color: "var(--accent)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(6, 182, 212, 0.2)"
+                }}
+              >
+                <Calculator style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>LLM Tokenizer & Price Grader</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Examine how LLMs read words in tokens. Highlight text boundaries and project query prices across OpenAI, Anthropic, and open-source models.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/tokenizer" className="btn btn-accent" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch Tokenizer</span>
+                  <Zap style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 8: Bias Auditor */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "var(--primary-glow)", 
+                  color: "var(--primary)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(99, 102, 241, 0.2)"
+                }}
+              >
+                <ShieldAlert style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Bias & Hallucination Auditor</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Audit AI logs for Fair Lending (ECOA) redlining bias, deposit rate hallucinations, and privacy leaks. Compile formal remediation reports.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/bias-auditor" className="btn btn-primary" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch Bias Audit</span>
+                  <ChevronRight style={{ width: 14, height: 14 }} />
                 </Link>
               </div>
             </div>
