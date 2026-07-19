@@ -431,6 +431,37 @@ export default function Home() {
               </div>
             </div>
 
+            {/* Lab 9: Policy Builder */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "var(--accent-glow)", 
+                  color: "var(--accent)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(6, 182, 212, 0.2)"
+                }}
+              >
+                <FileText style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>AI Policy & Governance Builder</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Draft custom AI policy and governance frameworks. Configure asset parameters, risk tiers, and compliance oversight to download in PDF/Markdown.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/policy-builder" className="btn btn-accent" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch Policy Builder</span>
+                  <Zap style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
           </div>
         </div>
 
