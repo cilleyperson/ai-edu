@@ -7,9 +7,11 @@ interface PathProgress {
   staff: boolean;
   management: boolean;
   board: boolean;
+  infosec: boolean;
   staffScore: number;
   managementScore: number;
   boardScore: number;
+  infosecScore: number;
   riskMatrixUsed: boolean;
   playgroundScore: number;
   ragUsed: boolean;
@@ -24,9 +26,11 @@ export default function ProgressTracker() {
     staff: false,
     management: false,
     board: false,
+    infosec: false,
     staffScore: 0,
     managementScore: 0,
     boardScore: 0,
+    infosecScore: 0,
     riskMatrixUsed: false,
     playgroundScore: 0,
     ragUsed: false,
@@ -41,10 +45,12 @@ export default function ProgressTracker() {
       const staffVal = localStorage.getItem("cu_ai_progress_staff") === "completed";
       const mgmtVal = localStorage.getItem("cu_ai_progress_management") === "completed";
       const boardVal = localStorage.getItem("cu_ai_progress_board") === "completed";
+      const infosecVal = localStorage.getItem("cu_ai_progress_infosec") === "completed";
       
       const staffScoreVal = parseInt(localStorage.getItem("cu_ai_score_staff") || "0", 10);
       const mgmtScoreVal = parseInt(localStorage.getItem("cu_ai_score_management") || "0", 10);
       const boardScoreVal = parseInt(localStorage.getItem("cu_ai_score_board") || "0", 10);
+      const infosecScoreVal = parseInt(localStorage.getItem("cu_ai_score_infosec") || "0", 10);
       
       const riskMatrixVal = localStorage.getItem("cu_ai_risk_completed") === "true";
       const playgroundScoreVal = parseInt(localStorage.getItem("cu_ai_score_playground") || "0", 10);
@@ -58,9 +64,11 @@ export default function ProgressTracker() {
         staff: staffVal,
         management: mgmtVal,
         board: boardVal,
+        infosec: infosecVal,
         staffScore: staffScoreVal,
         managementScore: mgmtScoreVal,
         boardScore: boardScoreVal,
+        infosecScore: infosecScoreVal,
         riskMatrixUsed: riskMatrixVal,
         playgroundScore: playgroundScoreVal,
         ragUsed: ragVal,
@@ -81,8 +89,8 @@ export default function ProgressTracker() {
     };
   }, []);
 
-  const completedPaths = [progress.staff, progress.management, progress.board].filter(Boolean).length;
-  const completionPercentage = Math.round((completedPaths / 3) * 100);
+  const completedPaths = [progress.staff, progress.management, progress.board, progress.infosec].filter(Boolean).length;
+  const completionPercentage = Math.round((completedPaths / 4) * 100);
 
   // Badge list logic
   const badges = [
@@ -175,10 +183,18 @@ export default function ProgressTracker() {
       color: "#f59e0b",
     },
     {
+      id: "infosec_badge",
+      title: "Zero-Trust Sentinel",
+      description: "Completed Information Security Path",
+      unlocked: progress.infosec,
+      icon: ShieldAlert,
+      color: "#f43f5e",
+    },
+    {
       id: "master",
       title: "Platform Master",
       description: "Unlocked all credit union AI credentials",
-      unlocked: progress.staff && progress.management && progress.board && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited,
+      unlocked: progress.staff && progress.management && progress.board && progress.infosec && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited,
       icon: Award,
       color: "#e11d48",
     },
@@ -243,6 +259,21 @@ export default function ProgressTracker() {
           </div>
           {progress.board ? (
             <span className="badge badge-success">Quiz: {progress.boardScore}%</span>
+          ) : (
+            <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Not Started</span>
+          )}
+        </div>
+
+        <div style={moduleItemStyle(progress.infosec)}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <CheckCircle2 style={{ width: 18, height: 18, color: progress.infosec ? "var(--success)" : "var(--text-muted)" }} />
+            <div>
+              <p style={{ fontSize: "0.95rem", fontWeight: 600 }}>InfoSec Learning Path</p>
+              <p style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>AI Impersonation & Zero-Trust Defense</p>
+            </div>
+          </div>
+          {progress.infosec ? (
+            <span className="badge badge-success">Quiz: {progress.infosecScore}%</span>
           ) : (
             <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Not Started</span>
           )}
@@ -312,6 +343,7 @@ function completedCountText(count: number) {
   if (count === 0) return "Beginner";
   if (count === 1) return "Novice";
   if (count === 2) return "Intermediate";
+  if (count === 3) return "Advanced";
   return "AI Champion";
 }
 
