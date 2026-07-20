@@ -6,6 +6,8 @@ import Link from "next/link";
 import { learningPaths } from "@/data/learningPaths";
 import QuizComponent from "@/components/QuizComponent";
 import ThreatSimulator from "@/components/ThreatSimulator";
+import PromptSandbox from "@/components/PromptSandbox";
+import InjectionSimulator from "@/components/InjectionSimulator";
 import { 
   BookOpen, Award, ShieldAlert, ArrowLeft, Clock, 
   ShieldCheck, CheckSquare, Square, Lock, Unlock, Sparkles
@@ -18,60 +20,8 @@ interface PageProps {
 }
 
 // ----------------------------------------------------
-// Staff Interactivity: PII Scrubbing Playground
+// Removed static PiiScrubberWidget in favor of PromptSandbox
 // ----------------------------------------------------
-function PiiScrubberWidget() {
-  const defaultText = "Dear Support, Member John Smith (SSN: 333-44-5555, Phone: 555-0199) living at 742 Evergreen Terrace has a question about account 987654321.";
-  const [inputText, setInputText] = useState(defaultText);
-  const [scrubbedText, setScrubbedText] = useState("");
-  const [isScrubbed, setIsScrubbed] = useState(false);
-
-  const handleScrub = () => {
-    let text = inputText;
-    // Simple regex scrubbers
-    text = text.replace(/John Smith/gi, "[MEMBER_NAME]");
-    text = text.replace(/\d{3}-\d{2}-\d{4}/g, "[REDACTED_SSN]");
-    text = text.replace(/\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g, "[REDACTED_PHONE]");
-    text = text.replace(/\d+\s+[A-Za-z0-9\s,]+(Avenue|Lane|Road|Boulevard|Drive|Street|Terrace|Way|St|Rd|Ave)/gi, "[REDACTED_ADDRESS]");
-    text = text.replace(/\b\d{9,12}\b/g, "[REDACTED_ACCOUNT]");
-    
-    setScrubbedText(text);
-    setIsScrubbed(true);
-  };
-
-  return (
-    <div className="card" style={{ marginTop: "20px", background: "rgba(6, 8, 20, 0.4)", border: "1px dashed var(--primary)" }}>
-      <h4 style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--accent)", fontSize: "1.1rem" }}>
-        <Sparkles style={{ width: 18, height: 18 }} />
-        PII Scrubbing Playground
-      </h4>
-      <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: "12px" }}>
-        Paste a sample text below containing Personally Identifiable Information (PII) to watch the AI safety filter scrub it.
-      </p>
-      
-      <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "12px" }}>
-        <textarea 
-          className="form-textarea"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          rows={3}
-          style={{ fontSize: "0.85rem", resize: "none" }}
-        />
-        <button className="btn btn-accent" onClick={handleScrub} style={{ alignSelf: "flex-end", padding: "6px 16px", fontSize: "0.8rem" }}>
-          <span>Run Scrub Filter</span>
-        </button>
-      </div>
-
-      {isScrubbed && (
-        <div style={{ padding: "12px", background: "var(--success-glow)", border: "1px solid var(--success)", borderRadius: "var(--radius-sm)" }} className="animate-fade-in-up">
-          <p style={{ fontSize: "0.8rem", color: "var(--success)", fontWeight: 700, marginBottom: "4px" }}>Scrubbed Prompt Output (Safe for LLM):</p>
-          <p style={{ fontSize: "0.85rem", color: "var(--text-primary)", fontFamily: "monospace" }}>{scrubbedText}</p>
-        </div>
-      )}
-    </div>
-  );
-}
-
 // ----------------------------------------------------
 // Management Interactivity: HITL Wire Gate
 // ----------------------------------------------------
@@ -193,7 +143,7 @@ export default function LearnPathPage({ params }: PageProps) {
   const { path } = use(params);
   
   // Validate path parameter
-  if (path !== "staff" && path !== "management" && path !== "board" && path !== "infosec") {
+  if (path !== "staff" && path !== "management" && path !== "board" && path !== "infosec" && path !== "engineering") {
     notFound();
   }
 
@@ -204,7 +154,8 @@ export default function LearnPathPage({ params }: PageProps) {
     staff: BookOpen,
     management: Award,
     board: ShieldAlert,
-    infosec: ShieldAlert
+    infosec: ShieldAlert,
+    engineering: ShieldAlert // Using ShieldAlert or another icon for engineering
   };
   
   const PathIcon = iconMap[pathData.iconName] || BookOpen;
@@ -426,10 +377,11 @@ export default function LearnPathPage({ params }: PageProps) {
           <h2 style={{ fontSize: "1.5rem", marginBottom: "20px" }} className="gradient-text-cyan">
             Interactive Learning Activity
           </h2>
-          {path === "staff" && <PiiScrubberWidget />}
+          {path === "staff" && <PromptSandbox />}
           {path === "management" && <HitlUnderwritingWidget />}
           {path === "board" && <VendorEvaluatorWidget />}
           {path === "infosec" && <ThreatSimulator />}
+          {path === "engineering" && <InjectionSimulator />}
         </div>
 
         {/* Quiz Module - Gated by module checklist completion */}
