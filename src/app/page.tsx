@@ -6,14 +6,15 @@ import ProgressTracker from "@/components/ProgressTracker";
 import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles, Terminal, FileText, Database, Calculator } from "lucide-react";
 
 export default function Home() {
-  const [completed, setCompleted] = useState({ staff: false, management: false, board: false });
+  const [completed, setCompleted] = useState({ staff: false, management: false, board: false, infosec: false });
 
   useEffect(() => {
     const checkState = () => {
       const staffVal = localStorage.getItem("cu_ai_progress_staff") === "completed";
       const mgmtVal = localStorage.getItem("cu_ai_progress_management") === "completed";
       const boardVal = localStorage.getItem("cu_ai_progress_board") === "completed";
-      setCompleted({ staff: staffVal, management: mgmtVal, board: boardVal });
+      const infosecVal = localStorage.getItem("cu_ai_progress_infosec") === "completed";
+      setCompleted({ staff: staffVal, management: mgmtVal, board: boardVal, infosec: infosecVal });
     };
 
     checkState();
@@ -56,6 +57,16 @@ export default function Home() {
       icon: ShieldAlert,
       badgeClass: "badge-board",
       completed: completed.board,
+    },
+    {
+      id: "infosec",
+      title: "InfoSec Path",
+      subtitle: "AI Threat & Zero-Trust Defense",
+      description: "Learn defense strategies against voice cloning (vishing), deepfake video meetings, and targeted AI phishing.",
+      href: "/learn/infosec",
+      icon: ShieldAlert,
+      badgeClass: "badge-danger",
+      completed: completed.infosec,
     },
   ];
 
