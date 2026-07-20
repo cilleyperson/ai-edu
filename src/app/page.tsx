@@ -3,10 +3,11 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ProgressTracker from "@/components/ProgressTracker";
+import Certificate from "@/components/Certificate";
 import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles, Terminal, FileText, Database, Calculator } from "lucide-react";
 
 export default function Home() {
-  const [completed, setCompleted] = useState({ staff: false, management: false, board: false, infosec: false });
+  const [completed, setCompleted] = useState({ staff: false, management: false, board: false, infosec: false, engineering: false });
 
   useEffect(() => {
     const checkState = () => {
@@ -14,7 +15,8 @@ export default function Home() {
       const mgmtVal = localStorage.getItem("cu_ai_progress_management") === "completed";
       const boardVal = localStorage.getItem("cu_ai_progress_board") === "completed";
       const infosecVal = localStorage.getItem("cu_ai_progress_infosec") === "completed";
-      setCompleted({ staff: staffVal, management: mgmtVal, board: boardVal, infosec: infosecVal });
+      const engineeringVal = localStorage.getItem("cu_ai_progress_engineering") === "completed";
+      setCompleted({ staff: staffVal, management: mgmtVal, board: boardVal, infosec: infosecVal, engineering: engineeringVal });
     };
 
     checkState();
@@ -68,12 +70,24 @@ export default function Home() {
       badgeClass: "badge-danger",
       completed: completed.infosec,
     },
+    {
+      id: "engineering",
+      title: "IT & Engineering Path",
+      subtitle: "Building Safe AI Systems",
+      description: "Learn about prompt injection defense, secure RAG pipelines, and safe API tool calling for agentic systems.",
+      href: "/learn/engineering",
+      icon: Terminal,
+      badgeClass: "badge-board",
+      completed: completed.engineering,
+    },
   ];
 
   return (
     <div className="section" style={{ paddingTop: "60px" }}>
       <div className="container">
         
+        <Certificate />
+
         {/* Welcome Hero Section */}
         <div style={{ textAlign: "center", marginBottom: "60px" }} className="animate-fade-in-up">
           <div 

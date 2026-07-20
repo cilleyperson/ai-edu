@@ -8,10 +8,12 @@ interface PathProgress {
   management: boolean;
   board: boolean;
   infosec: boolean;
+  engineering: boolean;
   staffScore: number;
   managementScore: number;
   boardScore: number;
   infosecScore: number;
+  engineeringScore: number;
   riskMatrixUsed: boolean;
   playgroundScore: number;
   ragUsed: boolean;
@@ -27,10 +29,12 @@ export default function ProgressTracker() {
     management: false,
     board: false,
     infosec: false,
+    engineering: false,
     staffScore: 0,
     managementScore: 0,
     boardScore: 0,
     infosecScore: 0,
+    engineeringScore: 0,
     riskMatrixUsed: false,
     playgroundScore: 0,
     ragUsed: false,
@@ -46,11 +50,13 @@ export default function ProgressTracker() {
       const mgmtVal = localStorage.getItem("cu_ai_progress_management") === "completed";
       const boardVal = localStorage.getItem("cu_ai_progress_board") === "completed";
       const infosecVal = localStorage.getItem("cu_ai_progress_infosec") === "completed";
+      const engineeringVal = localStorage.getItem("cu_ai_progress_engineering") === "completed";
       
       const staffScoreVal = parseInt(localStorage.getItem("cu_ai_score_staff") || "0", 10);
       const mgmtScoreVal = parseInt(localStorage.getItem("cu_ai_score_management") || "0", 10);
       const boardScoreVal = parseInt(localStorage.getItem("cu_ai_score_board") || "0", 10);
       const infosecScoreVal = parseInt(localStorage.getItem("cu_ai_score_infosec") || "0", 10);
+      const engineeringScoreVal = parseInt(localStorage.getItem("cu_ai_score_engineering") || "0", 10);
       
       const riskMatrixVal = localStorage.getItem("cu_ai_risk_completed") === "true";
       const playgroundScoreVal = parseInt(localStorage.getItem("cu_ai_score_playground") || "0", 10);
@@ -65,10 +71,12 @@ export default function ProgressTracker() {
         management: mgmtVal,
         board: boardVal,
         infosec: infosecVal,
+        engineering: engineeringVal,
         staffScore: staffScoreVal,
         managementScore: mgmtScoreVal,
         boardScore: boardScoreVal,
         infosecScore: infosecScoreVal,
+        engineeringScore: engineeringScoreVal,
         riskMatrixUsed: riskMatrixVal,
         playgroundScore: playgroundScoreVal,
         ragUsed: ragVal,
@@ -89,8 +97,8 @@ export default function ProgressTracker() {
     };
   }, []);
 
-  const completedPaths = [progress.staff, progress.management, progress.board, progress.infosec].filter(Boolean).length;
-  const completionPercentage = Math.round((completedPaths / 4) * 100);
+  const completedPaths = [progress.staff, progress.management, progress.board, progress.infosec, progress.engineering].filter(Boolean).length;
+  const completionPercentage = Math.round((completedPaths / 5) * 100);
 
   // Badge list logic
   const badges = [
@@ -98,7 +106,7 @@ export default function ProgressTracker() {
       id: "curious",
       title: "First Steps",
       description: "Began learning Credit Union Agentic AI",
-      unlocked: progress.staff || progress.management || progress.board || progress.playgroundScore > 0 || progress.ragUsed || progress.vendorAudited || progress.embeddingUsed || progress.tokenizerUsed || progress.biasAudited,
+      unlocked: progress.staff || progress.management || progress.board || progress.infosec || progress.engineering || progress.playgroundScore > 0 || progress.ragUsed || progress.vendorAudited || progress.embeddingUsed || progress.tokenizerUsed || progress.biasAudited,
       icon: Sparkles,
       color: "#06b6d4",
     },
@@ -191,10 +199,18 @@ export default function ProgressTracker() {
       color: "#f43f5e",
     },
     {
+      id: "engineering_badge",
+      title: "Security Architect",
+      description: "Completed IT & Engineering Path",
+      unlocked: progress.engineering,
+      icon: Terminal,
+      color: "#0ea5e9",
+    },
+    {
       id: "master",
       title: "Platform Master",
       description: "Unlocked all credit union AI credentials",
-      unlocked: progress.staff && progress.management && progress.board && progress.infosec && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited,
+      unlocked: progress.staff && progress.management && progress.board && progress.infosec && progress.engineering && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited,
       icon: Award,
       color: "#e11d48",
     },
@@ -278,6 +294,21 @@ export default function ProgressTracker() {
             <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Not Started</span>
           )}
         </div>
+
+        <div style={moduleItemStyle(progress.engineering)}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <CheckCircle2 style={{ width: 18, height: 18, color: progress.engineering ? "var(--success)" : "var(--text-muted)" }} />
+            <div>
+              <p style={{ fontSize: "0.95rem", fontWeight: 600 }}>Engineering Learning Path</p>
+              <p style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Building Safe AI Systems</p>
+            </div>
+          </div>
+          {progress.engineering ? (
+            <span className="badge badge-success">Quiz: {progress.engineeringScore}%</span>
+          ) : (
+            <span style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Not Started</span>
+          )}
+        </div>
       </div>
 
       {/* Badges Achievements */}
@@ -344,6 +375,7 @@ function completedCountText(count: number) {
   if (count === 1) return "Novice";
   if (count === 2) return "Intermediate";
   if (count === 3) return "Advanced";
+  if (count === 4) return "Expert";
   return "AI Champion";
 }
 
