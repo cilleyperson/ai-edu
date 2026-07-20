@@ -1,9 +1,17 @@
-import React from "react";
+"use client";
+
+import React, { useState, use } from "react";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { learningPaths } from "@/data/learningPaths";
 import QuizComponent from "@/components/QuizComponent";
-import { BookOpen, Award, ShieldAlert, ArrowLeft, Clock, ShieldCheck } from "lucide-react";
+import ThreatSimulator from "@/components/ThreatSimulator";
+import PromptSandbox from "@/components/PromptSandbox";
+import InjectionSimulator from "@/components/InjectionSimulator";
+import { 
+  BookOpen, Award, ShieldAlert, ArrowLeft, Clock, 
+  ShieldCheck, CheckSquare, Square, Lock, Unlock, Sparkles
+} from "lucide-react";
 
 interface PageProps {
   params: Promise<{
@@ -11,11 +19,131 @@ interface PageProps {
   }>;
 }
 
-export default async function LearnPathPage({ params }: PageProps) {
-  const { path } = await params;
+// ----------------------------------------------------
+// Removed static PiiScrubberWidget in favor of PromptSandbox
+// ----------------------------------------------------
+// ----------------------------------------------------
+// Management Interactivity: HITL Wire Gate
+// ----------------------------------------------------
+function HitlUnderwritingWidget() {
+  const [status, setStatus] = useState<"idle" | "approved" | "rejected">("idle");
+
+  return (
+    <div className="card" style={{ marginTop: "20px", background: "rgba(6, 8, 20, 0.4)", border: "1px dashed var(--primary)" }}>
+      <h4 style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--accent)", fontSize: "1.1rem" }}>
+        <Sparkles style={{ width: 18, height: 18 }} />
+        Human-in-the-Loop Wire Gate
+      </h4>
+      <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: "12px" }}>
+        An AI Agent recommends approving a <strong>$45,000 wire</strong>. The audit logs show details below. Review and decide:
+      </p>
+
+      <div style={{ background: "#0c0e1b", padding: "12px", borderRadius: "var(--radius-sm)", fontSize: "0.8rem", fontFamily: "monospace", color: "var(--text-secondary)", marginBottom: "16px", border: "1px solid var(--border-color)" }}>
+        <p style={{ margin: "2px 0", color: "var(--warning)" }}>⚠️ [WARN] Recipient account was opened 2 days ago.</p>
+        <p style={{ margin: "2px 0", color: "var(--danger)" }}>🚨 [CRITICAL] Request email domain deviates from verified customer record.</p>
+        <p style={{ margin: "2px 0", color: "var(--success)" }}>✓ [OK] Credit limit check passed.</p>
+      </div>
+
+      {status === "idle" && (
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button className="btn btn-primary" onClick={() => setStatus("approved")} style={{ flex: 1, padding: "8px", fontSize: "0.8rem" }}>
+            Approve Transfer
+          </button>
+          <button className="btn btn-secondary" onClick={() => setStatus("rejected")} style={{ flex: 1, padding: "8px", fontSize: "0.8rem" }}>
+            Hold for Verification
+          </button>
+        </div>
+      )}
+
+      {status === "approved" && (
+        <div style={{ padding: "12px", background: "var(--danger-glow)", border: "1px solid var(--danger)", borderRadius: "var(--radius-sm)" }} className="animate-fade-in-up">
+          <p style={{ fontSize: "0.85rem", color: "var(--danger)", fontWeight: 700 }}>Security Failure!</p>
+          <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
+            The transfer was processed but the recipient was a fraudulent account. You bypassed critical warnings. AI agents require strict Human verification!
+          </p>
+        </div>
+      )}
+
+      {status === "rejected" && (
+        <div style={{ padding: "12px", background: "var(--success-glow)", border: "1px solid var(--success)", borderRadius: "var(--radius-sm)" }} className="animate-fade-in-up">
+          <p style={{ fontSize: "0.85rem", color: "var(--success)", fontWeight: 700 }}>Action Correct!</p>
+          <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
+            You held the wire transfer. Out-of-band audit confirmed the email request was spoofed. Human oversight prevented a $45,000 loss.
+          </p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// Board Interactivity: Vendor Compliance Evaluator
+// ----------------------------------------------------
+function VendorEvaluatorWidget() {
+  const [checks, setChecks] = useState({ soc2: false, encryption: false, modelAudit: false });
+
+  const getRiskScore = () => {
+    const checkedCount = Object.values(checks).filter(Boolean).length;
+    if (checkedCount === 3) return { label: "LOW RISK (Compliant)", color: "var(--success)" };
+    if (checkedCount === 2) return { label: "MEDIUM RISK (Warning)", color: "var(--warning)" };
+    return { label: "HIGH RISK (Non-Compliant)", color: "var(--danger)" };
+  };
+
+  const score = getRiskScore();
+
+  return (
+    <div className="card" style={{ marginTop: "20px", background: "rgba(6, 8, 20, 0.4)", border: "1px dashed var(--primary)" }}>
+      <h4 style={{ display: "flex", alignItems: "center", gap: "8px", color: "var(--accent)", fontSize: "1.1rem" }}>
+        <Sparkles style={{ width: 18, height: 18 }} />
+        Vendor Risk Evaluator Matrix
+      </h4>
+      <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", marginBottom: "12px" }}>
+        Evaluate the AI chat vendor&apos;s security credentials to establish fiduciary board compliance:
+      </p>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginBottom: "16px" }}>
+        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "0.85rem" }}>
+          <input 
+            type="checkbox" 
+            checked={checks.soc2} 
+            onChange={(e) => setChecks({ ...checks, soc2: e.target.checked })} 
+          />
+          <span>SOC 2 Type II Security Certificate provided</span>
+        </label>
+        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "0.85rem" }}>
+          <input 
+            type="checkbox" 
+            checked={checks.encryption} 
+            onChange={(e) => setChecks({ ...checks, encryption: e.target.checked })} 
+          />
+          <span>End-to-End Encryption of member PII in transit/rest</span>
+        </label>
+        <label style={{ display: "flex", alignItems: "center", gap: "8px", cursor: "pointer", fontSize: "0.85rem" }}>
+          <input 
+            type="checkbox" 
+            checked={checks.modelAudit} 
+            onChange={(e) => setChecks({ ...checks, modelAudit: e.target.checked })} 
+          />
+          <span>Regular algorithmic model drift & bias audits verified</span>
+        </label>
+      </div>
+
+      <div style={{ padding: "12px", background: "rgba(255, 255, 255, 0.02)", border: `1px solid ${score.color}`, borderRadius: "var(--radius-sm)" }}>
+        <p style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>Calculated Vendor Risk Tier:</p>
+        <p style={{ fontSize: "0.95rem", color: score.color, fontWeight: 700 }}>{score.label}</p>
+      </div>
+    </div>
+  );
+}
+
+// ----------------------------------------------------
+// Main Learning Path Component
+// ----------------------------------------------------
+export default function LearnPathPage({ params }: PageProps) {
+  const { path } = use(params);
   
   // Validate path parameter
-  if (path !== "staff" && path !== "management" && path !== "board") {
+  if (path !== "staff" && path !== "management" && path !== "board" && path !== "infosec" && path !== "engineering") {
     notFound();
   }
 
@@ -26,9 +154,23 @@ export default async function LearnPathPage({ params }: PageProps) {
     staff: BookOpen,
     management: Award,
     board: ShieldAlert,
+    infosec: ShieldAlert,
+    engineering: ShieldAlert // Using ShieldAlert or another icon for engineering
   };
   
   const PathIcon = iconMap[pathData.iconName] || BookOpen;
+
+  // React State for Checklist Interactivity
+  const [completedModules, setCompletedModules] = useState<Record<number, boolean>>({});
+
+  const toggleModule = (idx: number) => {
+    setCompletedModules(prev => ({
+      ...prev,
+      [idx]: !prev[idx]
+    }));
+  };
+
+  const allCompleted = pathData.modules.every((_, idx) => completedModules[idx]);
 
   return (
     <div className="section" style={{ paddingTop: "40px" }}>
@@ -87,7 +229,7 @@ export default async function LearnPathPage({ params }: PageProps) {
                 borderRadius: "var(--radius-md)", 
                 background: "rgba(255,255,255,0.03)", 
                 border: "1px solid var(--border-color)",
-                color: "var(--primary)"
+                color: path === "infosec" ? "var(--danger)" : "var(--primary)"
               }}
             >
               <PathIcon style={{ width: 36, height: 36 }} />
@@ -95,8 +237,8 @@ export default async function LearnPathPage({ params }: PageProps) {
             
             <div style={{ flex: 1, minWidth: "280px" }}>
               <div style={{ display: "flex", gap: "12px", alignItems: "center", marginBottom: "8px", flexWrap: "wrap" }}>
-                <span className={`badge badge-${path === "staff" ? "staff" : path === "management" ? "mgmt" : "board"}`}>
-                  {path === "staff" ? "Staff Path" : path === "management" ? "Management Path" : "Board Path"}
+                <span className={`badge badge-${path === "staff" ? "staff" : path === "management" ? "mgmt" : path === "board" ? "board" : "danger"}`}>
+                  {path === "staff" ? "Staff Path" : path === "management" ? "Management Path" : path === "board" ? "Board Path" : "InfoSec Path"}
                 </span>
                 <span 
                   style={{ 
@@ -126,10 +268,15 @@ export default async function LearnPathPage({ params }: PageProps) {
         </div>
 
         {/* Content Modules */}
-        <div style={{ maxWidth: "850px", margin: "0 auto 60px auto" }}>
-          <h2 style={{ fontSize: "1.5rem", marginBottom: "24px" }} className="gradient-text-indigo">
-            Learning Modules
-          </h2>
+        <div style={{ maxWidth: "850px", margin: "0 auto 40px auto" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
+            <h2 style={{ fontSize: "1.5rem", margin: 0 }} className="gradient-text-indigo">
+              Learning Modules
+            </h2>
+            <span style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontWeight: 600 }}>
+              Unlock quiz by reading all modules
+            </span>
+          </div>
           
           {pathData.modules.map((mod, idx) => (
             <div 
@@ -138,15 +285,42 @@ export default async function LearnPathPage({ params }: PageProps) {
               style={{ 
                 marginBottom: "28px", 
                 padding: "24px",
-                borderLeft: "4px solid var(--primary)" 
+                borderLeft: completedModules[idx] ? "4px solid var(--success)" : "4px solid var(--primary)",
+                transition: "all 0.3s ease"
               }}
             >
-              <h3 style={{ fontSize: "1.25rem", marginBottom: "8px", color: "var(--text-primary)" }}>
-                {mod.title}
-              </h3>
-              <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", marginBottom: "16px", fontStyle: "italic" }}>
-                {mod.subtitle}
-              </p>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
+                <div style={{ flex: 1 }}>
+                  <h3 style={{ fontSize: "1.25rem", marginBottom: "8px", color: "var(--text-primary)" }}>
+                    {mod.title}
+                  </h3>
+                  <p style={{ fontSize: "0.95rem", color: "var(--text-secondary)", marginBottom: "16px", fontStyle: "italic" }}>
+                    {mod.subtitle}
+                  </p>
+                </div>
+                
+                {/* Module Checklist Interactivity */}
+                <button 
+                  onClick={() => toggleModule(idx)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    cursor: "pointer",
+                    padding: 0,
+                    color: completedModules[idx] ? "var(--success)" : "var(--text-muted)",
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "6px"
+                  }}
+                  title={completedModules[idx] ? "Completed" : "Mark as read"}
+                >
+                  {completedModules[idx] ? (
+                    <CheckSquare style={{ width: 24, height: 24 }} />
+                  ) : (
+                    <Square style={{ width: 24, height: 24 }} />
+                  )}
+                </button>
+              </div>
               
               <ul style={{ paddingLeft: "20px", marginBottom: "20px", color: "var(--text-secondary)", fontSize: "0.95rem" }}>
                 {mod.points.map((pt, pIdx) => (
@@ -198,18 +372,57 @@ export default async function LearnPathPage({ params }: PageProps) {
           ))}
         </div>
 
-        {/* Quiz Module */}
+        {/* Path-Specific Simulation Section */}
+        <div style={{ maxWidth: "850px", margin: "0 auto 60px auto" }}>
+          <h2 style={{ fontSize: "1.5rem", marginBottom: "20px" }} className="gradient-text-cyan">
+            Interactive Learning Activity
+          </h2>
+          {path === "staff" && <PromptSandbox />}
+          {path === "management" && <HitlUnderwritingWidget />}
+          {path === "board" && <VendorEvaluatorWidget />}
+          {path === "infosec" && <ThreatSimulator />}
+          {path === "engineering" && <InjectionSimulator />}
+        </div>
+
+        {/* Quiz Module - Gated by module checklist completion */}
         <div style={{ borderTop: "1px solid var(--border-color)", paddingTop: "50px" }}>
-          <div style={{ textAlign: "center", marginBottom: "30px" }}>
-            <h2 style={{ fontSize: "1.75rem", marginBottom: "8px" }} className="gradient-text-violet">
-              Unlock Your Certification
-            </h2>
-            <p style={{ color: "var(--text-secondary)", maxWidth: "550px", margin: "0 auto" }}>
-              Complete the knowledge check below to verify your mastery. Get a score of 70% or higher to unlock the path credential.
-            </p>
-          </div>
-          
-          <QuizComponent pathId={pathData.id} questions={pathData.quiz} />
+          {!allCompleted ? (
+            <div 
+              style={{ 
+                textAlign: "center", 
+                padding: "40px", 
+                background: "rgba(255, 255, 255, 0.01)", 
+                border: "1px dashed var(--border-color)", 
+                borderRadius: "var(--radius-lg)",
+                maxWidth: "600px",
+                margin: "0 auto"
+              }}
+              className="animate-fade-in-up"
+            >
+              <Lock style={{ width: 48, height: 48, color: "var(--text-muted)", margin: "0 auto 16px auto" }} />
+              <h3 style={{ fontSize: "1.5rem", color: "var(--text-secondary)", marginBottom: "8px" }}>Certification Locked</h3>
+              <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: 1.5 }}>
+                Please mark all learning modules above as read using the checkboxes to unlock your final knowledge verification assessment quiz.
+              </p>
+            </div>
+          ) : (
+            <div className="animate-fade-in-up">
+              <div style={{ textAlign: "center", marginBottom: "30px" }}>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: "6px", color: "var(--success)", fontSize: "0.9rem", fontWeight: 700, marginBottom: "12px" }}>
+                  <Unlock style={{ width: 16, height: 16 }} />
+                  <span>Certification Assessment Unlocked!</span>
+                </div>
+                <h2 style={{ fontSize: "1.75rem", marginBottom: "8px" }} className="gradient-text-violet">
+                  Unlock Your Certification
+                </h2>
+                <p style={{ color: "var(--text-secondary)", maxWidth: "550px", margin: "0 auto" }}>
+                  Complete the knowledge check below to verify your mastery. Get a score of 70% or higher to unlock the path credential.
+                </p>
+              </div>
+              
+              <QuizComponent pathId={pathData.id} questions={pathData.quiz} />
+            </div>
+          )}
         </div>
 
       </div>

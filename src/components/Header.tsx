@@ -16,7 +16,7 @@ export default function Header() {
     labs: false,
     governance: false
   });
-  const [progress, setProgress] = useState({ staff: false, management: false, board: false });
+  const [progress, setProgress] = useState({ staff: false, management: false, board: false, infosec: false, engineering: false });
 
   // Load progress from localStorage
   useEffect(() => {
@@ -24,7 +24,9 @@ export default function Header() {
       const staffVal = localStorage.getItem("cu_ai_progress_staff") === "completed";
       const mgmtVal = localStorage.getItem("cu_ai_progress_management") === "completed";
       const boardVal = localStorage.getItem("cu_ai_progress_board") === "completed";
-      setProgress({ staff: staffVal, management: mgmtVal, board: boardVal });
+      const infosecVal = localStorage.getItem("cu_ai_progress_infosec") === "completed";
+      const engineeringVal = localStorage.getItem("cu_ai_progress_engineering") === "completed";
+      setProgress({ staff: staffVal, management: mgmtVal, board: boardVal, infosec: infosecVal, engineering: engineeringVal });
     };
 
     checkProgress();
@@ -52,7 +54,9 @@ export default function Header() {
     items: [
       { name: "Staff Path", href: "/learn/staff", icon: BookOpen, description: "Compliance & PII basics for branch staff" },
       { name: "Management Path", href: "/learn/management", icon: Award, description: "Underwriting automation & metrics" },
-      { name: "Board Path", href: "/learn/board", icon: ShieldAlert, description: "Fiduciary oversight & regulatory policies" }
+      { name: "Board Path", href: "/learn/board", icon: ShieldAlert, description: "Fiduciary oversight & regulatory policies" },
+      { name: "InfoSec Path", href: "/learn/infosec", icon: ShieldAlert, description: "Defending against AI phishing & deepfakes" },
+      { name: "Engineering Path", href: "/learn/engineering", icon: Terminal, description: "Secure RAG & prompt injections" }
     ]
   };
 
@@ -72,7 +76,8 @@ export default function Header() {
     items: [
       { name: "Risk Matrix", href: "/risk-matrix", icon: ShieldAlert, description: "Calculate operational and reputational risk" },
       { name: "Vendor Auditor", href: "/vendor-auditor", icon: FileText, description: "Diligence third-party SaaS contracts" },
-      { name: "Bias Auditor", href: "/bias-auditor", icon: ShieldAlert, description: "Audit outputs for compliance risk anomalies" }
+      { name: "Bias Auditor", href: "/bias-auditor", icon: ShieldAlert, description: "Audit outputs for compliance risk anomalies" },
+      { name: "Policy Builder", href: "/policy-builder", icon: FileText, description: "Generate custom AI policies & governance models" }
     ]
   };
 
@@ -247,7 +252,7 @@ export default function Header() {
           >
             <BookOpenCheck style={{ width: 16, height: 16, color: "var(--success)" }} />
             <span style={{ color: "var(--text-secondary)", fontWeight: 500 }}>
-              Paths: <strong style={{ color: "var(--text-primary)" }}>{completedCount}/3</strong>
+              Paths: <strong style={{ color: "var(--text-primary)" }}>{completedCount}/5</strong>
             </span>
           </div>
 

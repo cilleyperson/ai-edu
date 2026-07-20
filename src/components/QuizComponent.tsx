@@ -14,7 +14,7 @@ export interface Question {
 }
 
 interface QuizComponentProps {
-  pathId: "staff" | "management" | "board";
+  pathId: "staff" | "management" | "board" | "infosec" | "engineering";
   questions: Question[];
 }
 
