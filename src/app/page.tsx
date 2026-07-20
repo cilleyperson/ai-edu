@@ -3,17 +3,20 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ProgressTracker from "@/components/ProgressTracker";
+import Certificate from "@/components/Certificate";
 import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles, Terminal, FileText, Database, Calculator } from "lucide-react";
 
 export default function Home() {
-  const [completed, setCompleted] = useState({ staff: false, management: false, board: false });
+  const [completed, setCompleted] = useState({ staff: false, management: false, board: false, infosec: false, engineering: false });
 
   useEffect(() => {
     const checkState = () => {
       const staffVal = localStorage.getItem("cu_ai_progress_staff") === "completed";
       const mgmtVal = localStorage.getItem("cu_ai_progress_management") === "completed";
       const boardVal = localStorage.getItem("cu_ai_progress_board") === "completed";
-      setCompleted({ staff: staffVal, management: mgmtVal, board: boardVal });
+      const infosecVal = localStorage.getItem("cu_ai_progress_infosec") === "completed";
+      const engineeringVal = localStorage.getItem("cu_ai_progress_engineering") === "completed";
+      setCompleted({ staff: staffVal, management: mgmtVal, board: boardVal, infosec: infosecVal, engineering: engineeringVal });
     };
 
     checkState();
@@ -57,12 +60,34 @@ export default function Home() {
       badgeClass: "badge-board",
       completed: completed.board,
     },
+    {
+      id: "infosec",
+      title: "InfoSec Path",
+      subtitle: "AI Threat & Zero-Trust Defense",
+      description: "Learn defense strategies against voice cloning (vishing), deepfake video meetings, and targeted AI phishing.",
+      href: "/learn/infosec",
+      icon: ShieldAlert,
+      badgeClass: "badge-danger",
+      completed: completed.infosec,
+    },
+    {
+      id: "engineering",
+      title: "IT & Engineering Path",
+      subtitle: "Building Safe AI Systems",
+      description: "Learn about prompt injection defense, secure RAG pipelines, and safe API tool calling for agentic systems.",
+      href: "/learn/engineering",
+      icon: Terminal,
+      badgeClass: "badge-board",
+      completed: completed.engineering,
+    },
   ];
 
   return (
     <div className="section" style={{ paddingTop: "60px" }}>
       <div className="container">
         
+        <Certificate />
+
         {/* Welcome Hero Section */}
         <div style={{ textAlign: "center", marginBottom: "60px" }} className="animate-fade-in-up">
           <div 
@@ -427,6 +452,37 @@ export default function Home() {
                 <Link href="/bias-auditor" className="btn btn-primary" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
                   <span>Launch Bias Audit</span>
                   <ChevronRight style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 9: Policy Builder */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "var(--accent-glow)", 
+                  color: "var(--accent)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(6, 182, 212, 0.2)"
+                }}
+              >
+                <FileText style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>AI Policy & Governance Builder</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Draft custom AI policy and governance frameworks. Configure asset parameters, risk tiers, and compliance oversight to download in PDF/Markdown.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/policy-builder" className="btn btn-accent" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch Policy Builder</span>
+                  <Zap style={{ width: 14, height: 14 }} />
                 </Link>
               </div>
             </div>
