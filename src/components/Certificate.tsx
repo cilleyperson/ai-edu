@@ -8,6 +8,34 @@ export default function Certificate() {
   const [show, setShow] = useState(false);
   const [downloading, setDownloading] = useState(false);
   const [dateCompleted, setDateCompleted] = useState<string>("");
+  const [verificationId] = useState(() => "CU-AI-" + Math.random().toString(36).substring(2, 10).toUpperCase());
+
+  const triggerConfetti = () => {
+    const duration = 3000;
+    const end = Date.now() + duration;
+
+    const frame = () => {
+      confetti({
+        particleCount: 5,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0 },
+        colors: ['#e11d48', '#0ea5e9', '#10b981']
+      });
+      confetti({
+        particleCount: 5,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1 },
+        colors: ['#e11d48', '#0ea5e9', '#10b981']
+      });
+
+      if (Date.now() < end) {
+        requestAnimationFrame(frame);
+      }
+    };
+    frame();
+  };
 
   useEffect(() => {
     const checkCompletion = () => {
@@ -41,32 +69,6 @@ export default function Certificate() {
     };
   }, []);
 
-  const triggerConfetti = () => {
-    const duration = 3000;
-    const end = Date.now() + duration;
-
-    const frame = () => {
-      confetti({
-        particleCount: 5,
-        angle: 60,
-        spread: 55,
-        origin: { x: 0 },
-        colors: ['#e11d48', '#0ea5e9', '#10b981']
-      });
-      confetti({
-        particleCount: 5,
-        angle: 120,
-        spread: 55,
-        origin: { x: 1 },
-        colors: ['#e11d48', '#0ea5e9', '#10b981']
-      });
-
-      if (Date.now() < end) {
-        requestAnimationFrame(frame);
-      }
-    };
-    frame();
-  };
 
   const handleDownload = () => {
     setDownloading(true);
@@ -161,7 +163,7 @@ export default function Certificate() {
             
             <div style={{ textAlign: "right" }}>
               <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "4px" }}>Verification ID</p>
-              <p style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "monospace" }}>CU-AI-{Math.random().toString(36).substring(2, 10).toUpperCase()}</p>
+              <p style={{ fontSize: "1.1rem", fontWeight: 700, color: "var(--text-primary)", fontFamily: "monospace" }}>{verificationId}</p>
             </div>
           </div>
         </div>
