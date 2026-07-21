@@ -4,7 +4,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Award, BookOpen, ShieldAlert, Sparkles, CheckCircle2, Terminal, Cpu, FileText, Database, Calculator } from "lucide-react";
+import { Award, BookOpen, ShieldAlert, Sparkles, CheckCircle2, Terminal, Cpu, FileText, Database, Calculator, Code2 } from "lucide-react";
 
 interface PathProgress {
   staff: boolean;
@@ -28,6 +28,7 @@ interface PathProgress {
   redteamLvl2: boolean;
   warroomUsed: boolean;
   pipelineUsed: boolean;
+  agentStudioCompleted: boolean;
 }
 
 export default function ProgressTracker() {
@@ -53,6 +54,7 @@ export default function ProgressTracker() {
     redteamLvl2: false,
     warroomUsed: false,
     pipelineUsed: false,
+    agentStudioCompleted: false,
   });
 
   useEffect(() => {
@@ -80,6 +82,7 @@ export default function ProgressTracker() {
       const rtLvl2 = localStorage.getItem("cu_ai_redteam_lvl2") === "completed";
       const warroomVal = localStorage.getItem("cu_ai_warroom_completed") === "completed";
       const pipelineVal = localStorage.getItem("cu_ai_pipeline_completed") === "completed";
+      const agentStudioVal = localStorage.getItem("cu_ai_agent_studio_completed") === "completed";
 
       setProgress({
         staff: staffVal,
@@ -103,6 +106,7 @@ export default function ProgressTracker() {
         redteamLvl2: rtLvl2,
         warroomUsed: warroomVal,
         pipelineUsed: pipelineVal,
+        agentStudioCompleted: agentStudioVal,
       });
     };
 
@@ -234,6 +238,14 @@ export default function ProgressTracker() {
       color: "#10b981",
     },
     {
+      id: "agent_studio_badge",
+      title: "Agent Developer",
+      description: "Completed missions in the Agent Builder Studio",
+      unlocked: progress.agentStudioCompleted,
+      icon: Code2,
+      color: "#6366f1",
+    },
+    {
       id: "infosec_badge",
       title: "Zero-Trust Sentinel",
       description: "Completed Information Security Path",
@@ -253,7 +265,7 @@ export default function ProgressTracker() {
       id: "master",
       title: "Platform Master",
       description: "Unlocked all credit union AI credentials",
-      unlocked: progress.staff && progress.management && progress.board && progress.infosec && progress.engineering && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited && progress.redteamLvl1 && progress.redteamLvl2 && progress.warroomUsed && progress.pipelineUsed,
+      unlocked: progress.staff && progress.management && progress.board && progress.infosec && progress.engineering && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited && progress.redteamLvl1 && progress.redteamLvl2 && progress.warroomUsed && progress.pipelineUsed && progress.agentStudioCompleted,
       icon: Award,
       color: "#e11d48",
     },
