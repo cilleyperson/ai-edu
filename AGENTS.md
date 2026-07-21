@@ -125,3 +125,18 @@ bd prime                # Refresh Beads context
 
 **Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/SYNC_CONCEPTS.md for details and anti-patterns.
 <!-- END BEADS CODEX SETUP -->
+
+## Windows / PowerShell Guidelines
+
+When writing or executing PowerShell commands or scripts:
+
+1. **Brackets in Paths (Wildcard Prevention)**:
+   - Next.js dynamic routes often contain brackets (e.g., `[path]`). PowerShell cmdlets (like `Get-Content`, `Set-Content`, `Remove-Item`) treat brackets as wildcards by default when using `-Path`.
+   - **Always use `-LiteralPath` instead of `-Path`** to prevent wildcard expansion errors when manipulating files.
+
+2. **Cross-Version PowerShell Compatibility**:
+   - Parameters like `-Raw` (on `Get-Content`) or `-NoNewline` (on `Set-Content`) are not supported in older PowerShell versions.
+   - For robust file reading and writing across all PowerShell versions, prefer using direct .NET APIs:
+     - Read entire file: `[System.IO.File]::ReadAllText($filePath)`
+     - Write entire file: `[System.IO.File]::WriteAllText($filePath, $content)`
+
