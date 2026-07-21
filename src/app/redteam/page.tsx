@@ -77,11 +77,14 @@ export default function RedTeamLab() {
   const currentLevel = levels[currentLevelIdx];
 
   // Initialize chat when level changes
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setChatHistory([
       { role: "system", content: `Connected to Agent Node: ${currentLevel.title}`, status: "info" },
       { role: "system", content: `System Directives: ${currentLevel.systemPrompt}`, status: "info" }
     ]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setUserInput("");
   }, [currentLevelIdx, currentLevel.title, currentLevel.systemPrompt]);
 

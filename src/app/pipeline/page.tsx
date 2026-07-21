@@ -35,6 +35,7 @@ export default function PipelineBuilder() {
 
   const addBlock = (block: PipelineBlock) => {
     // Generate a unique ID for the instance in the pipeline
+    // eslint-disable-next-line react-hooks/purity
     setPipeline([...pipeline, { ...block, id: `${block.type}_${Date.now()}` }]);
     setResults(null);
   };
@@ -80,9 +81,9 @@ export default function PipelineBuilder() {
         }
 
         // Check for PII before LLM
-        let llmIndex = pipeline.findIndex(b => b.type === "llm");
+        const llmIndex = pipeline.findIndex(b => b.type === "llm");
         if (llmIndex > -1) {
-          let piiBeforeLLM = pipeline.findIndex((b, idx) => b.type === "pii_scrubber" && idx < llmIndex);
+          const piiBeforeLLM = pipeline.findIndex((b, idx) => b.type === "pii_scrubber" && idx < llmIndex);
           if (piiBeforeLLM === -1) {
             msgs.push("CRITICAL: PII Scrubber missing before LLM. Member SSNs were sent to OpenAI.");
             passed = false;
@@ -92,7 +93,7 @@ export default function PipelineBuilder() {
           }
 
           // Check for guardrail after LLM
-          let guardAfterLLM = pipeline.findIndex((b, idx) => b.type === "guardrail" && idx > llmIndex);
+          const guardAfterLLM = pipeline.findIndex((b, idx) => b.type === "guardrail" && idx > llmIndex);
           if (guardAfterLLM === -1) {
             msgs.push("WARNING: No Output Guardrail after LLM. The AI recommended a discriminatory loan product.");
             passed = false;

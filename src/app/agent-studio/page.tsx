@@ -67,8 +67,8 @@ function getAutoLoanRate() {
             traceLog.push({ type: "THINK", content: "The tool did not return the expected rate of '5.25%'." });
             traceLog.push({ type: "FINAL_ANSWER", content: "I'm sorry, I could not retrieve the correct rate." });
           }
-        } catch (e: any) {
-          traceLog.push({ type: "ERROR", content: `Tool execution failed: ${e.message}` });
+        } catch (e: unknown) {
+          traceLog.push({ type: "ERROR", content: `Tool execution failed: ${(e as Error).message}` });
           traceLog.push({ type: "FINAL_ANSWER", content: "I encountered an internal error while fetching the rates." });
         }
         
@@ -123,8 +123,8 @@ function getAutoLoanRate() {
             traceLog.push({ type: "ERROR", content: "The tool approved a non-compliant message! ECOA violation detected." });
             traceLog.push({ type: "FINAL_ANSWER", content: "We guarantee you will be approved for a $50k loan! (COMPLIANCE FAILURE)" });
           }
-        } catch (e: any) {
-          traceLog.push({ type: "ERROR", content: `Tool execution failed: ${e.message}` });
+        } catch (e: unknown) {
+          traceLog.push({ type: "ERROR", content: `Tool execution failed: ${(e as Error).message}` });
         }
         
         return { success, trace: traceLog };
@@ -164,8 +164,8 @@ function getAutoLoanRate() {
           } else {
             traceLog.push({ type: "ERROR", content: "Routed to the wrong agent. The Loan Agent cannot help with passwords." });
           }
-        } catch (e: any) {
-          traceLog.push({ type: "ERROR", content: `Tool execution failed: ${e.message}` });
+        } catch (e: unknown) {
+          traceLog.push({ type: "ERROR", content: `Tool execution failed: ${(e as Error).message}` });
         }
         
         return { success, trace: traceLog };
@@ -176,9 +176,13 @@ function getAutoLoanRate() {
   const currentMission = missions[currentMissionIdx];
 
   // Load default code when switching missions
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCode(currentMission.defaultCode);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTrace([]);
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMissionSuccess(null);
   }, [currentMissionIdx]);
 
@@ -255,7 +259,7 @@ function getAutoLoanRate() {
               Agentic AI Studio
             </h1>
             <p style={{ color: "var(--text-secondary)", maxWidth: "800px" }}>
-              Learn how to build autonomous AI agents. Write custom tool code and watch the agent's internal "ReAct" (Reasoning + Action) execution loop in real-time.
+              Learn how to build autonomous AI agents. Write custom tool code and watch the agent&apos;s internal &quot;ReAct&quot; (Reasoning + Action) execution loop in real-time.
             </p>
           </div>
           
@@ -365,7 +369,7 @@ function getAutoLoanRate() {
               
               {trace.length === 0 && !isRunning && (
                 <div style={{ color: "var(--text-muted)", fontSize: "0.9rem", textAlign: "center", marginTop: "40px" }}>
-                  Write your tool code and click "Run Agent" to see the execution trace.
+                  Write your tool code and click &quot;Run Agent&quot; to see the execution trace.
                 </div>
               )}
               

@@ -230,7 +230,7 @@ export default function Home() {
               <div>
                 <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Agentic AI Studio</h3>
                 <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                  Learn how to build autonomous AI agents. Write custom tool code and watch the agent's internal "ReAct" execution loop in a simulated IDE.
+                  Learn how to build autonomous AI agents. Write custom tool code and watch the agent&apos;s internal &quot;ReAct&quot; execution loop in a simulated IDE.
                 </p>
               </div>
               <div style={{ marginTop: "auto" }}>
