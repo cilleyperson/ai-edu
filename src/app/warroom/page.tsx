@@ -3,7 +3,7 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, ShieldAlert, Activity, Users, DollarSign, Target, CheckCircle2, AlertTriangle, ArrowRight } from "lucide-react";
 
@@ -166,7 +166,7 @@ export default function WarRoom() {
             Executive War Room
           </h1>
           <p style={{ color: "var(--text-secondary)", maxWidth: "800px" }}>
-            Tabletop crisis simulator. You are the crisis commander during an unfolding AI security incident. Make executive decisions to protect the credit union's reputation, regulatory compliance, and financial standing.
+            Tabletop crisis simulator. You are the crisis commander during an unfolding AI security incident. Make executive decisions to protect the credit union&apos;s reputation, regulatory compliance, and financial standing.
           </p>
         </div>
 
