@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Jonathan Cilley <jonathan.cilley@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-only
+
 import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
