@@ -210,6 +210,37 @@ export default function Home() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }} className="labs-grid">
             
+            {/* Lab 0: Red Team CTF Lab */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "var(--danger-glow, rgba(239, 68, 68, 0.1))", 
+                  color: "var(--danger, #ef4444)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(239, 68, 68, 0.2)"
+                }}
+              >
+                <ShieldAlert style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>AI Red Teaming CTF</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Put on your hacker hat. Test your prompt injection and jailbreaking skills by attacking simulated LLM agents. Find the vulnerabilities before the bad guys do.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/redteam" className="btn btn-primary" style={{ backgroundColor: "var(--danger, #ef4444)", color: "#fff", border: "none", padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch CTF Lab</span>
+                  <Zap style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
             {/* Lab 1: Prompt Lab */}
             <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
               <div 
@@ -299,6 +330,68 @@ export default function Home() {
                 <Link href="/simulator" className="btn btn-accent" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
                   <span>Launch Simulator Lab</span>
                   <Zap style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 3.5: Executive War Room */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "rgba(99, 102, 241, 0.1)", 
+                  color: "var(--primary)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(99, 102, 241, 0.2)"
+                }}
+              >
+                <Award style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Executive War Room</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Tabletop crisis simulator. Act as the crisis commander during an unfolding AI security incident. Make executive decisions to protect the credit union.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/warroom" className="btn btn-primary" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch Simulator</span>
+                  <ChevronRight style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 3.75: Pipeline Builder */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "rgba(16, 185, 129, 0.1)", 
+                  color: "var(--success)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(16, 185, 129, 0.2)"
+                }}
+              >
+                <Database style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Visual AI Pipeline Builder</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Construct a secure Agentic AI pipeline. Assemble your architecture to handle PII and hallucinations before deploying to production.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/pipeline" className="btn btn-primary" style={{ backgroundColor: "var(--success)", color: "#fff", border: "none", padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch Builder</span>
+                  <ChevronRight style={{ width: 14, height: 14 }} />
                 </Link>
               </div>
             </div>
