@@ -1,3 +1,6 @@
+// Copyright (C) 2026 Jonathan Cilley <jonathan.cilley@gmail.com>
+// SPDX-License-Identifier: GPL-3.0-only
+
 "use client";
 
 import React, { useState } from "react";
