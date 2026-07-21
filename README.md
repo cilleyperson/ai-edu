@@ -115,3 +115,10 @@ Ensure code quality and layout alignment by running validation commands:
 - **NCUA Letter to Credit Unions 22-CU-05** (Fiduciary AI Risk Management)
 - **GLBA (Gramm-Leach-Bliley Act)** (Financial privacy & member data protections)
 - **ECOA (Equal Credit Opportunity Act)** (Fair lending algorithmic bias requirements)
+
+---
+
+## 📄 License
+
+This project is licensed under the GNU General Public License v3.0 - see the [LICENSE](file:///c:/Users/jonat/dev-projects/ai-edu/LICENSE) file for details.
+
