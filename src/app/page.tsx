@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ProgressTracker from "@/components/ProgressTracker";
 import Certificate from "@/components/Certificate";
-import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles, Terminal, FileText, Database, Calculator } from "lucide-react";
+import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles, Terminal, FileText, Database, Calculator, Code2 } from "lucide-react";
 
 export default function Home() {
   const [completed, setCompleted] = useState({ staff: false, management: false, board: false, infosec: false, engineering: false });
@@ -210,6 +210,37 @@ export default function Home() {
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "24px" }} className="labs-grid">
             
+            {/* Lab -1: Agent Studio */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "rgba(99, 102, 241, 0.1)", 
+                  color: "var(--primary)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(99, 102, 241, 0.2)"
+                }}
+              >
+                <Code2 style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Agentic AI Studio</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Learn how to build autonomous AI agents. Write custom tool code and watch the agent's internal "ReAct" execution loop in a simulated IDE.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/agent-studio" className="btn btn-primary" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch Studio</span>
+                  <ChevronRight style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
             {/* Lab 0: Red Team CTF Lab */}
             <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
               <div 
