@@ -75,6 +75,54 @@ export default function GlossaryPage() {
       definition: "An agentic planning loop where the AI alternates between 'thinking' (reasoning about goals) and 'acting' (invoking database lookups or calculators) until a problem is solved.",
       analogy: "Like a teller: 1. Think ('The member wants to withdraw $100'). 2. Act (Check account balance). 3. Observe ('Balance is $500'). 4. Think ('It is safe to withdraw'). 5. Act (Hand over money).",
       category: "Technical"
+    },
+    {
+      term: "Prompt Injection",
+      definition: "A technique where malicious prompts bypass an LLM's system-defined guardrails, hijacking the model to output unintended information, override its safety protocols, or execute unauthorized code.",
+      analogy: "Like a member showing up at the teller window and convincing the teller to ignore the standard ID policy because 'the CEO verbally pre-approved this special transaction.'",
+      category: "Security"
+    },
+    {
+      term: "AI Red Teaming",
+      definition: "The practice of systematically probing, attacking, and testing an AI model or agent pipeline to discover bugs, prompt injection vulnerabilities, alignment gaps, or data leaks before deploy.",
+      analogy: "A mock audit where a security consultant tries to break into the bank vault or trick the staff into revealing passwords to find security loopholes.",
+      category: "Security"
+    },
+    {
+      term: "Zero-Data-Retention (ZDR)",
+      definition: "A service agreement structure with AI model vendors guaranteeing that any data sent to their APIs is deleted immediately after inference and never used for model training or logging.",
+      analogy: "Sending financial documents to a third-party scanner who shreds the pages immediately after digitalization instead of saving them in their own file cabinets.",
+      category: "Security"
+    },
+    {
+      term: "Tokenizer",
+      definition: "A program that breaks continuous strings of text into numerical fragments (tokens) so they can be processed mathematically by a large language model.",
+      analogy: "A sorting machine that breaks down coins and bills into standard rolls and bundles before depositing them into the credit union vault.",
+      category: "Technical"
+    },
+    {
+      term: "Semantic Similarity",
+      definition: "A measure of how closely related two concept representations are in a vector space, regardless of whether they share exact keyword matches.",
+      analogy: "Recognizing that 'car loan,' 'auto financing,' and 'vehicle purchase rate' are all seeking the same core service, even if the keywords are completely different.",
+      category: "Technical"
+    },
+    {
+      term: "Fair Lending Bias",
+      definition: "Disparate, discriminatory outcomes produced by model algorithms that systematically penalize applicants based on protected characteristics like age, race, or zip code.",
+      analogy: "Using an outdated lending model that automatically declines applicants from specific areas, inadvertently causing redlining.",
+      category: "Oversight"
+    },
+    {
+      term: "LUA (Letter of Understanding and Agreement)",
+      definition: "A binding regulatory directive from the NCUA specifying precise corrective actions a credit union must take to resolve safety, soundness, or compliance issues.",
+      analogy: "A formal performance improvement plan issued by credit union regulators with strict deadlines and operational requirements.",
+      category: "Oversight"
+    },
+    {
+      term: "Zero-Trust Security",
+      definition: "A cyber security architecture model that assumes every access request is hostile and requires verification, continuous validation, and least-privilege constraints.",
+      analogy: "A branch policy requiring tellers to verify the ID and account details of a customer for every single step of a transaction, even if they recognize the customer.",
+      category: "Security"
     }
   ];
 
