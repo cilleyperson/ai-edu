@@ -24,6 +24,10 @@ interface PathProgress {
   embeddingUsed: boolean;
   tokenizerUsed: boolean;
   biasAudited: boolean;
+  redteamLvl1: boolean;
+  redteamLvl2: boolean;
+  warroomUsed: boolean;
+  pipelineUsed: boolean;
 }
 
 export default function ProgressTracker() {
@@ -45,6 +49,10 @@ export default function ProgressTracker() {
     embeddingUsed: false,
     tokenizerUsed: false,
     biasAudited: false,
+    redteamLvl1: false,
+    redteamLvl2: false,
+    warroomUsed: false,
+    pipelineUsed: false,
   });
 
   useEffect(() => {
@@ -68,6 +76,10 @@ export default function ProgressTracker() {
       const embeddingVal = localStorage.getItem("cu_ai_progress_embeddings") === "completed";
       const tokenizerVal = localStorage.getItem("cu_ai_progress_tokenizer") === "completed";
       const biasVal = localStorage.getItem("cu_ai_progress_bias") === "completed";
+      const rtLvl1 = localStorage.getItem("cu_ai_redteam_lvl1") === "completed";
+      const rtLvl2 = localStorage.getItem("cu_ai_redteam_lvl2") === "completed";
+      const warroomVal = localStorage.getItem("cu_ai_warroom_completed") === "completed";
+      const pipelineVal = localStorage.getItem("cu_ai_pipeline_completed") === "completed";
 
       setProgress({
         staff: staffVal,
@@ -87,6 +99,10 @@ export default function ProgressTracker() {
         embeddingUsed: embeddingVal,
         tokenizerUsed: tokenizerVal,
         biasAudited: biasVal,
+        redteamLvl1: rtLvl1,
+        redteamLvl2: rtLvl2,
+        warroomUsed: warroomVal,
+        pipelineUsed: pipelineVal,
       });
     };
 
@@ -194,6 +210,30 @@ export default function ProgressTracker() {
       color: "#f59e0b",
     },
     {
+      id: "redteam_badge",
+      title: "Red Team Specialist",
+      description: "Captured the flags in AI Red Teaming CTF Labs",
+      unlocked: progress.redteamLvl1 && progress.redteamLvl2,
+      icon: Terminal,
+      color: "#ef4444",
+    },
+    {
+      id: "warroom_badge",
+      title: "Crisis Commander",
+      description: "Successfully navigated an AI crisis in the Executive War Room",
+      unlocked: progress.warroomUsed,
+      icon: Award,
+      color: "#6366f1",
+    },
+    {
+      id: "pipeline_badge",
+      title: "Pipeline Architect",
+      description: "Deployed a secure AI pipeline using the visual builder",
+      unlocked: progress.pipelineUsed,
+      icon: Database,
+      color: "#10b981",
+    },
+    {
       id: "infosec_badge",
       title: "Zero-Trust Sentinel",
       description: "Completed Information Security Path",
@@ -213,7 +253,7 @@ export default function ProgressTracker() {
       id: "master",
       title: "Platform Master",
       description: "Unlocked all credit union AI credentials",
-      unlocked: progress.staff && progress.management && progress.board && progress.infosec && progress.engineering && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited,
+      unlocked: progress.staff && progress.management && progress.board && progress.infosec && progress.engineering && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited && progress.redteamLvl1 && progress.redteamLvl2 && progress.warroomUsed && progress.pipelineUsed,
       icon: Award,
       color: "#e11d48",
     },
