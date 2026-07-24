@@ -8,9 +8,10 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { 
   Cpu, BookOpen, ShieldAlert, Award, HelpCircle, Menu, X, 
-  BookOpenCheck, Terminal, FileText, ChevronDown, Database, Calculator 
+  BookOpenCheck, Terminal, FileText, ChevronDown, Database, Calculator, Search
 } from "lucide-react";
 import UserNav from "./UserNav";
+import CommandPalette from "./CommandPalette";
 
 export default function Header() {
   const pathname = usePathname();
@@ -21,6 +22,19 @@ export default function Header() {
     governance: false
   });
   const [progress, setProgress] = useState({ staff: false, management: false, board: false, infosec: false, engineering: false });
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Global Ctrl+K / Cmd+K listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === "k") {
+        e.preventDefault();
+        setIsSearchOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   // Load progress from localStorage
   useEffect(() => {
@@ -260,6 +274,26 @@ export default function Header() {
             </span>
           </div>
 
+          {/* Quick Command Palette Search Button */}
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="btn btn-secondary"
+            style={{
+              padding: "6px 12px",
+              fontSize: "0.8rem",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              background: "rgba(255, 255, 255, 0.04)",
+              border: "1px solid var(--border-color)",
+              color: "var(--text-secondary)",
+            }}
+          >
+            <Search style={{ width: 14, height: 14 }} />
+            <span>Search</span>
+            <kbd style={{ fontSize: "0.7rem", opacity: 0.6, background: "rgba(255,255,255,0.1)", padding: "1px 5px", borderRadius: "4px" }}>⌘K</kbd>
+          </button>
+
           {/* User Session & Login Navigation Widget */}
           <UserNav />
 
@@ -436,6 +470,8 @@ export default function Header() {
           }
         }
       `}</style>
+      {/* Command Palette Modal */}
+      <CommandPalette isOpen={isSearchOpen} onClose={() => setIsSearchOpen(false)} />
     </header>
   );
 }
