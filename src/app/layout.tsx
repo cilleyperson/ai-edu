@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
+import { AuthProvider } from "@/components/AuthProvider";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -41,13 +42,15 @@ export default function RootLayout({
           <div className="bg-glow-3"></div>
         </div>
 
-        {/* Global Navigation Header */}
-        <Header />
+        <AuthProvider>
+          {/* Global Navigation Header */}
+          <Header />
 
-        {/* Main Content Area */}
-        <main style={{ minHeight: "calc(100vh - 80px)" }}>
-          {children}
-        </main>
+          {/* Main Content Area */}
+          <main style={{ minHeight: "calc(100vh - 80px)" }}>
+            {children}
+          </main>
+        </AuthProvider>
       </body>
     </html>
   );
