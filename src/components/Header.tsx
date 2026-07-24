@@ -10,6 +10,7 @@ import {
   Cpu, BookOpen, ShieldAlert, Award, HelpCircle, Menu, X, 
   BookOpenCheck, Terminal, FileText, ChevronDown, Database, Calculator 
 } from "lucide-react";
+import UserNav from "./UserNav";
 
 export default function Header() {
   const pathname = usePathname();
@@ -258,6 +259,9 @@ export default function Header() {
               Paths: <strong style={{ color: "var(--text-primary)" }}>{completedCount}/5</strong>
             </span>
           </div>
+
+          {/* User Session & Login Navigation Widget */}
+          <UserNav />
 
           {/* Hamburger Menu Icon */}
           <button

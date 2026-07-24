@@ -4,7 +4,8 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Award, BookOpen, ShieldAlert, Sparkles, CheckCircle2, Terminal, Cpu, FileText, Database, Calculator, Code2, BrainCircuit, UserCheck } from "lucide-react";
+import { Award, BookOpen, ShieldAlert, Sparkles, CheckCircle2, Terminal, Cpu, FileText, Database, Calculator, Code2, BrainCircuit, UserCheck, CloudCheck, LogIn } from "lucide-react";
+import { useAuth } from "./AuthProvider";
 
 interface PathProgress {
   staff: boolean;
@@ -295,8 +296,40 @@ export default function ProgressTracker() {
     },
   ];
 
+  const { user } = useAuth();
+
   return (
     <div className="card" style={{ padding: "24px" }}>
+      {/* Cloud Sync Status Banner */}
+      <div
+        style={{
+          padding: "10px 14px",
+          marginBottom: "16px",
+          borderRadius: "var(--radius-md)",
+          background: user ? "rgba(16, 185, 129, 0.08)" : "rgba(99, 102, 241, 0.08)",
+          border: `1px solid ${user ? "rgba(16, 185, 129, 0.25)" : "rgba(99, 102, 241, 0.25)"}`,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          fontSize: "0.85rem",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+          {user ? (
+            <CloudCheck style={{ width: 16, height: 16, color: "var(--success)" }} />
+          ) : (
+            <LogIn style={{ width: 16, height: 16, color: "var(--primary)" }} />
+          )}
+          <span style={{ color: "var(--text-secondary)" }}>
+            {user ? (
+              <>Cloud Sync Active for <strong>{user.email}</strong></>
+            ) : (
+              <>Guest Mode: Progress saved locally. Sign in to sync across devices.</>
+            )}
+          </span>
+        </div>
+      </div>
+
       <h3 style={{ marginBottom: "16px", fontSize: "1.3rem" }} className="gradient-text-indigo">
         Your Learning Dashboard
       </h3>
