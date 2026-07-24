@@ -9,8 +9,13 @@ export interface OAuthUserProfile {
   provider: string;
 }
 
+function cleanBaseUrl(url: string): string {
+  return url.trim().replace(/\/+$/, "");
+}
+
 export function getOAuthAuthUrl(provider: string, baseUrl: string): string | null {
-  const redirectUri = `${baseUrl}/api/auth/callback/${provider}`;
+  const cleanUrl = cleanBaseUrl(baseUrl);
+  const redirectUri = `${cleanUrl}/api/auth/callback/${provider}`;
 
   if (provider === "google") {
     const clientId = process.env.GOOGLE_CLIENT_ID;
@@ -59,7 +64,8 @@ export async function processOAuthCallback(
   code: string,
   baseUrl: string
 ): Promise<OAuthUserProfile | null> {
-  const redirectUri = `${baseUrl}/api/auth/callback/${provider}`;
+  const cleanUrl = cleanBaseUrl(baseUrl);
+  const redirectUri = `${cleanUrl}/api/auth/callback/${provider}`;
 
   if (provider === "google") {
     const clientId = process.env.GOOGLE_CLIENT_ID;
