@@ -4,7 +4,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Award, BookOpen, ShieldAlert, Sparkles, CheckCircle2, Terminal, Cpu, FileText, Database, Calculator, Code2 } from "lucide-react";
+import { Award, BookOpen, ShieldAlert, Sparkles, CheckCircle2, Terminal, Cpu, FileText, Database, Calculator, Code2, BrainCircuit, UserCheck } from "lucide-react";
 
 interface PathProgress {
   staff: boolean;
@@ -29,6 +29,8 @@ interface PathProgress {
   warroomUsed: boolean;
   pipelineUsed: boolean;
   agentStudioCompleted: boolean;
+  xaiCompleted: boolean;
+  hitlCompleted: boolean;
 }
 
 export default function ProgressTracker() {
@@ -55,6 +57,8 @@ export default function ProgressTracker() {
     warroomUsed: false,
     pipelineUsed: false,
     agentStudioCompleted: false,
+    xaiCompleted: false,
+    hitlCompleted: false,
   });
 
   useEffect(() => {
@@ -83,6 +87,8 @@ export default function ProgressTracker() {
       const warroomVal = localStorage.getItem("cu_ai_warroom_completed") === "completed";
       const pipelineVal = localStorage.getItem("cu_ai_pipeline_completed") === "completed";
       const agentStudioVal = localStorage.getItem("cu_ai_agent_studio_completed") === "completed";
+      const xaiVal = localStorage.getItem("cu_ai_xai_completed") === "completed";
+      const hitlVal = localStorage.getItem("cu_ai_hitl_completed") === "completed";
 
       setProgress({
         staff: staffVal,
@@ -107,6 +113,8 @@ export default function ProgressTracker() {
         warroomUsed: warroomVal,
         pipelineUsed: pipelineVal,
         agentStudioCompleted: agentStudioVal,
+        xaiCompleted: xaiVal,
+        hitlCompleted: hitlVal,
       });
     };
 
@@ -246,6 +254,22 @@ export default function ProgressTracker() {
       color: "#6366f1",
     },
     {
+      id: "xai_badge",
+      title: "Model Interpreter",
+      description: "Interpreted feature importance in the Explainable AI Lab",
+      unlocked: progress.xaiCompleted,
+      icon: BrainCircuit,
+      color: "#0ea5e9",
+    },
+    {
+      id: "hitl_badge",
+      title: "Human Overseer",
+      description: "Successfully triaged AI-generated tasks in the HITL Simulator",
+      unlocked: progress.hitlCompleted,
+      icon: UserCheck,
+      color: "#10b981",
+    },
+    {
       id: "infosec_badge",
       title: "Zero-Trust Sentinel",
       description: "Completed Information Security Path",
@@ -265,7 +289,7 @@ export default function ProgressTracker() {
       id: "master",
       title: "Platform Master",
       description: "Unlocked all credit union AI credentials",
-      unlocked: progress.staff && progress.management && progress.board && progress.infosec && progress.engineering && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited && progress.redteamLvl1 && progress.redteamLvl2 && progress.warroomUsed && progress.pipelineUsed && progress.agentStudioCompleted,
+      unlocked: progress.staff && progress.management && progress.board && progress.infosec && progress.engineering && progress.riskMatrixUsed && progress.playgroundScore >= 70 && progress.ragUsed && progress.vendorAudited && progress.embeddingUsed && progress.tokenizerUsed && progress.biasAudited && progress.redteamLvl1 && progress.redteamLvl2 && progress.warroomUsed && progress.pipelineUsed && progress.agentStudioCompleted && progress.xaiCompleted && progress.hitlCompleted,
       icon: Award,
       color: "#e11d48",
     },
