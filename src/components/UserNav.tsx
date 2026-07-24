@@ -13,6 +13,20 @@ export default function UserNav() {
   const [showModal, setShowModal] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [isSyncing, setIsSyncing] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      const err = url.searchParams.get("auth_error");
+      if (err) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setAuthError(err);
+        url.searchParams.delete("auth_error");
+        window.history.replaceState({}, "", url.pathname + url.search);
+      }
+    }
+  }, []);
 
   const handleManualSync = async () => {
     setIsSyncing(true);
@@ -206,6 +220,23 @@ export default function UserNav() {
                 Sync your badges, certificates, and scores across all your devices with cloud backup.
               </p>
             </div>
+
+            {authError && (
+              <div
+                style={{
+                  padding: "10px 14px",
+                  marginBottom: "16px",
+                  borderRadius: "var(--radius-md)",
+                  backgroundColor: "rgba(239, 68, 68, 0.1)",
+                  border: "1px solid rgba(239, 68, 68, 0.3)",
+                  color: "var(--danger, #ef4444)",
+                  fontSize: "0.85rem",
+                  textAlign: "center",
+                }}
+              >
+                {authError}
+              </div>
+            )}
 
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
               <button
