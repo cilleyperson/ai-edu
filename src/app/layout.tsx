@@ -6,6 +6,7 @@ import { Outfit, Inter } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/Header";
 import { AuthProvider } from "@/components/AuthProvider";
+import { ToastProvider } from "@/components/ToastProvider";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -43,13 +44,15 @@ export default function RootLayout({
         </div>
 
         <AuthProvider>
-          {/* Global Navigation Header */}
-          <Header />
+          <ToastProvider>
+            {/* Global Navigation Header */}
+            <Header />
 
-          {/* Main Content Area */}
-          <main style={{ minHeight: "calc(100vh - 80px)" }}>
-            {children}
-          </main>
+            {/* Main Content Area */}
+            <main style={{ minHeight: "calc(100vh - 80px)" }}>
+              {children}
+            </main>
+          </ToastProvider>
         </AuthProvider>
       </body>
     </html>
