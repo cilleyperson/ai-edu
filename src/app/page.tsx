@@ -7,7 +7,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import ProgressTracker from "@/components/ProgressTracker";
 import Certificate from "@/components/Certificate";
-import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles, Terminal, FileText, Database, Calculator, Code2 } from "lucide-react";
+import { BookOpen, Award, ShieldAlert, Cpu, ChevronRight, Zap, Shield, Sparkles, Terminal, FileText, Database, Calculator, Code2, BrainCircuit, UserCheck } from "lucide-react";
 
 export default function Home() {
   const [completed, setCompleted] = useState({ staff: false, management: false, board: false, infosec: false, engineering: false });
@@ -422,6 +422,68 @@ export default function Home() {
               <div style={{ marginTop: "auto" }}>
                 <Link href="/pipeline" className="btn btn-primary" style={{ backgroundColor: "var(--success)", color: "#fff", border: "none", padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
                   <span>Launch Builder</span>
+                  <ChevronRight style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 3.8: XAI Lab */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "var(--accent-glow)", 
+                  color: "var(--accent)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(6, 182, 212, 0.2)"
+                }}
+              >
+                <BrainCircuit style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Explainable AI (XAI) Lab</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Visualize how an AI model makes lending decisions. Adjust feature weights to see a SHAP-like breakdown for regulatory transparency and ECOA compliance.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/xai-lab" className="btn btn-accent" style={{ padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch XAI Lab</span>
+                  <ChevronRight style={{ width: 14, height: 14 }} />
+                </Link>
+              </div>
+            </div>
+
+            {/* Lab 3.9: HITL Simulator */}
+            <div className="card card-hover" style={{ padding: "30px", display: "flex", flexDirection: "column", gap: "16px" }}>
+              <div 
+                style={{ 
+                  width: "50px", 
+                  height: "50px", 
+                  borderRadius: "var(--radius-md)", 
+                  background: "rgba(16, 185, 129, 0.1)", 
+                  color: "var(--success)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  border: "1px solid rgba(16, 185, 129, 0.2)"
+                }}
+              >
+                <UserCheck style={{ width: 26, height: 26 }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: "1.25rem", marginBottom: "6px" }}>Human-in-the-Loop Simulator</h3>
+                <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
+                  Act as a human overseer. Review AI-drafted responses for compliance violations, hallucination, and factual accuracy before approving them.
+                </p>
+              </div>
+              <div style={{ marginTop: "auto" }}>
+                <Link href="/hitl-simulator" className="btn btn-primary" style={{ backgroundColor: "var(--success)", color: "#fff", border: "none", padding: "10px 18px", fontSize: "0.85rem", width: "100%" }}>
+                  <span>Launch HITL Simulator</span>
                   <ChevronRight style={{ width: 14, height: 14 }} />
                 </Link>
               </div>

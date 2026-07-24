@@ -176,14 +176,12 @@ function getAutoLoanRate() {
   const currentMission = missions[currentMissionIdx];
 
   // Load default code when switching missions
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setCode(currentMission.defaultCode);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTrace([]);
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMissionSuccess(null);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentMissionIdx]);
 
   useEffect(() => {
