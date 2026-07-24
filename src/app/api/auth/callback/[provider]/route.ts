@@ -11,7 +11,7 @@ export async function GET(
   const { provider } = await params;
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
-  const baseUrl = process.env.NEXTAUTH_URL || url.origin;
+  const baseUrl = (process.env.NEXTAUTH_URL || url.origin).trim().replace(/\/+$/, "");
 
   if (!code) {
     return NextResponse.redirect(`${baseUrl}/?auth_error=Missing+authorization+code`);

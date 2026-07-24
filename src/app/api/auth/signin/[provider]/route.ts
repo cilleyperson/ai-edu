@@ -10,7 +10,7 @@ export async function GET(
 ) {
   const { provider } = await params;
   const url = new URL(request.url);
-  const baseUrl = process.env.NEXTAUTH_URL || url.origin;
+  const baseUrl = (process.env.NEXTAUTH_URL || url.origin).trim().replace(/\/+$/, "");
 
   const authUrl = getOAuthAuthUrl(provider, baseUrl);
 
