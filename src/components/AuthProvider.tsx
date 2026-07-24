@@ -3,7 +3,7 @@
 
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 
 export interface UserSession {
   id: string;
@@ -16,7 +16,7 @@ export interface UserSession {
 interface AuthContextType {
   user: UserSession | null;
   status: "authenticated" | "unauthenticated" | "loading";
-  login: (provider: "google" | "github" | "microsoft", customEmail?: string) => Promise<void>;
+  login: (provider: "google" | "github" | "microsoft") => Promise<void>;
   logout: () => void;
   syncCloudProgress: () => Promise<void>;
 }
@@ -35,60 +35,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserSession | null>(null);
   const [status, setStatus] = useState<"authenticated" | "unauthenticated" | "loading">("loading");
 
-  useEffect(() => {
-    const stored = localStorage.getItem("cu_ai_user_session");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        // eslint-disable-next-line react-hooks/set-state-in-effect
-        setUser(parsed);
-        setStatus("authenticated");
-      } catch {
-        localStorage.removeItem("cu_ai_user_session");
-        setStatus("unauthenticated");
-      }
-    } else {
-      setStatus("unauthenticated");
-    }
-  }, []);
-
-  const login = async (provider: "google" | "github" | "microsoft", customEmail?: string) => {
-    setStatus("loading");
-    try {
-      const response = await fetch("/api/auth/nextauth", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          provider,
-          email: customEmail || `cu_member@${provider}.org`,
-          name: `${provider.toUpperCase()} Credit Union Member`,
-        }),
-      });
-
-      const data = await response.json();
-      if (data.success && data.user) {
-        setUser(data.user);
-        setStatus("authenticated");
-        localStorage.setItem("cu_ai_user_session", JSON.stringify(data.user));
-
-        // Auto-trigger cloud sync on login
-        await triggerSync(data.user.id);
-        window.dispatchEvent(new Event("progressUpdated"));
-      }
-    } catch {
-      setStatus("unauthenticated");
-    }
-  };
-
-  const logout = () => {
-    setUser(null);
-    setStatus("unauthenticated");
-    localStorage.removeItem("cu_ai_user_session");
-    window.dispatchEvent(new Event("progressUpdated"));
-  };
-
-  const triggerSync = async (userId: string) => {
-    // Read local progress from localStorage
+  const triggerSync = useCallback(async (userId: string) => {
     const localPayload = {
       staff: localStorage.getItem("cu_ai_progress_staff") === "completed",
       management: localStorage.getItem("cu_ai_progress_management") === "completed",
@@ -124,7 +71,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       const data = await res.json();
       if (data.success && data.progress) {
-        // Write merged back to local storage
         const p = data.progress;
         if (p.staff) localStorage.setItem("cu_ai_progress_staff", "completed");
         if (p.management) localStorage.setItem("cu_ai_progress_management", "completed");
@@ -154,6 +100,68 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Offline fallback
     }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      const isAuthSuccess = url.searchParams.get("auth_success") === "true";
+      const userId = url.searchParams.get("user_id");
+
+      if (isAuthSuccess && userId) {
+        const sessionUser: UserSession = {
+          id: userId,
+          name: url.searchParams.get("user_name") || "CU Learner",
+          email: url.searchParams.get("user_email") || "user@creditunion.org",
+          provider: url.searchParams.get("user_provider") || "oauth",
+          image: url.searchParams.get("user_image") || undefined,
+        };
+
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        setUser(sessionUser);
+        setStatus("authenticated");
+        localStorage.setItem("cu_ai_user_session", JSON.stringify(sessionUser));
+
+        url.searchParams.delete("auth_success");
+        url.searchParams.delete("user_id");
+        url.searchParams.delete("user_name");
+        url.searchParams.delete("user_email");
+        url.searchParams.delete("user_provider");
+        url.searchParams.delete("user_image");
+        window.history.replaceState({}, "", url.pathname + url.search);
+
+        triggerSync(userId);
+        return;
+      }
+    }
+
+    const stored = localStorage.getItem("cu_ai_user_session");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored);
+        setUser(parsed);
+        setStatus("authenticated");
+      } catch {
+        localStorage.removeItem("cu_ai_user_session");
+        setStatus("unauthenticated");
+      }
+    } else {
+      setStatus("unauthenticated");
+    }
+  }, [triggerSync]);
+
+  const login = async (provider: "google" | "github" | "microsoft") => {
+    setStatus("loading");
+    if (typeof window !== "undefined") {
+      window.location.href = `/api/auth/signin/${provider}`;
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+    setStatus("unauthenticated");
+    localStorage.removeItem("cu_ai_user_session");
+    window.dispatchEvent(new Event("progressUpdated"));
   };
 
   const syncCloudProgress = async () => {
