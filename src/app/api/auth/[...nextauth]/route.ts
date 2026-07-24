@@ -12,7 +12,6 @@ export async function GET(request: Request) {
       providers: [
         { id: "google", name: "Google", type: "oauth" },
         { id: "github", name: "GitHub", type: "oauth" },
-        { id: "microsoft", name: "Microsoft Entra ID", type: "oauth" },
       ],
     });
   }

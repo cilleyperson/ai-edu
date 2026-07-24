@@ -114,7 +114,7 @@ AI University is a comprehensive, interactive, web-based educational portal buil
 
 ## 🔐 Enabling Live OAuth Integrations & Database Sync
 
-To enable live Google, GitHub, and Microsoft Entra ID authentication and persistent database storage (supported on **Laravel Forge** environments):
+To enable live Google and GitHub authentication and persistent database storage (supported on **Laravel Forge** environments):
 
 1. **Copy Environment Template**:
    ```bash
@@ -132,7 +132,6 @@ To enable live Google, GitHub, and Microsoft Entra ID authentication and persist
 3. **Register OAuth Applications**:
    - **Google**: Register an app in [Google Cloud Console](https://console.cloud.google.com/). Set Authorized Redirect URI to `https://your-domain.com/api/auth/callback/google`.
    - **GitHub**: Create a new OAuth App in [GitHub Developer Settings](https://github.com/settings/developers). Set Callback URL to `https://your-domain.com/api/auth/callback/github`.
-   - **Microsoft**: Register an application in [Microsoft Entra Admin Center](https://entra.microsoft.com/). Set Web Redirect URI to `https://your-domain.com/api/auth/callback/microsoft`.
 
 ---
 

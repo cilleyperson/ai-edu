@@ -16,7 +16,7 @@ export interface UserSession {
 interface AuthContextType {
   user: UserSession | null;
   status: "authenticated" | "unauthenticated" | "loading";
-  login: (provider: "google" | "github" | "microsoft") => Promise<void>;
+  login: (provider: "google" | "github") => Promise<void>;
   logout: () => void;
   syncCloudProgress: () => Promise<void>;
 }
@@ -150,7 +150,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [triggerSync]);
 
-  const login = async (provider: "google" | "github" | "microsoft") => {
+  const login = async (provider: "google" | "github") => {
     setStatus("loading");
     if (typeof window !== "undefined") {
       window.location.href = `/api/auth/signin/${provider}`;
