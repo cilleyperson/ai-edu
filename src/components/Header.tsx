@@ -256,19 +256,18 @@ export default function Header() {
         {/* Progress Tracker Widget */}
         <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
           <div
-            className="card"
             style={{
-              padding: "6px 12px",
+              padding: "4px 12px",
               borderRadius: "var(--radius-full)",
               display: "flex",
               alignItems: "center",
               gap: "8px",
-              fontSize: "0.85rem",
-              background: "rgba(255, 255, 255, 0.03)",
-              borderColor: "var(--border-color)",
+              fontSize: "0.8rem",
+              background: "rgba(255, 255, 255, 0.04)",
+              border: "1px solid var(--border-color)",
             }}
           >
-            <BookOpenCheck style={{ width: 16, height: 16, color: "var(--success)" }} />
+            <BookOpenCheck style={{ width: 15, height: 15, color: "var(--success)" }} />
             <span style={{ color: "var(--text-secondary)", fontWeight: 500 }}>
               Paths: <strong style={{ color: "var(--text-primary)" }}>{completedCount}/5</strong>
             </span>
