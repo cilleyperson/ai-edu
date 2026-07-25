@@ -537,22 +537,21 @@ export default function Tokenizer() {
               style={{ padding: "6px 12px", fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "6px" }}
             >
               <RefreshCw style={{ width: 14, height: 14 }} />
-              <span>Reset Flagship Baseline</span>
+              <span>Reset Baseline</span>
             </button>
           </div>
 
-          {/* Model Matrix Table */}
-          <div style={{ overflowX: "auto" }}>
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+          <div className="data-table-container">
+            <table className="data-table">
               <thead>
-                <tr style={{ borderBottom: "1px solid var(--border-color)", textAlign: "left" }}>
-                  <th style={{ padding: "12px 14px", color: "var(--text-muted)" }}>Model</th>
-                  <th style={{ padding: "12px 14px", color: "var(--text-muted)" }}>Provider</th>
-                  <th style={{ padding: "12px 14px", color: "var(--text-muted)" }}>Input $/1M</th>
-                  <th style={{ padding: "12px 14px", color: "var(--text-muted)" }}>Output $/1M</th>
-                  <th style={{ padding: "12px 14px", color: "var(--text-muted)" }}>Per Query</th>
-                  <th style={{ padding: "12px 14px", color: "var(--text-muted)" }}>Annual OpEx</th>
-                  <th style={{ padding: "12px 14px", color: "var(--text-muted)", width: "120px" }}>Select</th>
+                <tr>
+                  <th>Model Name</th>
+                  <th>Provider</th>
+                  <th>Input $/1M</th>
+                  <th>Output $/1M</th>
+                  <th>Per Query</th>
+                  <th>Annual OpEx</th>
+                  <th style={{ width: "120px" }}>Select</th>
                 </tr>
               </thead>
               <tbody>

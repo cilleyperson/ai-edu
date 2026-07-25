@@ -352,70 +352,28 @@ export default function Home() {
           }}
           className="animate-fade-in-up"
         >
-          <div
-            className="card"
-            style={{
-              padding: "18px 20px",
-              display: "flex",
-              alignItems: "center",
-              gap: "14px",
-              background: "rgba(99, 102, 241, 0.06)",
-              border: "1px solid rgba(99, 102, 241, 0.2)",
-            }}
-          >
-            <div style={{ padding: "10px", borderRadius: "10px", backgroundColor: "rgba(99, 102, 241, 0.15)", color: "var(--primary)" }}>
-              <TrendingUp style={{ width: 22, height: 22 }} />
+          <div className="metric-card">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span className="metric-label">Overall Mastery</span>
+              <TrendingUp style={{ width: 18, height: 18, color: "var(--primary)" }} />
             </div>
-            <div>
-              <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Overall Mastery</span>
-              <p style={{ margin: "2px 0 0 0", fontSize: "1.3rem", fontWeight: 800, color: "var(--text-primary)" }}>
-                {totalMasteryScore}%
-              </p>
-            </div>
+            <p className="metric-value">{totalMasteryScore}%</p>
           </div>
 
-          <div
-            className="card"
-            style={{
-              padding: "18px 20px",
-              display: "flex",
-              alignItems: "center",
-              gap: "14px",
-              background: "rgba(16, 185, 129, 0.06)",
-              border: "1px solid rgba(16, 185, 129, 0.2)",
-            }}
-          >
-            <div style={{ padding: "10px", borderRadius: "10px", backgroundColor: "rgba(16, 185, 129, 0.15)", color: "var(--success)" }}>
-              <CheckCircle2 style={{ width: 22, height: 22 }} />
+          <div className="metric-card">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span className="metric-label">Unlocked Credentials</span>
+              <CheckCircle2 style={{ width: 18, height: 18, color: "var(--success)" }} />
             </div>
-            <div>
-              <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Unlocked Credentials</span>
-              <p style={{ margin: "2px 0 0 0", fontSize: "1.3rem", fontWeight: 800, color: "var(--text-primary)" }}>
-                {completedCount} / 17
-              </p>
-            </div>
+            <p className="metric-value">{completedCount} / 17</p>
           </div>
 
-          <div
-            className="card"
-            style={{
-              padding: "18px 20px",
-              display: "flex",
-              alignItems: "center",
-              gap: "14px",
-              background: "rgba(245, 158, 11, 0.06)",
-              border: "1px solid rgba(245, 158, 11, 0.2)",
-            }}
-          >
-            <div style={{ padding: "10px", borderRadius: "10px", backgroundColor: "rgba(245, 158, 11, 0.15)", color: "var(--warning)" }}>
-              <Flame style={{ width: 22, height: 22 }} />
+          <div className="metric-card">
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <span className="metric-label">NCUA Compliance Status</span>
+              <Flame style={{ width: 18, height: 18, color: "var(--warning)" }} />
             </div>
-            <div>
-              <span style={{ fontSize: "0.8rem", color: "var(--text-muted)", textTransform: "uppercase" }}>Learning Streak</span>
-              <p style={{ margin: "2px 0 0 0", fontSize: "1.3rem", fontWeight: 800, color: "var(--text-primary)" }}>
-                Active Learner
-              </p>
-            </div>
+            <p className="metric-value" style={{ fontSize: "1.2rem", marginTop: "4px" }}>Audit Ready</p>
           </div>
         </div>
 
@@ -441,10 +399,10 @@ export default function Home() {
 
               <div>
                 <div style={{ display: "flex", alignItems: "center", gap: "8px", marginBottom: "4px" }}>
-                  <span className="badge badge-indigo" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}>
-                    <Sparkles style={{ width: 12, height: 12 }} /> Adaptive Learning Copilot
+                  <span className="badge badge-indigo">
+                    Adaptive Learning Copilot
                   </span>
-                  <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Recommended Next Milestone</span>
+                  <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Recommended Milestone</span>
                 </div>
                 <h3 style={{ margin: "0 0 4px 0", fontSize: "1.3rem", color: "var(--text-primary)" }}>
                   Next Target: {copilotRecommendation.title}
