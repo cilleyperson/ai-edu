@@ -89,3 +89,15 @@ model UserProgress {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
+
+model ModelPrice {
+  id            String   @id
+  name          String
+  provider      String
+  inputPrice    Float    // Price per 1M tokens (USD)
+  outputPrice   Float    // Price per 1M tokens (USD)
+  contextWindow String
+  tier          String
+  updatedAt     DateTime @updatedAt
+}
+
