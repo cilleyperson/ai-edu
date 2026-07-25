@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import UserNav from "./UserNav";
 import CommandPalette from "./CommandPalette";
+import ThemeToggle from "./ThemeToggle";
 
 export default function Header() {
   const pathname = usePathname();
@@ -292,6 +293,9 @@ export default function Header() {
             <span>Search</span>
             <kbd style={{ fontSize: "0.7rem", opacity: 0.6, background: "rgba(255,255,255,0.1)", padding: "1px 5px", borderRadius: "4px" }}>⌘K</kbd>
           </button>
+
+          {/* Theme Selector Widget */}
+          <ThemeToggle />
 
           {/* User Session & Login Navigation Widget */}
           <UserNav />

@@ -66,6 +66,28 @@
   --shadow-lg: 0 12px 36px -4px rgba(0, 0, 0, 0.6);
 }
 
+/* Light Theme Overrides */
+html[data-theme="light"] {
+  --surface-base: #f8fafc;
+  --surface-card: #ffffff;
+  --surface-hover: #f1f5f9;
+  --surface-elevated: #e2e8f0;
+  --surface-overlay: #cbd5e1;
+  
+  --border-color: rgba(0, 0, 0, 0.08);
+  --border-subtle: rgba(0, 0, 0, 0.04);
+  --border-strong: rgba(0, 0, 0, 0.16);
+  --border-active: #4f46e5;
+  
+  --text-primary: #0f172a;
+  --text-secondary: #334155;
+  --text-muted: #64748b;
+  
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 20px -2px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 36px -4px rgba(0, 0, 0, 0.12);
+}
+
 body {
   background-color: var(--surface-base);
   color: var(--text-primary);
@@ -92,6 +114,14 @@ body {
     linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px);
   background-size: 100% 100%, 40px 40px, 40px 40px;
   pointer-events: none;
+}
+
+html[data-theme="light"] .bg-gradient-wrapper {
+  background-color: var(--surface-base);
+  background-image: 
+    radial-gradient(circle at 50% 0%, rgba(99, 102, 241, 0.06) 0%, transparent 60%),
+    linear-gradient(rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
 }
 
 /* Layout Containers */
