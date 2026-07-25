@@ -56,12 +56,13 @@ export default function Tokenizer() {
   const fetchLivePricing = useCallback(async (isManual: boolean = false) => {
     setIsSyncing(true);
     try {
-      const res = await fetch("/api/models/pricing");
+      const url = isManual ? "/api/models/pricing?force=true" : "/api/models/pricing";
+      const res = await fetch(url);
       const data = await res.json();
 
       if (data.success && Array.isArray(data.models)) {
         setModels(data.models);
-        const formattedTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        const formattedTime = new Date(data.lastUpdated || Date.now()).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
         setLastSyncedTime(formattedTime);
 
         try {
@@ -241,9 +242,9 @@ export default function Tokenizer() {
           >
             <Radio style={{ width: 18, height: 18, color: "var(--success)" }} className={isSyncing ? "animate-pulse" : ""} />
             <div>
-              <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>Live API Rate Sync</span>
+              <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>Database 24h Auto-Refresh</span>
               <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)" }}>
-                {lastSyncedTime ? `Synced at ${lastSyncedTime}` : "Auto-Sync Ready"}
+                {lastSyncedTime ? `Synced at ${lastSyncedTime}` : "Database Feed Ready"}
               </span>
             </div>
             <button
