@@ -6,9 +6,18 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import confetti from "canvas-confetti";
-import { 
-  ArrowLeft, Download, Printer, Building, Users, CheckSquare, 
-  Shield, ShieldAlert, ClipboardList, Info, FileText
+import {
+  ArrowLeft,
+  Download,
+  Printer,
+  Building,
+  Users,
+  CheckSquare,
+  Shield,
+  ShieldAlert,
+  ClipboardList,
+  FileText,
+  Award,
 } from "lucide-react";
 
 interface PolicyData {
@@ -21,20 +30,36 @@ interface PolicyData {
   governingBody: string;
   aiLiaisonRole: string;
   boardReviewFrequency: string;
+
+  // Approved Use Cases
   useCaseChatbot: boolean;
   useCaseUnderwriting: boolean;
   useCaseFraud: boolean;
   useCaseMarketing: boolean;
   useCaseDocProcessing: boolean;
+
+  // Security & Data Privacy
   allowPublicGenAI: boolean;
   piiRestrictions: string;
   hitlRequired: boolean;
   biasCheckFrequency: string;
   vendorDiligenceRequired: boolean;
+
+  // Research Guidance & Regulatory Alignment (from docs/ai-gov-bp.md)
+  ncuaPrioritiesAligned: boolean;
+  cfpbCircular202203Aligned: boolean;
+  interagencyTprmAligned: boolean;
+  cfpbChatbotUdaapAligned: boolean;
+  nistRmfFramework: boolean;
+  iso42001Certified: boolean;
+  explainabilityTelemetry: boolean;
+  fourthPartyConsentRequired: boolean;
+  unrestrictedRightToAudit: boolean;
+  dataDestructionGuarantee: boolean;
 }
 
 export default function PolicyBuilderPage() {
-  const [activeTab, setActiveTab] = useState<"profile" | "governance" | "usecases" | "risk" | "compliance">("profile");
+  const [activeTab, setActiveTab] = useState<"profile" | "governance" | "usecases" | "risk" | "tprm">("profile");
   const [viewMode, setViewMode] = useState<"edit" | "preview">("edit");
   const [showPrintModal, setShowPrintModal] = useState(false);
 
@@ -43,27 +68,40 @@ export default function PolicyBuilderPage() {
     const today = new Date();
     const future = new Date();
     future.setDate(today.getDate() + 30);
-    
+
     return {
       creditUnionName: "Community First Credit Union",
       assetSize: "$250 Million - $1 Billion",
       stateJurisdiction: "Washington",
-      version: "1.0",
+      version: "2.0",
       effectiveDate: today.toISOString().split("T")[0],
       boardApprovalDate: future.toISOString().split("T")[0],
-      governingBody: "AI Steering Committee",
+      governingBody: "Executive AI Steering Committee",
       aiLiaisonRole: "Chief Risk Officer",
       boardReviewFrequency: "Annually",
+
       useCaseChatbot: true,
-      useCaseUnderwriting: false,
+      useCaseUnderwriting: true,
       useCaseFraud: true,
       useCaseMarketing: true,
       useCaseDocProcessing: true,
+
       allowPublicGenAI: false,
       piiRestrictions: "Strict Prohibition",
       hitlRequired: true,
       biasCheckFrequency: "Quarterly",
-      vendorDiligenceRequired: true
+      vendorDiligenceRequired: true,
+
+      ncuaPrioritiesAligned: true,
+      cfpbCircular202203Aligned: true,
+      interagencyTprmAligned: true,
+      cfpbChatbotUdaapAligned: true,
+      nistRmfFramework: true,
+      iso42001Certified: true,
+      explainabilityTelemetry: true,
+      fourthPartyConsentRequired: true,
+      unrestrictedRightToAudit: true,
+      dataDestructionGuarantee: true,
     };
   });
 
@@ -71,117 +109,178 @@ export default function PolicyBuilderPage() {
     const { name, value, type } = e.target;
     if (type === "checkbox") {
       const checked = (e.target as HTMLInputElement).checked;
-      setFormData(prev => ({ ...prev, [name]: checked }));
+      setFormData((prev) => ({ ...prev, [name]: checked }));
     } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({ ...prev, [name]: value }));
     }
   };
 
-  const handleSelectRadio = (name: string, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
-
-  // Generate Markdown Text
+  // Generate Markdown Text incorporating research from docs/ai-gov-bp.md
   const generateMarkdown = () => {
     const selectedUseCases = [];
     if (formData.useCaseChatbot) {
-      selectedUseCases.push(`*   **Member Support Chatbot:** Conversational agent deployed to assist members with FAQ searches, basic troubleshooting, and navigational guidance.`);
+      selectedUseCases.push(
+        `*   **Member Support Chatbots & Conversational AI:** Conversational agents deployed for member FAQ response, basic troubleshooting, and navigational guidance. Subject to CFPB CFPA Section 1036 UDAAP safeguards and mandatory Regulation E (EFT) / Regulation Z (Billing Dispute) human escalation triggers.`
+      );
     }
     if (formData.useCaseUnderwriting) {
-      selectedUseCases.push(`*   **Credit Underwriting Assistant:** Algorithmic assessment tools that review credit histories, calculate debt-to-income ratios, and provide creditworthiness recommendations to underwriters.`);
+      selectedUseCases.push(
+        `*   **Automated Credit Underwriting & Risk Scoring:** Algorithmic credit scoring and DTI calculation models evaluating loan applications. Subject to CFPB Circular 2022-03 explainability rules, SHAP/LIME feature attributions, and quarterly ECOA fair lending bias audits.`
+      );
     }
     if (formData.useCaseFraud) {
-      selectedUseCases.push(`*   **Fraud Detection & AML Compliance:** Real-time transaction pattern monitoring to identify suspicious deposits, potential identity theft, and compliance flags.`);
+      selectedUseCases.push(
+        `*   **Fraud Screening & Transaction Monitoring:** Real-time transaction pattern recognition to detect account takeover, identity theft, and synthetic voice/video deepfake attacks.`
+      );
     }
     if (formData.useCaseMarketing) {
-      selectedUseCases.push(`*   **Marketing Content Drafting:** Large Language Models (LLMs) used by creative staff to generate initial drafts for email campaigns, blog posts, and educational resources.`);
+      selectedUseCases.push(
+        `*   **Marketing Content Drafting & Personalization:** Generative AI models assisting staff in drafting promotional text, member newsletter copy, and financial literacy guides.`
+      );
     }
     if (formData.useCaseDocProcessing) {
-      selectedUseCases.push(`*   **Member Document Processing:** Machine learning OCR systems designed to extract structural data from tax filings, paystubs, and mortgage deeds.`);
+      selectedUseCases.push(
+        `*   **Member Document Processing & OCR Extraction:** Machine learning vision models extracting structured data from tax documents, pay stubs, and mortgage deeds.`
+      );
     }
 
     if (selectedUseCases.length === 0) {
-      selectedUseCases.push(`*   *No specific use cases selected. All AI deployments require individual steering committee review and risk classification.*`);
+      selectedUseCases.push(
+        `*   *No specific use cases selected. All AI deployments require individual Steering Committee review and risk classification.*`
+      );
     }
 
     return `# ${formData.creditUnionName.toUpperCase()}
-# ARTIFICIAL INTELLIGENCE (AI) POLICY & GOVERNANCE FRAMEWORK
+# ENTERPRISE ARTIFICIAL INTELLIGENCE (AI) GOVERNANCE & COMPLIANCE POLICY
 
-**Document Status:** Approved & Active
-**Policy Version:** ${formData.version}
-**Effective Date:** ${formData.effectiveDate}
-**Board Approval Date:** ${formData.boardApprovalDate}
-**Policy Owner:** ${formData.aiLiaisonRole}
-**State Jurisdiction:** ${formData.stateJurisdiction}
-**Asset Size Tier:** ${formData.assetSize}
-
----
-
-## 1. OBJECTIVE & SCOPE
-The mission of **${formData.creditUnionName}** is to serve our member-owners with integrity, financial safety, and absolute prudence. As we integrate Artificial Intelligence (AI) technologies—including Machine Learning (ML), Large Language Models (LLMs), and Generative AI—into our operational workflows, this Policy establishes a rigorous governance framework.
-
-This policy applies to all employees, contractors, board directors, and third-party software partners. It is structured to align with the technology-neutral examination expectations of the **National Credit Union Administration (NCUA)**, the **NIST AI Risk Management Framework (AI RMF 1.0)**, and the **Gramm-Leach-Bliley Act (GLBA)** privacy requirements.
+**Document Status:** Approved & Active  
+**Policy Version:** ${formData.version} (Incorporating NCUA 2026 Supervisory Priorities & Interagency Guidance)  
+**Effective Date:** ${formData.effectiveDate}  
+**Board Approval Date:** ${formData.boardApprovalDate}  
+**Policy Owner:** ${formData.aiLiaisonRole}  
+**Primary Governing Body:** ${formData.governingBody}  
+**Jurisdiction:** State of ${formData.stateJurisdiction} | NCUA Region  
+**Asset Classification:** ${formData.assetSize}  
 
 ---
 
-## 2. GOVERNANCE & RESPONSIBILITIES
-To maintain clear organizational oversight and accountability, the Credit Union establishes the following governance matrix:
+## 1. EXECUTIVE OBJECTIVE & REGULATORY ALIGNMENT
 
-1.  **Board of Directors:** Retains ultimate fiduciary duty. The Board reviews and approves this Policy ${formData.boardReviewFrequency.toLowerCase()}, monitors systemic algorithmic risks, and evaluates AI integrations within annual capital planning.
-2.  **${formData.governingBody}:** The primary governing committee responsible for reviewing and approving all proposed AI use cases, maintaining the central AI Use Case Inventory, auditing compliance logs, and approving risk exceptions.
-3.  **Primary AI Liaison (${formData.aiLiaisonRole}):** Appointed to oversee day-to-day AI implementation, lead vendor risk assessments, coordinate compliance testing, and serve as the main point of contact for external audits.
-4.  **Business Unit Owners:** Retain operational accountability for AI systems deployed within their departments, ensuring staff adhere to prompt safety rules and manual output verification.
+### 1.1 Purpose
+The mission of **${formData.creditUnionName}** is to serve our member-owners with financial integrity, operational safety, and absolute fiduciary prudence. As the Credit Union integrates Artificial Intelligence (AI), Machine Learning (ML), and Large Language Models (LLMs) into member service, underwriting, and risk monitoring, this Policy establishes an examiner-defensible governance framework.
 
----
-
-## 3. APPROVED AI USE CASES & OPERATIONAL BOUNDS
-AI technologies may only be deployed for use cases explicitly reviewed and authorized by the **${formData.governingBody}**. The initially approved use cases include:
-
-${selectedUseCases.join("\n")}
-
-### Generative AI Usage Rules (Public vs. Enterprise)
-*   **Public GenAI Platforms:** ${formData.allowPublicGenAI ? "Allowed for low-risk business tasks (e.g. email brainstorming, text formatting) strictly subject to entering zero member data or proprietary information." : "Strictly PROHIBITED for all business operations. Employees are forbidden from using consumer-facing public GenAI accounts (e.g., public ChatGPT, Gemini, Claude) for any Credit Union work."}
-*   **Member PII Handling:** Under GLBA compliance, **${formData.piiRestrictions === "Strict Prohibition" ? "under no circumstances may Nonpublic Personal Information (PII) or financial data be entered into external AI systems." : "any member PII or financial data must be fully anonymized or masked using approved cryptographic sanitization libraries before processing."}**
-*   **Human-in-the-Loop (HITL) Gate:** ${formData.hitlRequired ? "Mandatory. No high-risk AI output (including credit recommendations, account modifications, or member communications) may be executed autonomously. A qualified Credit Union officer must review and verify the outputs prior to execution." : "Recommended. High-risk systems require manual review, whereas moderate/low risk systems may operate under automated supervision."}
+### 1.2 Statutory & Supervisory Framework
+This policy explicitly incorporates technology-neutral supervisory expectations established by federal regulatory authorities:
+*   **NCUA 2026 Supervisory Priorities & CAIO Directives:** Aligned with Office of Management and Budget (OMB) Memorandum M-25-21 and the AI in Government Act of 2020. Artificial intelligence deployments are evaluated through core examination pillars including BSA/AML, ECOA, GLBA, and Third-Party Risk Management (TPRM).
+*   **CFPB Circular 2022-03 (Adverse Action Disclosures):** Mandates specific, accurate principal reason disclosures under ECOA (Regulation B) for algorithmic credit denials. Technological complexity is strictly prohibited as a defense for "black-box" decision opacity.
+*   **2023 Interagency Guidance on Third-Party Relationships:** Enforces non-delegable institutional liability for all third-party AI fintech vendors and sub-processors.
+*   **CFPB Chatbot Guidance & CFPA Section 1036:** Prevents Unfair, Deceptive, or Abusive Acts or Practices (UDAAP) in automated member communications and enforces mandatory escalation for Regulation E (Electronic Fund Transfers) and Regulation Z (Truth in Lending) disputes.
+*   **NIST AI Risk Management Framework (NIST AI RMF 1.0):** Operationalizes technical trustworthiness across four core functions: **Govern, Map, Measure, and Manage**.
 
 ---
 
-## 4. RISK TIER CLASSIFICATION & AUDITS
-To calibrate due diligence, the Credit Union adopts a three-tier risk model:
+## 2. STRATEGIC GOVERNANCE ARCHITECTURE & OVERSIGHT
 
-| Risk Tier | Definition | Review & Audit Requirements |
-| :--- | :--- | :--- |
-| **Low Risk** | Productivity tools, code assistants, internal spelling checks. | General compliance review; standard IT security scan. |
-| **Moderate Risk** | Marketing drafting, internal knowledge base Q&A, FAQ chatbots. | Vendor due diligence, compliance reviews, annual output spot-audits. |
-| **High Risk** | Credit scoring, automated underwriting recommendations, fraud alerts, collections. | Full Model Risk Validation, **${formData.biasCheckFrequency}** bias audits, mandatory HITL, Board-level notifications. |
-
----
-
-## 5. REGULATORY COMPLIANCE & FAIR LENDING
-The Credit Union is committed to preventing algorithmic bias and complying with the **Equal Credit Opportunity Act (ECOA / Regulation B)** and CFPB guidelines.
-
-1.  **Algorithmic Discrimination:** AI models used in underwriting, pricing, or collections are prohibited from utilizing protected classes (e.g., race, gender, age, marital status) as input features, or mathematical proxies thereof.
-2.  **Adverse Action Notices:** If an AI system recommends the denial or modification of credit, the Credit Union must provide the member with a clear, specific, and legally compliant Adverse Action explanation. Vague terms like "algorithmic score" are prohibited.
-3.  **Quantitative Bias Testing:** All High-Risk models must undergo **${formData.biasCheckFrequency}** quantitative testing to detect disparate impact anomalies. Testing records shall be maintained for exam review.
+### 2.1 Governance Roles & Accountabilities
+1.  **Board of Directors:** Retains ultimate fiduciary duty. The Board approves this Policy ${formData.boardReviewFrequency.toLowerCase()}, establishes the institutional AI Risk Appetite, and reviews model risk exposure during capital planning.
+2.  **${formData.governingBody}:** Cross-functional executive body comprising Risk, Compliance, Lending, IT, and Operations. Responsible for approving new AI use cases, maintaining the central AI Asset Inventory, reviewing SHAP/LIME explainability audits, and evaluating vendor due diligence files.
+3.  **Primary AI Liaison (${formData.aiLiaisonRole}):** Manages day-to-day AI risk operations, coordinates model revalidations, reviews telemetry logs, and serves as primary point-of-contact for NCUA examiners.
+4.  **Model Risk Management (MRM) Team:** Conducts independent pre-deployment model validations, bias audits, and drift monitoring.
+5.  **Third-Party Risk Management (TPRM) Team:** Executes initial vendor due diligence, contract negotiations, SOC report reviews, and 4th-party subcontractor tracking.
 
 ---
 
-## 6. THIRD-PARTY VENDOR DUE DILIGENCE
-Since the Credit Union utilizes third-party SaaS providers for AI capability, all AI vendors must undergo strict security reviews:
+## 3. THREE-TIER AI RISK TAXONOMY & OPERATIONAL SAFEGUARDS
 
-*   **Security & Audit Rights:** Vendors must provide SOC 2 Type II reports and agree to regular auditing by Credit Union auditors or the NCUA.
-*   **Data Ownership:** Contracts must explicitly state that the **Credit Union retains 100% ownership** of all inputted data and prompt history.
-*   **Non-Training Clause:** ${formData.vendorDiligenceRequired ? "Contracts MUST explicitly forbid the vendor from training their public or shared AI models on Credit Union member data or prompts." : "Contracts should seek non-training clauses, or establish dedicated virtual private tenants to separate Credit Union data."}
+To calibrate due diligence, **${formData.creditUnionName}** categorizes all automated systems into three risk tiers:
 
----
-
-## 7. COMPLIANCE & ENFORCEMENT
-Violations of this Policy may result in disciplinary action up to and including termination. Suspicious AI outputs, potential data leaks, or algorithmic anomalies must be reported immediately to the **${formData.aiLiaisonRole}** or via the anonymous compliance hotline.
+| AI Risk Tier | Categorization Criteria & Scope | Approved Credit Union Use Cases | Mandatory Governance Safeguards |
+| :--- | :--- | :--- | :--- |
+| **High Risk** | Direct impact on credit availability, financial standing, BSA/AML, or legal rights. | Automated credit underwriting, dynamic risk pricing, BSA/AML monitoring, automated fraud blocking. | Pre-deployment bias testing (AIR/Marginal Effect), full SHAP/LIME validation, decision logging by design, mandatory ${formData.hitlRequired ? "Human-in-the-Loop (HITL)" : "Steering Committee review"}, **${formData.biasCheckFrequency}** fair lending audits. |
+| **Moderate Risk** | Direct member interaction or operational routing without binding financial decisions. | Member-facing chatbots, marketing segmentation, loan doc OCR routing, internal knowledge Q&A. | Real-time accuracy validation, RAG hallucination guardrails, mandatory Reg E/Z human escalation triggers, NPI privacy masking. |
+| **Low Risk** | Isolated internal productivity tools operating without member data access. | Code assistance tools, internal document formatting, aggregated operational analytics. | Baseline IT security scan, Data Loss Prevention (DLP) monitoring, acceptable use policy enforcement. |
 
 ---
 
-## 8. DISCLAIMER & LEGAL NOTICE
-*This document serves as the internal operational policy for ${formData.creditUnionName}. It is designed for regulatory preparedness and organizational risk mapping. It does not constitute formal legal counsel. The Credit Union shall consult legal advisors to ensure compliance with changing state and federal AI statutes.*
+## 4. APPROVED USE CASES & OPERATIONAL BOUNDS
+
+The Credit Union authorizes the following initial AI use cases, strictly subject to the specified operational controls:
+
+${selectedUseCases.join("\n\n")}
+
+### Generative AI Usage & Data Privacy Rules
+*   **Public GenAI Platforms:** ${formData.allowPublicGenAI ? "Permitted ONLY for non-sensitive administrative task brainstorming, strictly prohibited from receiving member NPI or proprietary credit union data." : "STRICTLY PROHIBITED for all business operations. Employees are forbidden from using consumer-facing public accounts (e.g. ChatGPT, Claude) for credit union work."}
+*   **Member PII Safeguards:** Under GLBA compliance, **${formData.piiRestrictions === "Strict Prohibition" ? "under no circumstances may Nonpublic Personal Information (PII) or financial data be entered into external AI systems." : "any member PII or financial data must be fully anonymized or masked using approved cryptographic sanitization libraries before processing."}**
+*   **Human-in-the-Loop (HITL) Requirement:** ${formData.hitlRequired ? "Mandatory for all High-Risk AI outputs. No automated system may issue binding credit denials, account closures, or wire transfers without explicit sign-off by a qualified credit union officer." : "Recommended for High-Risk workflows; automated execution permitted under strict real-time telemetry monitoring."}
+
+---
+
+## 5. MODEL RISK MANAGEMENT, FAIR LENDING & EXPLAINABILITY TELEMETRY
+
+### 5.1 Fair Lending Compliance (ECOA / Regulation B)
+Models involved in underwriting or credit evaluation are strictly prohibited from utilizing protected attributes (race, gender, age, marital status) or proxy variables (e.g. zip code, educational background). Continuous fair lending monitoring requires **${formData.biasCheckFrequency}** bias audits utilizing Adverse Impact Ratios (AIR) and Marginal Effect Analysis.
+
+### 5.2 Algorithmic Explainability & CFPB Circular 2022-03
+To comply with Adverse Action notification requirements, all complex non-linear models must integrate local explainability pipelines (SHAP or LIME). Mathematical factor attributions are mapped directly to standardized ECOA denial reason codes. Vague justifications such as "algorithmic score" are legally non-compliant.
+
+### 5.3 Immutable Decision Logging Telemetry
+Every automated credit or risk decision must generate an immutable audit log capturing:
+
+| Telemetry Field | Audit & Regulatory Purpose |
+| :--- | :--- |
+| **Timestamp & Session ID** | Verifies execution timing and operational context. |
+| **Model ID & Version** | Ensures model version control and validation tracking. |
+| **Ingested Data Inputs** | FCRA / ECOA data accuracy safeguards. |
+| **Raw Model Probability Score** | Captures mathematical confidence and drift. |
+| **Local Feature Attributions** | Quantifies top 4 negative impact factors via SHAP/LIME values. |
+| **Executed Action & ECOA Codes** | Logs final action (Approved, Referred, Denied) and exact adverse action reason codes. |
+
+---
+
+## 6. THIRD-PARTY RISK MANAGEMENT (TPRM) & VENDOR CLAUSES
+
+In compliance with the 2023 Interagency Guidance on Third-Party Relationships, all AI fintech vendors must undergo a structured 5-stage lifecycle evaluation:
+
+1.  **Planning:** Classify vendor criticality and define risk boundaries.
+2.  **Due Diligence:** Evaluate model provenance, training data sources, and verify **ISO 42001 (AI Management System)** and **AIUC-1 (AI Agent Standard)** certifications.
+3.  **Contract Negotiation:** Mandatory inclusion of:
+    *   **Unrestricted Right-to-Audit:** Grants Credit Union and NCUA examiners independent authority to audit models, code, and security controls.
+    *   **4th-Party Subcontractor Consent:** Vendors must obtain explicit Credit Union consent before introducing new sub-processors or model updates.
+    *   **Data Non-Training Clause:** Explicitly forbids vendors from training public/shared models on Credit Union data.
+4.  **Ongoing Monitoring:** Continuous review of SOC 2 Type II reports, SLA metrics, and annual model revalidations.
+5.  **Termination & Data Destruction:** Enforce secure extraction and destruction of member NPI and decision logs upon offboarding.
+
+---
+
+## 7. MEMBER CHATBOTS, UDAAP PREVENTION & FRAUD DEFENSE
+
+### 7.1 Chatbot Safeguards & CFPA Section 1036
+Member-facing conversational agents operating under Retrieval-Augmented Generation (RAG) must adhere to strict retrieval boundaries. Misleading responses regarding account fees or loan terms constitute UDAAP violations under CFPA Section 1036.
+
+### 7.2 Mandatory Dispute Escalation Triggers
+Automated agents are programmed to detect statutory dispute language under **Regulation E (Electronic Fund Transfers)** and **Regulation Z (Truth in Lending)** and immediately execute a seamless transfer to a human compliance representative.
+
+### 7.3 AI-Driven Fraud Protections
+To counter synthetic voice (vishing), deepfake video, and prompt injection attacks, the Credit Union deploys biometric liveness verification and API guardrails for all remote onboarding and wire transfer channels.
+
+---
+
+## 8. SIX-STAGE OPERATIONAL IMPLEMENTATION BLUEPRINT
+
+To maintain compliance readiness, the Credit Union executes a structured 6-stage operational blueprint:
+1.  **AI Asset Inventory:** Maintain a centralized inventory of all active AI models and risk classifications.
+2.  **Regulatory Mapping:** Map every AI asset to BSA/AML, ECOA, FCRA, GLBA, and UDAAP obligations.
+3.  **Gap Assessment:** Audit vendor contracts and model validation files against Interagency TPRM rules.
+4.  **Architectural Review:** Enforce compliance-first design, decision logging, and data masking.
+5.  **Formal Governance:** Maintain Board Risk Appetite approval and AI Steering Committee charters.
+6.  **Continuous Testing:** Execute **${formData.biasCheckFrequency}** fair lending revalidations and telemetry tracking.
+
+---
+
+## 9. ENFORCEMENT & DISCLAIMER
+Violations of this Policy may result in disciplinary action up to and including termination. Suspicious AI outputs or potential data exposure must be reported immediately to the **${formData.aiLiaisonRole}**.
+
+*This document constitutes the internal AI Governance Policy of ${formData.creditUnionName}. Prepared for NCUA supervisory review and institutional risk management.*
 `;
   };
 
@@ -192,20 +291,18 @@ Violations of this Policy may result in disciplinary action up to and including 
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    
-    // Clean file name
-    const sanitizedCuName = formData.creditUnionName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+
+    const sanitizedCuName = formData.creditUnionName.replace(/[^a-z0-9]/gi, "_").toLowerCase();
     link.setAttribute("download", `${sanitizedCuName}_ai_governance_policy.md`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    
-    // Fire confetti
+
     confetti({
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
-      colors: ["#6366f1", "#a855f7", "#06b6d4"]
+      colors: ["#6366f1", "#a855f7", "#06b6d4"],
     });
   };
 
@@ -218,20 +315,18 @@ Violations of this Policy may result in disciplinary action up to and including 
     setShowPrintModal(false);
     setTimeout(() => {
       window.print();
-      // Fire confetti on complete
       confetti({
         particleCount: 80,
         spread: 60,
         origin: { y: 0.6 },
-        colors: ["#6366f1", "#a855f7", "#06b6d4"]
+        colors: ["#6366f1", "#a855f7", "#06b6d4"],
       });
     }, 500);
   };
 
   return (
-    <div className="section" style={{ paddingTop: "60px", minHeight: "100vh" }}>
+    <div className="section" style={{ paddingTop: "40px", minHeight: "100vh" }}>
       <div className="container">
-        
         {/* Breadcrumb / Back Navigation */}
         <div className="no-print" style={{ marginBottom: "20px" }}>
           <Link href="/" className="btn btn-secondary" style={{ padding: "8px 16px", fontSize: "0.85rem" }}>
@@ -241,1064 +336,517 @@ Violations of this Policy may result in disciplinary action up to and including 
         </div>
 
         {/* Title Block */}
-        <div className="no-print animate-fade-in-up" style={{ marginBottom: "40px" }}>
+        <div className="no-print animate-fade-in-up" style={{ marginBottom: "30px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
-            <span className="badge badge-board">Governance Module</span>
+            <span className="badge badge-board">NCUA 2026 Aligned</span>
+            <span className="badge badge-indigo">NIST AI RMF & ISO 42001</span>
           </div>
           <h1 style={{ fontSize: "2.5rem", marginBottom: "12px" }}>
             AI Policy & <span className="gradient-text">Governance Builder</span>
           </h1>
-          <p style={{ color: "var(--text-secondary)", fontSize: "1.1rem", maxWidth: "800px" }}>
-            Draft a tailored Artificial Intelligence security and compliance policy for your Credit Union. Calibrate risk thresholds, configure vendor limitations, and enforce oversight mechanisms aligned with NCUA technology-neutral review points.
+          <p style={{ color: "var(--text-secondary)", maxWidth: "850px", fontSize: "1.05rem" }}>
+            Configure and export a complete, NCUA-examiner-defensible AI Governance Policy for your credit union. Incorporates CFPB Circular 2022-03 Adverse Action rules, 2023 Interagency TPRM guidance, SHAP/LIME explainability, and ISO 42001 / AIUC-1 standards.
           </p>
         </div>
 
-        {/* Mobile View Toggles */}
-        <div className="no-print flex md:hidden" style={{ display: "none", marginBottom: "20px", gap: "10px" }} id="mobile-view-tabs">
-          <button 
-            onClick={() => setViewMode("edit")} 
-            className={`btn ${viewMode === "edit" ? "btn-primary" : "btn-secondary"}`}
-            style={{ flex: 1, padding: "10px" }}
-          >
-            Configure Policy
-          </button>
-          <button 
-            onClick={() => setViewMode("preview")} 
-            className={`btn ${viewMode === "preview" ? "btn-accent" : "btn-secondary"}`}
-            style={{ flex: 1, padding: "10px" }}
-          >
-            Preview Document
-          </button>
+        {/* View Toggle Bar */}
+        <div
+          className="no-print"
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            flexWrap: "wrap",
+            gap: "16px",
+            marginBottom: "30px",
+            padding: "16px 20px",
+            backgroundColor: "rgba(255, 255, 255, 0.02)",
+            border: "1px solid var(--border-color)",
+            borderRadius: "var(--radius-lg)",
+          }}
+        >
+          {/* Mode Switcher */}
+          <div style={{ display: "flex", gap: "8px", background: "rgba(0,0,0,0.3)", padding: "4px", borderRadius: "var(--radius-md)" }}>
+            <button
+              onClick={() => setViewMode("edit")}
+              className={`btn ${viewMode === "edit" ? "btn-primary" : "btn-secondary"}`}
+              style={{ padding: "8px 16px", fontSize: "0.85rem" }}
+            >
+              <ClipboardList style={{ width: 14, height: 14 }} />
+              <span>Interactive Policy Editor</span>
+            </button>
+
+            <button
+              onClick={() => setViewMode("preview")}
+              className={`btn ${viewMode === "preview" ? "btn-primary" : "btn-secondary"}`}
+              style={{ padding: "8px 16px", fontSize: "0.85rem" }}
+            >
+              <FileText style={{ width: 14, height: 14 }} />
+              <span>Preview Policy Document</span>
+            </button>
+          </div>
+
+          {/* Export Actions */}
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button onClick={downloadMarkdown} className="btn btn-secondary" style={{ padding: "8px 16px", fontSize: "0.85rem" }}>
+              <Download style={{ width: 14, height: 14 }} />
+              <span>Export Markdown (.md)</span>
+            </button>
+
+            <button onClick={handlePrintPDF} className="btn btn-primary" style={{ padding: "8px 16px", fontSize: "0.85rem" }}>
+              <Printer style={{ width: 14, height: 14 }} />
+              <span>Export PDF / Print</span>
+            </button>
+          </div>
         </div>
 
-        {/* Builder Layout Split Panel */}
-        <div className="builder-layout-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: "32px", alignItems: "start" }}>
-          
-          {/* Left Column: Form Questionnaire */}
-          <div className={`no-print card ${viewMode === "edit" ? "block" : "hidden-mobile"}`} style={{ padding: "24px", minHeight: "550px" }}>
-            
-            {/* Tab Navigation Icons */}
-            <div className="form-tabs-bar" style={{ display: "flex", gap: "4px", borderBottom: "1px solid var(--border-color)", paddingBottom: "12px", marginBottom: "24px", overflowX: "auto" }}>
-              <button 
-                type="button"
-                onClick={() => setActiveTab("profile")} 
-                className={`tab-btn ${activeTab === "profile" ? "active" : ""}`}
-                title="Profile Settings"
-              >
-                <Building style={{ width: 16, height: 16 }} />
-                <span>Profile</span>
-              </button>
-              <button 
-                type="button"
-                onClick={() => setActiveTab("governance")} 
-                className={`tab-btn ${activeTab === "governance" ? "active" : ""}`}
-                title="Governance Matrix"
-              >
-                <Users style={{ width: 16, height: 16 }} />
-                <span>Governance</span>
-              </button>
-              <button 
-                type="button"
-                onClick={() => setActiveTab("usecases")} 
-                className={`tab-btn ${activeTab === "usecases" ? "active" : ""}`}
-                title="Use Cases & Safety"
-              >
-                <CheckSquare style={{ width: 16, height: 16 }} />
-                <span>AI Rules</span>
-              </button>
-              <button 
-                type="button"
-                onClick={() => setActiveTab("risk")} 
-                className={`tab-btn ${activeTab === "risk" ? "active" : ""}`}
-                title="Risk Calibration"
-              >
-                <Shield style={{ width: 16, height: 16 }} />
-                <span>Risk Tiers</span>
-              </button>
-              <button 
-                type="button"
-                onClick={() => setActiveTab("compliance")} 
-                className={`tab-btn ${activeTab === "compliance" ? "active" : ""}`}
-                title="Regulatory Verification"
-              >
-                <ClipboardList style={{ width: 16, height: 16 }} />
-                <span>Compliance</span>
-              </button>
-            </div>
-
-            {/* TAB CONTENTS */}
-            
-            {/* Tab 1: Profile */}
-            {activeTab === "profile" && (
-              <div className="form-section">
-                <h3 className="section-title">Credit Union Profile</h3>
-                <p className="section-desc">Define the core organization metadata for the document header.</p>
-                
-                <div className="input-group">
-                  <label htmlFor="creditUnionName">Credit Union Name</label>
-                  <input 
-                    type="text" 
-                    id="creditUnionName" 
-                    name="creditUnionName" 
-                    value={formData.creditUnionName} 
-                    onChange={handleInputChange} 
-                    className="form-input"
-                    placeholder="e.g. Community First CU"
-                  />
-                </div>
-
-                <div className="grid-2-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                  <div className="input-group">
-                    <label htmlFor="stateJurisdiction">State Jurisdiction</label>
-                    <input 
-                      type="text" 
-                      id="stateJurisdiction" 
-                      name="stateJurisdiction" 
-                      value={formData.stateJurisdiction} 
-                      onChange={handleInputChange} 
-                      className="form-input"
-                      placeholder="e.g. Washington"
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label htmlFor="version">Document Version</label>
-                    <input 
-                      type="text" 
-                      id="version" 
-                      name="version" 
-                      value={formData.version} 
-                      onChange={handleInputChange} 
-                      className="form-input"
-                      placeholder="e.g. 1.0"
-                    />
-                  </div>
-                </div>
-
-                <div className="input-group">
-                  <label htmlFor="assetSize">Asset Size Category</label>
-                  <select 
-                    id="assetSize" 
-                    name="assetSize" 
-                    value={formData.assetSize} 
-                    onChange={handleInputChange} 
-                    className="form-select"
-                  >
-                    <option value="Under $250 Million">Under $250 Million</option>
-                    <option value="$250 Million - $1 Billion">$250 Million - $1 Billion</option>
-                    <option value="$1 Billion - $10 Billion">$1 Billion - $10 Billion</option>
-                    <option value="Over $10 Billion">Over $10 Billion</option>
-                  </select>
-                </div>
-
-                <div className="grid-2-col" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
-                  <div className="input-group">
-                    <label htmlFor="effectiveDate">Effective Date</label>
-                    <input 
-                      type="date" 
-                      id="effectiveDate" 
-                      name="effectiveDate" 
-                      value={formData.effectiveDate} 
-                      onChange={handleInputChange} 
-                      className="form-input"
-                    />
-                  </div>
-                  <div className="input-group">
-                    <label htmlFor="boardApprovalDate">Board Approval Date</label>
-                    <input 
-                      type="date" 
-                      id="boardApprovalDate" 
-                      name="boardApprovalDate" 
-                      value={formData.boardApprovalDate} 
-                      onChange={handleInputChange} 
-                      className="form-input"
-                    />
-                  </div>
-                </div>
+        {/* MAIN WORKSPACE CONTENT */}
+        {viewMode === "edit" ? (
+          <div className="no-print" style={{ display: "grid", gridTemplateColumns: "1.1fr 0.9fr", gap: "28px", alignItems: "start" }}>
+            {/* Editor Input Form */}
+            <div className="card" style={{ padding: "28px", display: "flex", flexDirection: "column", gap: "24px" }}>
+              {/* Editor Tabs Navigation */}
+              <div style={{ display: "flex", gap: "6px", borderBottom: "1px solid var(--border-color)", paddingBottom: "12px", overflowX: "auto" }}>
+                {[
+                  { id: "profile", label: "CU Profile", icon: Building },
+                  { id: "governance", label: "Oversight", icon: Users },
+                  { id: "usecases", label: "Use Cases", icon: CheckSquare },
+                  { id: "risk", label: "Risk & Telemetry", icon: ShieldAlert },
+                  { id: "tprm", label: "TPRM & Standards", icon: Shield },
+                ].map((tab) => {
+                  const Icon = tab.icon;
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id as "profile" | "governance" | "usecases" | "risk" | "tprm")}
+                      style={{
+                        padding: "8px 14px",
+                        borderRadius: "var(--radius-sm)",
+                        border: "none",
+                        fontSize: "0.8rem",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        backgroundColor: isActive ? "var(--primary)" : "transparent",
+                        color: isActive ? "#fff" : "var(--text-secondary)",
+                        transition: "all 0.2s ease",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      <Icon style={{ width: 14, height: 14 }} />
+                      <span>{tab.label}</span>
+                    </button>
+                  );
+                })}
               </div>
-            )}
 
-            {/* Tab 2: Governance */}
-            {activeTab === "governance" && (
-              <div className="form-section">
-                <h3 className="section-title">Oversight Structure</h3>
-                <p className="section-desc">Outline who holds operational responsibility and fiduciary duty for AI controls.</p>
+              {/* TAB 1: CU PROFILE */}
+              {activeTab === "profile" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+                  <h3 style={{ fontSize: "1.1rem", margin: 0, color: "var(--primary)" }}>Credit Union Profile & Charter Details</h3>
 
-                <div className="input-group">
-                  <label htmlFor="governingBody">AI Governing Committee</label>
-                  <input 
-                    type="text" 
-                    id="governingBody" 
-                    name="governingBody" 
-                    value={formData.governingBody} 
-                    onChange={handleInputChange} 
-                    className="form-input"
-                    placeholder="e.g. AI Risk Committee"
-                  />
-                  <small className="help-text">The committee that approves use cases and reviews audit logs.</small>
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>Credit Union Name</label>
+                    <input
+                      type="text"
+                      name="creditUnionName"
+                      value={formData.creditUnionName}
+                      onChange={handleInputChange}
+                      style={{
+                        width: "100%",
+                        padding: "10px 14px",
+                        borderRadius: "var(--radius-md)",
+                        border: "1px solid var(--border-color)",
+                        backgroundColor: "rgba(0,0,0,0.3)",
+                        color: "var(--text-primary)",
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>Asset Size Tier</label>
+                      <select
+                        name="assetSize"
+                        value={formData.assetSize}
+                        onChange={handleInputChange}
+                        style={{
+                          width: "100%",
+                          padding: "10px 14px",
+                          borderRadius: "var(--radius-md)",
+                          border: "1px solid var(--border-color)",
+                          backgroundColor: "rgba(18, 21, 38, 0.95)",
+                          color: "var(--text-primary)",
+                        }}
+                      >
+                        <option value="Under $100 Million">Under $100 Million</option>
+                        <option value="$100 Million - $250 Million">$100 Million - $250 Million</option>
+                        <option value="$250 Million - $1 Billion">$250 Million - $1 Billion</option>
+                        <option value="$1 Billion - $10 Billion">$1 Billion - $10 Billion</option>
+                        <option value="Over $10 Billion">Over $10 Billion</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>State Jurisdiction</label>
+                      <input
+                        type="text"
+                        name="stateJurisdiction"
+                        value={formData.stateJurisdiction}
+                        onChange={handleInputChange}
+                        style={{
+                          width: "100%",
+                          padding: "10px 14px",
+                          borderRadius: "var(--radius-md)",
+                          border: "1px solid var(--border-color)",
+                          backgroundColor: "rgba(0,0,0,0.3)",
+                          color: "var(--text-primary)",
+                        }}
+                      />
+                    </div>
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>Policy Version</label>
+                      <input
+                        type="text"
+                        name="version"
+                        value={formData.version}
+                        onChange={handleInputChange}
+                        style={{
+                          width: "100%",
+                          padding: "10px 14px",
+                          borderRadius: "var(--radius-md)",
+                          border: "1px solid var(--border-color)",
+                          backgroundColor: "rgba(0,0,0,0.3)",
+                          color: "var(--text-primary)",
+                        }}
+                      />
+                    </div>
+
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>Effective Date</label>
+                      <input
+                        type="date"
+                        name="effectiveDate"
+                        value={formData.effectiveDate}
+                        onChange={handleInputChange}
+                        style={{
+                          width: "100%",
+                          padding: "10px 14px",
+                          borderRadius: "var(--radius-md)",
+                          border: "1px solid var(--border-color)",
+                          backgroundColor: "rgba(18, 21, 38, 0.95)",
+                          color: "var(--text-primary)",
+                        }}
+                      />
+                    </div>
+                  </div>
                 </div>
+              )}
 
-                <div className="input-group">
-                  <label htmlFor="aiLiaisonRole">Primary AI Liaison Officer</label>
-                  <input 
-                    type="text" 
-                    id="aiLiaisonRole" 
-                    name="aiLiaisonRole" 
-                    value={formData.aiLiaisonRole} 
-                    onChange={handleInputChange} 
-                    className="form-input"
-                    placeholder="e.g. Chief Risk Officer"
-                  />
-                  <small className="help-text">Appointed officer leading day-to-day risk management audits.</small>
+              {/* TAB 2: GOVERNANCE & ROLES */}
+              {activeTab === "governance" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+                  <h3 style={{ fontSize: "1.1rem", margin: 0, color: "var(--primary)" }}>Board Oversight & Committee Structure</h3>
+
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>Primary Governing Body</label>
+                    <input
+                      type="text"
+                      name="governingBody"
+                      value={formData.governingBody}
+                      onChange={handleInputChange}
+                      style={{
+                        width: "100%",
+                        padding: "10px 14px",
+                        borderRadius: "var(--radius-md)",
+                        border: "1px solid var(--border-color)",
+                        backgroundColor: "rgba(0,0,0,0.3)",
+                        color: "var(--text-primary)",
+                      }}
+                    />
+                  </div>
+
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>Primary AI Liaison Role</label>
+                      <select
+                        name="aiLiaisonRole"
+                        value={formData.aiLiaisonRole}
+                        onChange={handleInputChange}
+                        style={{
+                          width: "100%",
+                          padding: "10px 14px",
+                          borderRadius: "var(--radius-md)",
+                          border: "1px solid var(--border-color)",
+                          backgroundColor: "rgba(18, 21, 38, 0.95)",
+                          color: "var(--text-primary)",
+                        }}
+                      >
+                        <option value="Chief Risk Officer">Chief Risk Officer (CRO)</option>
+                        <option value="Chief Information Officer">Chief Information Officer (CIO)</option>
+                        <option value="Chief Compliance Officer">Chief Compliance Officer (CCO)</option>
+                        <option value="Chief Technology Officer">Chief Technology Officer (CTO)</option>
+                        <option value="AI Governance Officer">AI Governance Officer</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>Board Review Frequency</label>
+                      <select
+                        name="boardReviewFrequency"
+                        value={formData.boardReviewFrequency}
+                        onChange={handleInputChange}
+                        style={{
+                          width: "100%",
+                          padding: "10px 14px",
+                          borderRadius: "var(--radius-md)",
+                          border: "1px solid var(--border-color)",
+                          backgroundColor: "rgba(18, 21, 38, 0.95)",
+                          color: "var(--text-primary)",
+                        }}
+                      >
+                        <option value="Quarterly">Quarterly</option>
+                        <option value="Semi-Annually">Semi-Annually</option>
+                        <option value="Annually">Annually</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
+              )}
 
-                <div className="input-group">
-                  <label htmlFor="boardReviewFrequency">Board Review Frequency</label>
-                  <select 
-                    id="boardReviewFrequency" 
-                    name="boardReviewFrequency" 
-                    value={formData.boardReviewFrequency} 
-                    onChange={handleInputChange} 
-                    className="form-select"
-                  >
-                    <option value="Quarterly">Quarterly Review</option>
-                    <option value="Semi-Annually">Semi-Annual Review</option>
-                    <option value="Annually">Annual Review</option>
-                  </select>
-                  <small className="help-text">How often the Board of Directors audits AI performance logs and reviews this policy.</small>
-                </div>
-              </div>
-            )}
+              {/* TAB 3: USE CASES */}
+              {activeTab === "usecases" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+                  <h3 style={{ fontSize: "1.1rem", margin: 0, color: "var(--primary)" }}>Authorized Credit Union AI Use Cases</h3>
 
-            {/* Tab 3: Use Cases & Rules */}
-            {activeTab === "usecases" && (
-              <div className="form-section">
-                <h3 className="section-title">Approved Use Cases & Rules</h3>
-                <p className="section-desc">Select which operations are authorized, and set constraints on public tool access.</p>
-
-                <div className="input-group">
-                  <label style={{ marginBottom: "12px", display: "block" }}>Authorized Credit Union Use Cases</label>
                   <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                    <label className="checkbox-container">
-                      <input 
-                        type="checkbox" 
-                        name="useCaseChatbot" 
-                        checked={formData.useCaseChatbot} 
-                        onChange={handleInputChange} 
-                      />
-                      <span className="checkbox-text">Member Support Chatbot (FAQ / Info)</span>
-                    </label>
-                    <label className="checkbox-container">
-                      <input 
-                        type="checkbox" 
-                        name="useCaseUnderwriting" 
-                        checked={formData.useCaseUnderwriting} 
-                        onChange={handleInputChange} 
-                      />
-                      <span className="checkbox-text">Credit Underwriting Assistant (Advisory)</span>
-                    </label>
-                    <label className="checkbox-container">
-                      <input 
-                        type="checkbox" 
-                        name="useCaseFraud" 
-                        checked={formData.useCaseFraud} 
-                        onChange={handleInputChange} 
-                      />
-                      <span className="checkbox-text">Fraud Detection & AML Transaction Patterns</span>
-                    </label>
-                    <label className="checkbox-container">
-                      <input 
-                        type="checkbox" 
-                        name="useCaseMarketing" 
-                        checked={formData.useCaseMarketing} 
-                        onChange={handleInputChange} 
-                      />
-                      <span className="checkbox-text">Marketing Content Drafting (LLM drafts)</span>
-                    </label>
-                    <label className="checkbox-container">
-                      <input 
-                        type="checkbox" 
-                        name="useCaseDocProcessing" 
-                        checked={formData.useCaseDocProcessing} 
-                        onChange={handleInputChange} 
-                      />
-                      <span className="checkbox-text">Member Document Processing (Tax filings/Paystubs OCR)</span>
-                    </label>
+                    {[
+                      { key: "useCaseChatbot", title: "Member Support Chatbots & Conversational AI", desc: "Includes Reg E/Z dispute escalation triggers and UDAAP safeguards." },
+                      { key: "useCaseUnderwriting", title: "Credit Underwriting & Risk Scoring", desc: "Includes CFPB Circular 2022-03 explainability & SHAP attributions." },
+                      { key: "useCaseFraud", title: "Fraud Screening & Transaction Monitoring", desc: "Deepfake, vishing, and synthetic identity defenses." },
+                      { key: "useCaseMarketing", title: "Marketing Content Drafting", desc: "Generative AI copywriting and literacy content." },
+                      { key: "useCaseDocProcessing", title: "Member Document Processing & OCR", desc: "Paystubs, tax forms, and mortgage extraction." },
+                    ].map((item) => (
+                      <label
+                        key={item.key}
+                        style={{
+                          padding: "12px 14px",
+                          borderRadius: "var(--radius-md)",
+                          backgroundColor: "rgba(255,255,255,0.02)",
+                          border: "1px solid var(--border-color)",
+                          display: "flex",
+                          alignItems: "flex-start",
+                          gap: "12px",
+                          cursor: "pointer",
+                        }}
+                      >
+                        <input
+                          type="checkbox"
+                          name={item.key}
+                          checked={Boolean(formData[item.key as keyof PolicyData])}
+                          onChange={handleInputChange}
+                          style={{ width: 18, height: 18, accentColor: "var(--primary)", marginTop: "2px" }}
+                        />
+                        <div>
+                          <strong style={{ fontSize: "0.9rem", color: "var(--text-primary)" }}>{item.title}</strong>
+                          <p style={{ margin: "2px 0 0 0", fontSize: "0.8rem", color: "var(--text-secondary)" }}>{item.desc}</p>
+                        </div>
+                      </label>
+                    ))}
                   </div>
                 </div>
+              )}
 
-                <hr style={{ border: 0, borderTop: "1px solid var(--border-color)", margin: "20px 0" }} />
+              {/* TAB 4: RISK & TELEMETRY */}
+              {activeTab === "risk" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+                  <h3 style={{ fontSize: "1.1rem", margin: 0, color: "var(--primary)" }}>Model Risk Management & Decision Telemetry</h3>
 
-                <div className="input-group">
-                  <label>Allow Public GenAI Tools? (e.g. consumer ChatGPT)</label>
-                  <div style={{ display: "flex", gap: "10px", marginTop: "8px" }}>
-                    <button 
-                      type="button"
-                      className={`option-chip ${!formData.allowPublicGenAI ? "active-danger" : ""}`}
-                      onClick={() => handleSelectRadio("allowPublicGenAI", false)}
-                      style={{ flex: 1 }}
+                  <div>
+                    <label style={{ display: "block", fontSize: "0.85rem", fontWeight: 600, marginBottom: "6px" }}>Fair Lending Bias Audit Frequency</label>
+                    <select
+                      name="biasCheckFrequency"
+                      value={formData.biasCheckFrequency}
+                      onChange={handleInputChange}
+                      style={{
+                        width: "100%",
+                        padding: "10px 14px",
+                        borderRadius: "var(--radius-md)",
+                        border: "1px solid var(--border-color)",
+                        backgroundColor: "rgba(18, 21, 38, 0.95)",
+                        color: "var(--text-primary)",
+                      }}
                     >
-                      Prohibited
-                    </button>
-                    <button 
-                      type="button"
-                      className={`option-chip ${formData.allowPublicGenAI ? "active-success" : ""}`}
-                      onClick={() => handleSelectRadio("allowPublicGenAI", true)}
-                      style={{ flex: 1 }}
-                    >
-                      Permitted (Constrained)
-                    </button>
+                      <option value="Monthly">Monthly</option>
+                      <option value="Quarterly">Quarterly</option>
+                      <option value="Semi-Annually">Semi-Annually</option>
+                    </select>
                   </div>
-                  <small className="help-text">Prohibiting public consumer tools prevents accidental data uploads to public networks.</small>
-                </div>
 
-                <div className="input-group">
-                  <label htmlFor="piiRestrictions">Member PII Rules</label>
-                  <select 
-                    id="piiRestrictions" 
-                    name="piiRestrictions" 
-                    value={formData.piiRestrictions} 
-                    onChange={handleInputChange} 
-                    className="form-select"
-                  >
-                    <option value="Strict Prohibition">Strict Prohibition (No PII allowed)</option>
-                    <option value="Anonymized/Masked">Anonymized/Masked Only (Sanitized before uploading)</option>
-                  </select>
-                  <small className="help-text">Under GLBA, NPI/PII (SSNs, names, balances) must be aggressively isolated.</small>
-                </div>
-              </div>
-            )}
-
-            {/* Tab 4: Risk Calibration */}
-            {activeTab === "risk" && (
-              <div className="form-section">
-                <h3 className="section-title">Risk Tier Calibration</h3>
-                <p className="section-desc">Classify system applications and designate audit check schedules.</p>
-
-                <div className="input-group">
-                  <label htmlFor="biasCheckFrequency">High-Risk Algorithmic Audit Schedule</label>
-                  <select 
-                    id="biasCheckFrequency" 
-                    name="biasCheckFrequency" 
-                    value={formData.biasCheckFrequency} 
-                    onChange={handleInputChange} 
-                    className="form-select"
-                  >
-                    <option value="Monthly">Monthly Auditing</option>
-                    <option value="Quarterly">Quarterly Auditing</option>
-                    <option value="Semi-Annually">Semi-Annual Auditing</option>
-                    <option value="Annually">Annual Auditing</option>
-                  </select>
-                  <small className="help-text">How often underwriting, collections, or pricing AI models undergo demographic bias evaluations.</small>
-                </div>
-
-                <div className="info-box" style={{ marginTop: "24px" }}>
-                  <Info style={{ width: 16, height: 16, color: "var(--accent)", flexShrink: 0 }} />
-                  <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                    <strong>Risk Tiering Best Practice:</strong> Systems making or modifying underwriting assessments (High Risk) require validation, while chatbots providing general public FAQs (Moderate Risk) can rely on annual spot-checking.
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Tab 5: Compliance */}
-            {activeTab === "compliance" && (
-              <div className="form-section">
-                <h3 className="section-title">Compliance & Vendor Diligence</h3>
-                <p className="section-desc">Configure checks for Fair Lending (ECOA), Adverse Actions, and vendor constraints.</p>
-
-                <div className="input-group">
-                  <label style={{ display: "block", marginBottom: "12px" }}>Governance Checklist Controls</label>
-                  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                    <label className="checkbox-container">
-                      <input 
-                        type="checkbox" 
-                        name="hitlRequired" 
-                        checked={formData.hitlRequired} 
-                        onChange={handleInputChange} 
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "0.85rem", cursor: "pointer" }}>
+                      <input
+                        type="checkbox"
+                        name="explainabilityTelemetry"
+                        checked={formData.explainabilityTelemetry}
+                        onChange={handleInputChange}
+                        style={{ width: 16, height: 16, accentColor: "var(--primary)" }}
                       />
-                      <span className="checkbox-text">
-                        <strong>Mandatory Human-in-the-Loop (HITL)</strong>
-                        <span style={{ display: "block", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px" }}>
-                          Requires a credit union officer to sign off on automated underwriting or collections overrides.
-                        </span>
-                      </span>
+                      <span>Enforce Immutable Decision Logging Telemetry (SHAP/LIME attributions + ECOA Reason Codes)</span>
                     </label>
 
-                    <label className="checkbox-container">
-                      <input 
-                        type="checkbox" 
-                        name="vendorDiligenceRequired" 
-                        checked={formData.vendorDiligenceRequired} 
-                        onChange={handleInputChange} 
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "0.85rem", cursor: "pointer" }}>
+                      <input
+                        type="checkbox"
+                        name="hitlRequired"
+                        checked={formData.hitlRequired}
+                        onChange={handleInputChange}
+                        style={{ width: 16, height: 16, accentColor: "var(--primary)" }}
                       />
-                      <span className="checkbox-text">
-                        <strong>Contractual Non-Training Clause</strong>
-                        <span style={{ display: "block", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: "2px" }}>
-                          Enforce clauses forbidding SaaS vendors from training models on uploaded credit union data.
-                        </span>
-                      </span>
+                      <span>Mandatory Human-in-the-Loop (HITL) Gate for High-Risk Applications</span>
                     </label>
                   </div>
                 </div>
+              )}
 
-                <div className="info-box" style={{ marginTop: "24px" }}>
-                  <Shield style={{ width: 16, height: 16, color: "var(--success)", flexShrink: 0 }} />
-                  <div style={{ fontSize: "0.8rem", color: "var(--text-secondary)" }}>
-                    <strong>CFPB Warning:</strong> Vague Adverse Action codes (e.g. &quot;system score low&quot;) violate ECOA rules. The model must yield transparent, explainable reason codes for automated credit decisions.
+              {/* TAB 5: TPRM & STANDARDS */}
+              {activeTab === "tprm" && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "18px" }}>
+                  <h3 style={{ fontSize: "1.1rem", margin: 0, color: "var(--primary)" }}>5-Stage TPRM & Vendor Certification Standards</h3>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "0.85rem", cursor: "pointer" }}>
+                      <input
+                        type="checkbox"
+                        name="iso42001Certified"
+                        checked={formData.iso42001Certified}
+                        onChange={handleInputChange}
+                        style={{ width: 16, height: 16, accentColor: "var(--primary)" }}
+                      />
+                      <span>Require ISO 42001 (AI Management System) & AIUC-1 Agent Standards</span>
+                    </label>
+
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "0.85rem", cursor: "pointer" }}>
+                      <input
+                        type="checkbox"
+                        name="unrestrictedRightToAudit"
+                        checked={formData.unrestrictedRightToAudit}
+                        onChange={handleInputChange}
+                        style={{ width: 16, height: 16, accentColor: "var(--primary)" }}
+                      />
+                      <span>Contractual Unrestricted Right-to-Audit for Credit Union & NCUA Examiners</span>
+                    </label>
+
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "0.85rem", cursor: "pointer" }}>
+                      <input
+                        type="checkbox"
+                        name="fourthPartyConsentRequired"
+                        checked={formData.fourthPartyConsentRequired}
+                        onChange={handleInputChange}
+                        style={{ width: 16, height: 16, accentColor: "var(--primary)" }}
+                      />
+                      <span>Mandatory Consent for 4th-Party Subcontractors & Sub-processors</span>
+                    </label>
+
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "0.85rem", cursor: "pointer" }}>
+                      <input
+                        type="checkbox"
+                        name="dataDestructionGuarantee"
+                        checked={formData.dataDestructionGuarantee}
+                        onChange={handleInputChange}
+                        style={{ width: 16, height: 16, accentColor: "var(--primary)" }}
+                      />
+                      <span>Enforce Secure NPI & Decision Log Extraction upon Offboarding</span>
+                    </label>
                   </div>
                 </div>
-              </div>
-            )}
-            
-            {/* Quick Actions (On screen edit mode) */}
-            <div style={{ marginTop: "32px", display: "flex", flexDirection: "column", gap: "10px" }}>
-              <button type="button" onClick={downloadMarkdown} className="btn btn-primary" style={{ width: "100%" }}>
-                <Download style={{ width: 18, height: 18 }} />
-                <span>Download Markdown (.md)</span>
-              </button>
-              <button type="button" onClick={handlePrintPDF} className="btn btn-accent" style={{ width: "100%" }}>
-                <Printer style={{ width: 18, height: 18 }} />
-                <span>Export PDF Document</span>
-              </button>
-            </div>
-            
-          </div>
-
-          {/* Right Column: Policy Document Preview */}
-          <div className={`print-area ${viewMode === "preview" ? "block" : "hidden-mobile"}`} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            
-            {/* Toolbar above preview */}
-            <div className="no-print" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", backgroundColor: "rgba(255,255,255,0.03)", padding: "12px 20px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-color)" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <FileText style={{ width: 16, height: 16, color: "var(--primary)" }} />
-                <span style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text-secondary)" }}>Real-Time Document Preview</span>
-              </div>
-              <div style={{ display: "flex", gap: "8px" }}>
-                <button type="button" onClick={downloadMarkdown} className="btn btn-secondary" style={{ padding: "8px 14px", fontSize: "0.75rem" }} title="Download Markdown">
-                  <Download style={{ width: 14, height: 14 }} />
-                  <span>Markdown</span>
-                </button>
-                <button type="button" onClick={handlePrintPDF} className="btn btn-primary" style={{ padding: "8px 14px", fontSize: "0.75rem" }} title="Print / Save PDF">
-                  <Printer style={{ width: 14, height: 14 }} />
-                  <span>Export PDF</span>
-                </button>
-              </div>
+              )}
             </div>
 
-            {/* Document Paper Sheet Render */}
-            <div id="policy-document-preview" className="preview-paper">
-              
-              <div style={{ textAlign: "center", marginBottom: "30px" }}>
-                <h1 style={{ fontSize: "1.6rem", margin: "0 0 10px 0", color: "#0f172a", textTransform: "uppercase" }}>
-                  <span className="highlight-placeholder">{formData.creditUnionName}</span>
-                </h1>
-                <h2 style={{ fontSize: "1.1rem", margin: "0 0 20px 0", letterSpacing: "1px", color: "#475569", fontWeight: 600 }}>
-                  ARTIFICIAL INTELLIGENCE (AI) POLICY & GOVERNANCE FRAMEWORK
-                </h2>
-                <div style={{ display: "inline-block", padding: "4px 12px", border: "1px solid #cbd5e1", borderRadius: "4px", fontSize: "0.75rem", fontWeight: 700, backgroundColor: "#f8fafc", color: "#475569" }}>
-                  DOCUMENT STATUS: APPROVED & ACTIVE
+            {/* Right Column: Regulatory Guidance Cheat-Sheet */}
+            <div className="card" style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "20px" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <Award style={{ width: 20, height: 20, color: "var(--warning)" }} />
+                <h3 style={{ fontSize: "1.1rem", margin: 0, color: "var(--text-primary)" }}>
+                  2026 Regulatory Examination Benchmarks
+                </h3>
+              </div>
+
+              <div style={{ display: "flex", flexDirection: "column", gap: "12px", fontSize: "0.85rem" }}>
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "rgba(99, 102, 241, 0.08)", border: "1px solid rgba(99, 102, 241, 0.2)" }}>
+                  <strong style={{ color: "var(--primary)", display: "block", marginBottom: "4px" }}>NCUA 2026 Supervisory Priorities</strong>
+                  Examiners evaluate AI through existing BSA/AML, ECOA, and TPRM pillars. Continuous decision logging and board oversight are mandatory.
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "rgba(168, 85, 247, 0.08)", border: "1px solid rgba(168, 85, 247, 0.2)" }}>
+                  <strong style={{ color: "var(--secondary)", display: "block", marginBottom: "4px" }}>CFPB Circular 2022-03 (Adverse Action)</strong>
+                  Black-box algorithms are prohibited. Denial disclosures must state exact negative impact factors mapped to ECOA codes.
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "rgba(16, 185, 129, 0.08)", border: "1px solid rgba(16, 185, 129, 0.2)" }}>
+                  <strong style={{ color: "var(--success)", display: "block", marginBottom: "4px" }}>2023 Interagency TPRM Guidance</strong>
+                  Institutional liability cannot be outsourced. Vendors must provide audit access and 4th-party subcontractor consent.
+                </div>
+
+                <div style={{ padding: "12px", borderRadius: "8px", backgroundColor: "rgba(6, 182, 212, 0.08)", border: "1px solid rgba(6, 182, 212, 0.2)" }}>
+                  <strong style={{ color: "var(--accent)", display: "block", marginBottom: "4px" }}>ISO 42001 & AIUC-1 Certification</strong>
+                  Benchmark standards for AI management systems and quarterly adversarial agent testing.
                 </div>
               </div>
-
-              {/* Document Metadata Table */}
-              <table style={{ marginBottom: "30px" }}>
-                <tbody>
-                  <tr>
-                    <th>Policy Owner</th>
-                    <td><span className="highlight-placeholder">{formData.aiLiaisonRole}</span></td>
-                    <th>Policy Version</th>
-                    <td><span className="highlight-placeholder">{formData.version}</span></td>
-                  </tr>
-                  <tr>
-                    <th>Effective Date</th>
-                    <td><span className="highlight-placeholder">{formData.effectiveDate}</span></td>
-                    <th>Board Approval Date</th>
-                    <td><span className="highlight-placeholder">{formData.boardApprovalDate}</span></td>
-                  </tr>
-                  <tr>
-                    <th>State Jurisdiction</th>
-                    <td><span className="highlight-placeholder">{formData.stateJurisdiction}</span> State Law</td>
-                    <th>Asset Size Tier</th>
-                    <td><span className="highlight-placeholder">{formData.assetSize}</span></td>
-                  </tr>
-                </tbody>
-              </table>
-
-              <hr />
-
-              {/* Section 1 */}
-              <h3 style={{ fontSize: "1.2rem", color: "#0f172a", borderBottom: "1px solid #e2e8f0", paddingBottom: "6px" }}>
-                1. OBJECTIVE & SCOPE
-              </h3>
-              <p>
-                The mission of <strong><span className="highlight-placeholder">{formData.creditUnionName}</span></strong> is to serve our member-owners with integrity, financial safety, and absolute prudence. As we integrate Artificial Intelligence (AI) technologies—including Machine Learning (ML), Large Language Models (LLMs), and Generative AI—into our operational workflows, this Policy establishes a rigorous governance framework.
-              </p>
-              <p style={{ marginTop: "10px" }}>
-                This policy applies to all employees, contractors, board directors, and third-party software partners. It is structured to align with the technology-neutral examination expectations of the <strong>National Credit Union Administration (NCUA)</strong>, the <strong>NIST AI Risk Management Framework (AI RMF 1.0)</strong>, and the <strong>Gramm-Leach-Bliley Act (GLBA)</strong> privacy requirements.
-              </p>
-
-              {/* Section 2 */}
-              <h3 style={{ fontSize: "1.2rem", color: "#0f172a", borderBottom: "1px solid #e2e8f0", paddingBottom: "6px", marginTop: "24px" }}>
-                2. GOVERNANCE & RESPONSIBILITIES
-              </h3>
-              <p>
-                To maintain clear organizational oversight and accountability, the Credit Union establishes the following governance matrix:
-              </p>
-              <ul style={{ marginTop: "10px", paddingLeft: "20px" }}>
-                <li>
-                  <strong>Board of Directors:</strong> Retains ultimate fiduciary duty. The Board reviews and approves this Policy <strong><span className="highlight-placeholder">{formData.boardReviewFrequency.toLowerCase()}</span></strong>, monitors systemic algorithmic risks, and evaluates AI integrations within annual capital planning.
-                </li>
-                <li>
-                  <strong><span className="highlight-placeholder">{formData.governingBody}</span>:</strong> The primary governing committee responsible for reviewing and approving all proposed AI use cases, maintaining the central AI Use Case Inventory, auditing compliance logs, and approving risk exceptions.
-                </li>
-                <li>
-                  <strong>Primary AI Liaison (<span className="highlight-placeholder">{formData.aiLiaisonRole}</span>):</strong> Appointed to oversee day-to-day AI implementation, lead vendor risk assessments, coordinate compliance testing, and serve as the main point of contact for external audits.
-                </li>
-                <li>
-                  <strong>Business Unit Owners:</strong> Retain operational accountability for AI systems deployed within their departments, ensuring staff adhere to prompt safety rules and manual output verification.
-                </li>
-              </ul>
-
-              {/* Section 3 */}
-              <h3 style={{ fontSize: "1.2rem", color: "#0f172a", borderBottom: "1px solid #e2e8f0", paddingBottom: "6px", marginTop: "24px" }}>
-                3. APPROVED AI USE CASES & OPERATIONAL BOUNDS
-              </h3>
-              <p>
-                AI technologies may only be deployed for use cases explicitly reviewed and authorized by the <strong><span className="highlight-placeholder">{formData.governingBody}</span></strong>. The initially approved use cases include:
-              </p>
-              
-              <ul style={{ marginTop: "10px", paddingLeft: "20px", display: "flex", flexDirection: "column", gap: "8px" }}>
-                {formData.useCaseChatbot && (
-                  <li>
-                    <strong>Member Support Chatbot:</strong> Conversational agent deployed to assist members with FAQ searches, basic troubleshooting, and navigational guidance.
-                  </li>
-                )}
-                {formData.useCaseUnderwriting && (
-                  <li>
-                    <strong>Credit Underwriting Assistant:</strong> Algorithmic assessment tools that review credit histories, calculate debt-to-income ratios, and provide creditworthiness recommendations to underwriters.
-                  </li>
-                )}
-                {formData.useCaseFraud && (
-                  <li>
-                    <strong>Fraud Detection & AML Compliance:</strong> Real-time transaction pattern monitoring to identify suspicious deposits, potential identity theft, and compliance flags.
-                  </li>
-                )}
-                {formData.useCaseMarketing && (
-                  <li>
-                    <strong>Marketing Content Drafting:</strong> Large Language Models (LLMs) used by creative staff to generate initial drafts for email campaigns, blog posts, and educational resources.
-                  </li>
-                )}
-                {formData.useCaseDocProcessing && (
-                  <li>
-                    <strong>Member Document Processing:</strong> Machine learning OCR systems designed to extract structural data from tax filings, paystubs, and mortgage deeds.
-                  </li>
-                )}
-                {!formData.useCaseChatbot && !formData.useCaseUnderwriting && !formData.useCaseFraud && !formData.useCaseMarketing && !formData.useCaseDocProcessing && (
-                  <li style={{ fontStyle: "italic", color: "#64748b" }}>
-                    No specific use cases selected. All AI deployments require individual steering committee review and risk classification.
-                  </li>
-                )}
-              </ul>
-
-              <h4 style={{ fontSize: "1rem", color: "#0f172a", marginTop: "16px", fontWeight: 600 }}>
-                Generative AI Usage Rules (Public vs. Enterprise)
-              </h4>
-              <ul style={{ marginTop: "8px", paddingLeft: "20px" }}>
-                <li>
-                  <strong>Public GenAI Platforms:</strong> {formData.allowPublicGenAI ? (
-                    <span>Allowed for low-risk business tasks (e.g. email brainstorming, text formatting) <strong>strictly subject to entering zero member data</strong> or proprietary information.</span>
-                  ) : (
-                    <span><strong>Strictly PROHIBITED</strong> for all business operations. Employees are forbidden from using consumer-facing public GenAI accounts (e.g., public ChatGPT, Gemini, Claude) for any Credit Union work.</span>
-                  )}
-                </li>
-                <li>
-                  <strong>Member PII Handling:</strong> Under GLBA compliance, <strong>{formData.piiRestrictions === "Strict Prohibition" ? (
-                    <span>under no circumstances may Nonpublic Personal Information (PII) or financial data be entered into external AI systems.</span>
-                  ) : (
-                    <span>any member PII or financial data must be fully anonymized or masked using approved cryptographic sanitization libraries before processing.</span>
-                  )}</strong>
-                </li>
-                <li>
-                  <strong>Human-in-the-Loop (HITL) Gate:</strong> {formData.hitlRequired ? (
-                    <span><strong>Mandatory.</strong> No high-risk AI output (including credit recommendations, account modifications, or member communications) may be executed autonomously. A qualified Credit Union officer must review and verify the outputs prior to execution.</span>
-                  ) : (
-                    <span>Recommended. High-risk systems require manual review, whereas moderate/low risk systems may operate under automated supervision.</span>
-                  )}
-                </li>
-              </ul>
-
-              {/* Section 4 */}
-              <h3 style={{ fontSize: "1.2rem", color: "#0f172a", borderBottom: "1px solid #e2e8f0", paddingBottom: "6px", marginTop: "24px" }}>
-                4. RISK TIER CLASSIFICATION & AUDITS
-              </h3>
-              <p>
-                To calibrate due diligence, the Credit Union adopts a three-tier risk model:
-              </p>
-              
-              <table style={{ marginTop: "10px" }}>
-                <thead>
-                  <tr>
-                    <th style={{ width: "20%" }}>Risk Tier</th>
-                    <th style={{ width: "40%" }}>Definition</th>
-                    <th style={{ width: "40%" }}>Review & Audit Requirements</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td style={{ fontWeight: 700, color: "#475569" }}>Low Risk</td>
-                    <td>Productivity tools, code assistants, internal spelling checks.</td>
-                    <td>General compliance review; standard IT security scan.</td>
-                  </tr>
-                  <tr>
-                    <td style={{ fontWeight: 700, color: "#b45309" }}>Moderate Risk</td>
-                    <td>Marketing drafting, internal knowledge base Q&A, FAQ chatbots.</td>
-                    <td>Vendor due diligence, compliance reviews, annual output spot-audits.</td>
-                  </tr>
-                  <tr>
-                    <td style={{ fontWeight: 700, color: "#be123c" }}>High Risk</td>
-                    <td>Credit scoring, automated underwriting recommendations, fraud alerts, collections.</td>
-                    <td>Full Model Risk Validation, <strong><span className="highlight-placeholder">{formData.biasCheckFrequency}</span></strong> bias audits, mandatory HITL, Board-level notifications.</td>
-                  </tr>
-                </tbody>
-              </table>
-
-              {/* Section 5 */}
-              <h3 style={{ fontSize: "1.2rem", color: "#0f172a", borderBottom: "1px solid #e2e8f0", paddingBottom: "6px", marginTop: "24px" }}>
-                5. REGULATORY COMPLIANCE & FAIR LENDING
-              </h3>
-              <p>
-                The Credit Union is committed to preventing algorithmic bias and complying with the <strong>Equal Credit Opportunity Act (ECOA / Regulation B)</strong> and CFPB guidelines.
-              </p>
-              <ol style={{ marginTop: "10px", paddingLeft: "20px", display: "flex", flexDirection: "column", gap: "6px" }}>
-                <li>
-                  <strong>Algorithmic Discrimination:</strong> AI models used in underwriting, pricing, or collections are prohibited from utilizing protected classes (e.g., race, gender, age, marital status) as input features, or mathematical proxies thereof.
-                </li>
-                <li>
-                  <strong>Adverse Action Notices:</strong> If an AI system recommends the denial or modification of credit, the Credit Union must provide the member with a clear, specific, and legally compliant Adverse Action explanation. Vague terms like &quot;algorithmic score&quot; are prohibited.
-                </li>
-                <li>
-                  <strong>Quantitative Bias Testing:</strong> All High-Risk models must undergo <strong><span className="highlight-placeholder">{formData.biasCheckFrequency}</span></strong> quantitative testing to detect disparate impact anomalies. Testing records shall be maintained for exam review.
-                </li>
-              </ol>
-
-              {/* Section 6 */}
-              <h3 style={{ fontSize: "1.2rem", color: "#0f172a", borderBottom: "1px solid #e2e8f0", paddingBottom: "6px", marginTop: "24px" }}>
-                6. THIRD-PARTY VENDOR DUE DILIGENCE
-              </h3>
-              <p>
-                Since the Credit Union utilizes third-party SaaS providers for AI capability, all AI vendors must undergo strict security reviews:
-              </p>
-              <ul style={{ marginTop: "10px", paddingLeft: "20px" }}>
-                <li>
-                  <strong>Security & Audit Rights:</strong> Vendors must provide SOC 2 Type II reports and agree to regular auditing by Credit Union auditors or the NCUA.
-                </li>
-                <li>
-                  <strong>Data Ownership:</strong> Contracts must explicitly state that the <strong>Credit Union retains 100% ownership</strong> of all inputted data and prompt history.
-                </li>
-                <li>
-                  <strong>Non-Training Clause:</strong> {formData.vendorDiligenceRequired ? (
-                    <span>Contracts <strong>MUST explicitly forbid</strong> the vendor from training their public or shared AI models on Credit Union member data or prompts.</span>
-                  ) : (
-                    <span>Contracts should seek non-training clauses, or establish dedicated virtual private tenants to separate Credit Union data.</span>
-                  )}
-                </li>
-              </ul>
-
-              {/* Section 7 */}
-              <h3 style={{ fontSize: "1.2rem", color: "#0f172a", borderBottom: "1px solid #e2e8f0", paddingBottom: "6px", marginTop: "24px" }}>
-                7. COMPLIANCE & ENFORCEMENT
-              </h3>
-              <p>
-                Violations of this Policy may result in disciplinary action up to and including termination. Suspicious AI outputs, potential data leaks, or algorithmic anomalies must be reported immediately to the <strong><span className="highlight-placeholder">{formData.aiLiaisonRole}</span></strong> or via the anonymous compliance hotline.
-              </p>
-
-              {/* Section 8 */}
-              <h3 style={{ fontSize: "1.2rem", color: "#0f172a", borderBottom: "1px solid #e2e8f0", paddingBottom: "6px", marginTop: "24px" }}>
-                8. DISCLAIMER & LEGAL NOTICE
-              </h3>
-              <p style={{ fontStyle: "italic", fontSize: "0.85rem", color: "#475569" }}>
-                This document serves as the internal operational policy for {formData.creditUnionName}. It is designed for regulatory preparedness and organizational risk mapping. It does not constitute formal legal counsel. The Credit Union shall consult legal advisors to ensure compliance with changing state and federal AI statutes.
-              </p>
-
             </div>
           </div>
-          
-        </div>
-
-        {/* Disclaimer / Warning Footer */}
-        <div className="no-print card" style={{ marginTop: "40px", border: "1px solid rgba(245, 158, 11, 0.2)", background: "rgba(245, 158, 11, 0.02)" }}>
-          <div style={{ display: "flex", gap: "16px", padding: "20px", alignItems: "flex-start" }}>
-            <div style={{ padding: "8px", borderRadius: "var(--radius-sm)", background: "rgba(245,158,11,0.1)", color: "var(--warning)", flexShrink: 0 }}>
-              <ShieldAlert style={{ width: 22, height: 22 }} />
-            </div>
-            <div>
-              <h4 style={{ fontSize: "1.05rem", color: "var(--text-primary)", margin: "0 0 6px 0" }}>Important Regulatory Disclaimer</h4>
-              <p style={{ fontSize: "0.85rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                This tool provides a policy framework based on NCUA Technology-Neutral examination guidance, NIST AI Risk Management Framework, and ECOA guidelines. AI regulations are evolving rapidly at the state and federal levels. Generative outputs are templates and should be vetted by your credit union&apos;s legal counsel and executive risk officers prior to board presentation and signature.
-              </p>
-            </div>
+        ) : (
+          /* PREVIEW MODE: Publication-Ready Policy Document */
+          <div className="card" style={{ padding: "40px", backgroundColor: "#fff", color: "#111827", borderRadius: "var(--radius-lg)" }}>
+            <pre style={{ fontFamily: "serif", fontSize: "0.95rem", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
+              {generateMarkdown()}
+            </pre>
           </div>
-        </div>
+        )}
 
-      </div>
-
-      {/* PDF Export Instructions Modal */}
-      {showPrintModal && (
-        <div className="modal-backdrop">
-          <div className="modal-content animate-scale-up" style={{ maxWidth: "480px" }}>
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "16px" }}>
-              <div style={{ padding: "12px", borderRadius: "var(--radius-full)", background: "var(--accent-glow)", color: "var(--accent)" }}>
-                <Printer style={{ width: 32, height: 32 }} />
-              </div>
-              <h3 style={{ fontSize: "1.3rem", margin: 0, color: "var(--text-primary)" }}>PDF Export Guidelines</h3>
-              <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", lineHeight: 1.5 }}>
-                For a professional, clean corporate policy document, please apply the following settings in your browser&apos;s print dialogue:
+        {/* PRINT MODAL CONFIRMATION */}
+        {showPrintModal && (
+          <div
+            style={{
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.8)",
+              backdropFilter: "blur(6px)",
+              zIndex: 3000,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "20px",
+            }}
+          >
+            <div className="card" style={{ maxWidth: "480px", width: "100%", padding: "28px" }}>
+              <h3 style={{ marginTop: 0, marginBottom: "12px" }}>Prepare Policy Document for Export</h3>
+              <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: "20px" }}>
+                Ready to generate printable PDF / Examiner submission package for <strong>{formData.creditUnionName}</strong>.
               </p>
-              
-              <ul style={{ textAlign: "left", fontSize: "0.85rem", color: "var(--text-muted)", display: "flex", flexDirection: "column", gap: "6px", width: "100%", paddingLeft: "12px", listStyleType: "disc" }}>
-                <li>Set the <strong>Destination</strong> to <strong>Save as PDF</strong>.</li>
-                <li>Set the <strong>Layout</strong> to <strong>Portrait</strong>.</li>
-                <li>Under <strong>More Settings</strong>, select/enable <strong>Background graphics</strong> (to print tables and borders correctly).</li>
-                <li>Select <strong>Paper size</strong> as <strong>Letter</strong> (8.5&quot; x 11&quot;).</li>
-                <li>Deselect/uncheck <strong>Headers and footers</strong> to remove browser-generated URL timestamps.</li>
-              </ul>
-              
-              <div style={{ display: "flex", gap: "12px", width: "100%", marginTop: "10px" }}>
-                <button type="button" onClick={() => setShowPrintModal(false)} className="btn btn-secondary" style={{ flex: 1 }}>
+
+              <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
+                <button onClick={() => setShowPrintModal(false)} className="btn btn-secondary">
                   Cancel
                 </button>
-                <button type="button" onClick={executePrint} className="btn btn-accent" style={{ flex: 1 }}>
-                  Open Print Dialog
+                <button onClick={executePrint} className="btn btn-primary">
+                  <Printer style={{ width: 16, height: 16 }} />
+                  <span>Print / Save PDF</span>
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Global CSS Styles */}
-      <style jsx global>{`
-        /* Form tab button styles */
-        .tab-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 10px 16px;
-          border-radius: var(--radius-sm);
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: var(--text-secondary);
-          background: transparent;
-          border: 1px solid transparent;
-          cursor: pointer;
-          transition: var(--transition-fast);
-          white-space: nowrap;
-        }
-        .tab-btn:hover {
-          color: var(--text-primary);
-          background: rgba(255, 255, 255, 0.03);
-          border-color: var(--border-color);
-        }
-        .tab-btn.active {
-          color: var(--text-primary);
-          background: var(--primary-glow);
-          border-color: var(--primary);
-        }
-        
-        /* Form inputs styles */
-        .form-section {
-          display: flex;
-          flex-direction: column;
-          gap: 18px;
-          animation: fadeIn 0.3s ease-out;
-        }
-        .section-title {
-          font-size: 1.2rem;
-          margin: 0;
-          color: var(--text-primary);
-        }
-        .section-desc {
-          font-size: 0.85rem;
-          color: var(--text-secondary);
-          margin-top: -12px;
-          margin-bottom: 6px;
-        }
-        .input-group {
-          display: flex;
-          flex-direction: column;
-          gap: 6px;
-        }
-        .input-group label {
-          font-size: 0.85rem;
-          font-weight: 600;
-          color: var(--text-primary);
-        }
-        .form-input, .form-select {
-          font-family: var(--font-sans);
-          font-size: 0.9rem;
-          padding: 10px 14px;
-          background-color: rgba(6, 8, 20, 0.5);
-          border: 1px solid var(--border-color);
-          border-radius: var(--radius-sm);
-          color: var(--text-primary);
-          outline: none;
-          transition: var(--transition-fast);
-          width: 100%;
-        }
-        .form-input:focus, .form-select:focus {
-          border-color: var(--primary);
-          box-shadow: 0 0 10px rgba(99, 102, 241, 0.2);
-        }
-        .help-text {
-          font-size: 0.75rem;
-          color: var(--text-muted);
-          margin-top: 2px;
-        }
-        
-        /* Option chips (radio style buttons) */
-        .option-chip {
-          padding: 10px 14px;
-          border-radius: var(--radius-sm);
-          font-size: 0.85rem;
-          font-weight: 600;
-          cursor: pointer;
-          background-color: rgba(255, 255, 255, 0.02);
-          border: 1px solid var(--border-color);
-          color: var(--text-secondary);
-          transition: var(--transition-fast);
-        }
-        .option-chip:hover {
-          color: var(--text-primary);
-          background-color: rgba(255, 255, 255, 0.05);
-        }
-        .option-chip.active-danger {
-          border-color: var(--danger);
-          background-color: var(--danger-glow);
-          color: var(--text-primary);
-        }
-        .option-chip.active-success {
-          border-color: var(--success);
-          background-color: var(--success-glow);
-          color: var(--text-primary);
-        }
-        
-        /* Checkbox customization */
-        .checkbox-container {
-          display: flex;
-          align-items: flex-start;
-          gap: 10px;
-          cursor: pointer;
-          padding: 8px 12px;
-          border-radius: var(--radius-sm);
-          border: 1px solid transparent;
-          transition: var(--transition-fast);
-        }
-        .checkbox-container:hover {
-          background-color: rgba(255, 255, 255, 0.02);
-          border-color: var(--border-color);
-        }
-        .checkbox-container input[type="checkbox"] {
-          margin-top: 4px;
-          accent-color: var(--primary);
-          width: 16px;
-          height: 16px;
-          cursor: pointer;
-        }
-        .checkbox-text {
-          font-size: 0.85rem;
-          color: var(--text-secondary);
-        }
-        
-        /* Info boxes */
-        .info-box {
-          display: flex;
-          gap: 12px;
-          padding: 14px;
-          background-color: rgba(6, 182, 212, 0.03);
-          border: 1px solid rgba(6, 182, 212, 0.1);
-          border-radius: var(--radius-sm);
-          align-items: flex-start;
-        }
-        
-        /* Modal Backdrop */
-        .modal-backdrop {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100vw;
-          height: 100vh;
-          background-color: rgba(0, 0, 0, 0.75);
-          backdrop-filter: blur(4px);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 9999;
-          animation: fadeIn 0.2s ease-out;
-        }
-        .modal-content {
-          background-color: #0d1023;
-          border: 1px solid var(--border-color);
-          border-radius: var(--radius-lg);
-          padding: 32px;
-          width: 90%;
-          box-shadow: var(--shadow-md);
-        }
-        
-        /* Animation keyframes */
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        .animate-scale-up {
-          animation: scaleUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-        @keyframes scaleUp {
-          from { transform: scale(0.9); opacity: 0; }
-          to { transform: scale(1); opacity: 1; }
-        }
-        
-        /* Paper Preview Area Styling */
-        .preview-paper {
-          background-color: #ffffff;
-          color: #1e293b;
-          padding: 40px;
-          border-radius: var(--radius-sm);
-          box-shadow: var(--shadow-md), 0 0 40px rgba(0,0,0,0.1);
-          font-family: var(--font-sans), sans-serif;
-          font-size: 0.92rem;
-          line-height: 1.6;
-          border: 1px solid #cbd5e1;
-          height: 700px;
-          overflow-y: auto;
-          text-align: left;
-        }
-        .preview-paper h2, .preview-paper h3, .preview-paper h4 {
-          color: #0f172a;
-          margin-top: 1.6em;
-          margin-bottom: 0.6em;
-        }
-        .preview-paper p {
-          margin-bottom: 1em;
-          color: #334155;
-        }
-        .preview-paper hr {
-          border: 0;
-          border-top: 1px solid #e2e8f0;
-          margin: 24px 0;
-        }
-        .preview-paper table {
-          width: 100%;
-          border-collapse: collapse;
-          margin: 16px 0;
-          font-size: 0.85rem;
-        }
-        .preview-paper th {
-          background-color: #f1f5f9;
-          border: 1px solid #cbd5e1;
-          padding: 10px 12px;
-          text-align: left;
-          font-weight: 700;
-          color: #1e293b;
-        }
-        .preview-paper td {
-          border: 1px solid #cbd5e1;
-          padding: 8px 12px;
-          color: #334155;
-        }
-        .preview-paper ul, .preview-paper ol {
-          margin-bottom: 1.2em;
-          padding-left: 20px;
-        }
-        .preview-paper li {
-          margin-bottom: 6px;
-          color: #334155;
-        }
-        
-        /* Hover highlighters */
-        .highlight-placeholder {
-          background-color: rgba(99, 102, 241, 0.1);
-          border-bottom: 1.5px dashed var(--primary);
-          color: #4f46e5;
-          padding: 0 4px;
-          border-radius: 2px;
-          font-weight: 600;
-          transition: all 0.2s ease;
-          display: inline-block;
-        }
-        .highlight-placeholder:hover {
-          background-color: rgba(99, 102, 241, 0.25);
-          color: #4338ca;
-        }
-        
-        /* Print Stylesheet Overrides */
-        @media print {
-          body, html {
-            background-color: #ffffff !important;
-            color: #000000 !important;
-            font-size: 11pt !important;
-          }
-          .no-print, header, .header-wrapper, footer, #mobile-view-tabs, .form-tabs-bar {
-            display: none !important;
-          }
-          main {
-            min-height: auto !important;
-          }
-          .container {
-            max-width: 100% !important;
-            width: 100% !important;
-            padding: 0 !important;
-            margin: 0 !important;
-          }
-          .builder-layout-grid {
-            display: block !important;
-            grid-template-columns: none !important;
-          }
-          .print-area {
-            display: block !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-            box-shadow: none !important;
-          }
-          .preview-paper {
-            height: auto !important;
-            overflow-y: visible !important;
-            border: none !important;
-            box-shadow: none !important;
-            padding: 0 !important;
-            margin: 0 !important;
-            color: #000000 !important;
-            background-color: #ffffff !important;
-          }
-          .preview-paper th {
-            background-color: #f1f5f9 !important;
-            -webkit-print-color-adjust: exact;
-            print-color-adjust: exact;
-          }
-          .highlight-placeholder {
-            background: transparent !important;
-            border: none !important;
-            color: #000000 !important;
-            padding: 0 !important;
-            font-weight: inherit !important;
-            text-decoration: none !important;
-          }
-        }
-        
-        /* Responsive layout rules */
-        @media (max-width: 990px) {
-          .builder-layout-grid {
-            grid-template-columns: 1fr !important;
-          }
-          #mobile-view-tabs {
-            display: flex !important;
-          }
-          .hidden-mobile {
-            display: none !important;
-          }
-        }
-      `}</style>
+        )}
+      </div>
     </div>
   );
 }
