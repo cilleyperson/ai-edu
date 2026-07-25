@@ -7,6 +7,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import { AuthProvider } from "@/components/AuthProvider";
 import { ToastProvider } from "@/components/ToastProvider";
+import { ThemeProvider } from "@/components/ThemeProvider";
 
 const outfit = Outfit({
   variable: "--font-outfit",
@@ -34,7 +35,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${outfit.variable} ${inter.variable}`}>
+    <html lang="en" className={`${outfit.variable} ${inter.variable}`} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('cu_ai_theme');
+                  var theme = saved || 'system';
+                  if (theme === 'system') {
+                    theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+                  }
+                  document.documentElement.setAttribute('data-theme', theme);
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body style={{ fontFamily: "var(--font-inter), sans-serif" }}>
         {/* Background glow effects */}
         <div className="bg-gradient-wrapper">
@@ -44,15 +63,17 @@ export default function RootLayout({
         </div>
 
         <AuthProvider>
-          <ToastProvider>
-            {/* Global Navigation Header */}
-            <Header />
+          <ThemeProvider>
+            <ToastProvider>
+              {/* Global Navigation Header */}
+              <Header />
 
-            {/* Main Content Area */}
-            <main style={{ minHeight: "calc(100vh - 80px)" }}>
-              {children}
-            </main>
-          </ToastProvider>
+              {/* Main Content Area */}
+              <main style={{ minHeight: "calc(100vh - 80px)" }}>
+                {children}
+              </main>
+            </ToastProvider>
+          </ThemeProvider>
         </AuthProvider>
       </body>
     </html>
