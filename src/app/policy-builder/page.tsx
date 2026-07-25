@@ -18,6 +18,8 @@ import {
   ClipboardList,
   FileText,
   Award,
+  Layers,
+  CheckCircle2,
 } from "lucide-react";
 
 interface PolicyData {
@@ -60,7 +62,7 @@ interface PolicyData {
 
 export default function PolicyBuilderPage() {
   const [activeTab, setActiveTab] = useState<"profile" | "governance" | "usecases" | "risk" | "tprm">("profile");
-  const [viewMode, setViewMode] = useState<"edit" | "preview">("edit");
+  const [viewMode, setViewMode] = useState<"edit" | "preview-policy" | "preview-plan" | "preview-combined">("edit");
   const [showPrintModal, setShowPrintModal] = useState(false);
 
   // Form State initialized via pure lazy initializer
@@ -115,8 +117,8 @@ export default function PolicyBuilderPage() {
     }
   };
 
-  // Generate Markdown Text incorporating research from docs/ai-gov-bp.md
-  const generateMarkdown = () => {
+  // Generate Governance Policy Markdown Text
+  const generatePolicyMarkdown = () => {
     const selectedUseCases = [];
     if (formData.useCaseChatbot) {
       selectedUseCases.push(
@@ -284,16 +286,152 @@ Violations of this Policy may result in disciplinary action up to and including 
 `;
   };
 
+  // Generate 6-Stage Operational Implementation Plan Markdown
+  const generateImplementationPlanMarkdown = () => {
+    return `# ${formData.creditUnionName.toUpperCase()}
+# DRAFT OPERATIONAL IMPLEMENTATION PLAN: 6-STAGE AI GOVERNANCE BLUEPRINT
+
+**Plan Status:** Draft & Ready for Execution  
+**Associated Policy Version:** ${formData.version}  
+**Lead Implementation Officer:** ${formData.aiLiaisonRole}  
+**Governing Body:** ${formData.governingBody}  
+**Target Completion Horizon:** 90 Days  
+
+---
+
+## EXECUTIVE SUMMARY & BLUEPRINT HORIZON
+To operationalize the **${formData.creditUnionName}** AI Governance & Compliance Policy, this Implementation Plan establishes discrete execution steps, assigned roles, compliance deliverables, and audit benchmarks for each of the six stages in the Credit Union AI Operational Blueprint.
+
+---
+
+## STAGE 1: AI ASSET INVENTORY & RISK CLASSIFICATION
+
+### 1.1 Objective
+Establish total visibility across all automated systems, machine learning models, third-party SaaS integrations, and generative AI tools deployed across the Credit Union.
+
+### 1.2 Execution Tasks & Deliverables
+
+| Task ID | Task Description | Lead Role | Deliverable / Output | Target Timeline |
+| :--- | :--- | :--- | :--- | :--- |
+| **STG1-1** | Deploy internal survey to department heads to catalog all software utilizing algorithmic scoring, OCR, or GenAI. | IT / Risk | Central AI Discovery Log | Days 1 - 10 |
+| **STG1-2** | Establish centralized **AI Asset Inventory Register** recording Asset Name, Model Provider, Data Input Types, Core System Interfaces, and Department Owner. | ${formData.aiLiaisonRole} | Master AI Asset Register | Days 11 - 20 |
+| **STG1-3** | Categorize each asset into **High Risk**, **Moderate Risk**, or **Low Risk** according to Section 3 of the Policy. | ${formData.governingBody} | Risk Tier Sign-off Matrix | Days 21 - 30 |
+
+### 1.3 Stage 1 Quality Gate
+*The Master AI Asset Register must be formally signed off by the ${formData.aiLiaisonRole} prior to proceeding to Stage 2.*
+
+---
+
+## STAGE 2: REGULATORY OBLIGATION MAPPING MATRIX
+
+### 2.1 Objective
+Map every cataloged AI asset directly to federal consumer protection laws, safety and soundness standards, and NCUA examination priorities.
+
+### 2.2 Execution Tasks & Deliverables
+
+| Task ID | Task Description | Lead Role | Deliverable / Output | Target Timeline |
+| :--- | :--- | :--- | :--- | :--- |
+| **STG2-1** | Map High-Risk underwriting models to **ECOA (Regulation B)** and **FCRA Section 615** adverse action requirements. | Compliance | ECOA/FCRA Compliance Checklist | Days 31 - 35 |
+| **STG2-2** | Map member-facing chatbots to **CFPA Section 1036 (UDAAP)**, **Regulation E**, and **Regulation Z** dispute triggers. | Legal / Compliance | Chatbot Statutory Escrow Specs | Days 36 - 40 |
+| **STG2-3** | Map transaction monitoring models to **BSA/AML** regulations and **GLBA Safeguards Rule** NPI encryption standards. | BSA Officer / InfoSec | BSA/GLBA Security Review | Days 41 - 45 |
+
+### 2.3 Regulatory Mapping Matrix Template
+
+| Asset ID | Asset Name | Applicable Regulations | Mandatory Compliance Safeguard |
+| :--- | :--- | :--- | :--- |
+| **AI-01** | Credit Underwriting Engine | ECOA (Reg B), FCRA, CFPB Circular 2022-03 | SHAP/LIME Explainability & Adverse Action Reason Code Mapping |
+| **AI-02** | Member Support Chatbot | CFPA Sec 1036 (UDAAP), Reg E, Reg Z | RAG Retrieval Bounds & Mandatory Human Escalation Triggers |
+| **AI-03** | Fraud Screening Engine | BSA/AML, GLBA Safeguards Rule | Biometric Liveness & Synthetic ID Detection Logs |
+
+---
+
+## STAGE 3: GAP ASSESSMENT & TPRM AUDIT PROTOCOL
+
+### 3.1 Objective
+Audit third-party AI vendor contracts, SOC 2 Type II reports, and validation documentation to ensure full compliance with the 2023 Interagency TPRM Guidance.
+
+### 3.2 Execution Tasks & Deliverables
+
+| Task ID | Task Description | Lead Role | Deliverable / Output | Target Timeline |
+| :--- | :--- | :--- | :--- | :--- |
+| **STG3-1** | Request and review **SOC 2 Type II**, **ISO 42001**, and **AIUC-1** certification packages from all High/Moderate risk AI vendors. | TPRM / InfoSec | Vendor Cert Audit File | Days 46 - 52 |
+| **STG3-2** | Inspect vendor contracts for mandatory **Unrestricted Right-to-Audit**, **Data Non-Training**, and **4th-Party Consent** clauses. | Legal | Contract Addendum Gap Report | Days 53 - 60 |
+| **STG3-3** | Issue formal Contract Addendums to non-compliant vendors requiring explicit data destruction and audit commitments. | Procurement | Executed Vendor Addendums | Days 61 - 65 |
+
+---
+
+## STAGE 4: ARCHITECTURAL REVIEW & DECISION TELEMETRY SPECS
+
+### 4.1 Objective
+Enforce compliance-first software design by embedding decision logging by design, SHAP/LIME feature attributions, and NPI masking into production AI pipelines.
+
+### 4.2 Technical Implementation Checklist
+
+- [ ] **Decision Logging Pipeline:** Build immutable DB logging capturing 'Timestamp', 'SessionID', 'ModelVersion', 'InputFeatures', 'RawProbability', 'SHAPValues', 'Action', and 'ECOACodes'.
+- [ ] **PII Masking Integration:** Implement cryptographic sanitization library to mask member NPI prior to sending payloads to external vendor APIs.
+- [ ] **RAG Guardrails:** Configure vector database retrieval boundaries for member support chatbots to eliminate out-of-bounds hallucinations.
+
+---
+
+## STAGE 5: FORMAL GOVERNANCE & STEERING COMMITTEE CHARTERING
+
+### 5.1 Objective
+Institutionalize ongoing governance, charter the Executive AI Steering Committee, and submit the Board Risk Appetite Resolution for formal adoption.
+
+### 5.2 Operational Governance Deliverables
+
+1.  **AI Steering Committee Charter:** Formally establishing monthly review meetings, use case approval workflows, and model exception protocols.
+2.  **Board Risk Appetite Resolution:** Formal Board resolution codifying risk tolerance thresholds for AI deployments.
+3.  **Quarterly Dashboard Template:** Standardized reporting metric layout summarizing active AI assets, bias audit scores, and vendor SLAs.
+
+---
+
+## STAGE 6: CONTINUOUS TESTING & REVALIDATION RUNBOOK
+
+### 6.1 Objective
+Operationalize continuous fair lending monitoring, model drift tracking, and scheduled **${formData.biasCheckFrequency}** revalidations.
+
+### 6.2 Execution Schedule & Tolerances
+
+| Audit Activity | Frequency | Metric / Threshold | Corrective Action Trigger |
+| :--- | :--- | :--- | :--- |
+| **Fair Lending Bias Audit** | **${formData.biasCheckFrequency}** | Adverse Impact Ratio (AIR) >= 0.80 across protected classes | Immediate model pause & proxy variable removal if AIR < 0.80 |
+| **Model Performance & Drift** | Monthly | Population Stability Index (PSI) < 0.10 | Model retraining triggered if PSI >= 0.25 |
+| **Chatbot Escalation Scan** | Weekly | 100% successful routing of Reg E/Z keywords | Immediate NLP retraining if escalation fails |
+
+---
+
+## 7. SIGN-OFF & OPERATIONAL COMMITMENT
+
+**Submitted By:** ${formData.aiLiaisonRole}  
+**Approved For Execution:** ${formData.governingBody}  
+**Target Operational Completion Date:** ${formData.boardApprovalDate}  
+`;
+  };
+
+  // Combined Package Generator
+  const generateCombinedPackageMarkdown = () => {
+    return `${generatePolicyMarkdown()}\n\n---\n\n${generateImplementationPlanMarkdown()}`;
+  };
+
+  // Get active text based on viewMode
+  const getActiveContent = () => {
+    if (viewMode === "preview-plan") return generateImplementationPlanMarkdown();
+    if (viewMode === "preview-combined") return generateCombinedPackageMarkdown();
+    return generatePolicyMarkdown();
+  };
+
   // Download Markdown file
   const downloadMarkdown = () => {
-    const mdText = generateMarkdown();
+    const mdText = getActiveContent();
     const blob = new Blob([mdText], { type: "text/markdown;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
 
     const sanitizedCuName = formData.creditUnionName.replace(/[^a-z0-9]/gi, "_").toLowerCase();
-    link.setAttribute("download", `${sanitizedCuName}_ai_governance_policy.md`);
+    const suffix = viewMode === "preview-plan" ? "operational_plan" : viewMode === "preview-combined" ? "full_package" : "policy";
+    link.setAttribute("download", `${sanitizedCuName}_ai_${suffix}.md`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -340,12 +478,13 @@ Violations of this Policy may result in disciplinary action up to and including 
           <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
             <span className="badge badge-board">NCUA 2026 Aligned</span>
             <span className="badge badge-indigo">NIST AI RMF & ISO 42001</span>
+            <span className="badge badge-emerald">6-Stage Blueprint Ready</span>
           </div>
           <h1 style={{ fontSize: "2.5rem", marginBottom: "12px" }}>
             AI Policy & <span className="gradient-text">Governance Builder</span>
           </h1>
-          <p style={{ color: "var(--text-secondary)", maxWidth: "850px", fontSize: "1.05rem" }}>
-            Configure and export a complete, NCUA-examiner-defensible AI Governance Policy for your credit union. Incorporates CFPB Circular 2022-03 Adverse Action rules, 2023 Interagency TPRM guidance, SHAP/LIME explainability, and ISO 42001 / AIUC-1 standards.
+          <p style={{ color: "var(--text-secondary)", maxWidth: "900px", fontSize: "1.05rem" }}>
+            Configure and export a complete, NCUA-examiner-defensible AI Governance Policy and a draft **6-Stage Operational Implementation Plan**. Incorporates CFPB Circular 2022-03 Adverse Action rules, 2023 Interagency TPRM guidance, SHAP/LIME explainability, and ISO 42001 / AIUC-1 standards.
           </p>
         </div>
 
@@ -365,24 +504,42 @@ Violations of this Policy may result in disciplinary action up to and including 
             borderRadius: "var(--radius-lg)",
           }}
         >
-          {/* Mode Switcher */}
-          <div style={{ display: "flex", gap: "8px", background: "rgba(0,0,0,0.3)", padding: "4px", borderRadius: "var(--radius-md)" }}>
+          {/* Mode Switcher Buttons */}
+          <div style={{ display: "flex", gap: "6px", background: "rgba(0,0,0,0.4)", padding: "4px", borderRadius: "var(--radius-md)", overflowX: "auto" }}>
             <button
               onClick={() => setViewMode("edit")}
               className={`btn ${viewMode === "edit" ? "btn-primary" : "btn-secondary"}`}
-              style={{ padding: "8px 16px", fontSize: "0.85rem" }}
+              style={{ padding: "8px 14px", fontSize: "0.8rem" }}
             >
               <ClipboardList style={{ width: 14, height: 14 }} />
-              <span>Interactive Policy Editor</span>
+              <span>Form Editor</span>
             </button>
 
             <button
-              onClick={() => setViewMode("preview")}
-              className={`btn ${viewMode === "preview" ? "btn-primary" : "btn-secondary"}`}
-              style={{ padding: "8px 16px", fontSize: "0.85rem" }}
+              onClick={() => setViewMode("preview-policy")}
+              className={`btn ${viewMode === "preview-policy" ? "btn-primary" : "btn-secondary"}`}
+              style={{ padding: "8px 14px", fontSize: "0.8rem" }}
             >
               <FileText style={{ width: 14, height: 14 }} />
-              <span>Preview Policy Document</span>
+              <span>Policy Preview</span>
+            </button>
+
+            <button
+              onClick={() => setViewMode("preview-plan")}
+              className={`btn ${viewMode === "preview-plan" ? "btn-primary" : "btn-secondary"}`}
+              style={{ padding: "8px 14px", fontSize: "0.8rem" }}
+            >
+              <Layers style={{ width: 14, height: 14 }} />
+              <span>6-Stage Implementation Roadmap</span>
+            </button>
+
+            <button
+              onClick={() => setViewMode("preview-combined")}
+              className={`btn ${viewMode === "preview-combined" ? "btn-primary" : "btn-secondary"}`}
+              style={{ padding: "8px 14px", fontSize: "0.8rem" }}
+            >
+              <CheckCircle2 style={{ width: 14, height: 14 }} />
+              <span>Full Package</span>
             </button>
           </div>
 
@@ -390,7 +547,7 @@ Violations of this Policy may result in disciplinary action up to and including 
           <div style={{ display: "flex", gap: "10px" }}>
             <button onClick={downloadMarkdown} className="btn btn-secondary" style={{ padding: "8px 16px", fontSize: "0.85rem" }}>
               <Download style={{ width: 14, height: 14 }} />
-              <span>Export Markdown (.md)</span>
+              <span>Export Markdown</span>
             </button>
 
             <button onClick={handlePrintPDF} className="btn btn-primary" style={{ padding: "8px 16px", fontSize: "0.85rem" }}>
@@ -802,10 +959,10 @@ Violations of this Policy may result in disciplinary action up to and including 
             </div>
           </div>
         ) : (
-          /* PREVIEW MODE: Publication-Ready Policy Document */
+          /* PREVIEW MODE: Publication-Ready Policy & Implementation Documents */
           <div className="card" style={{ padding: "40px", backgroundColor: "#fff", color: "#111827", borderRadius: "var(--radius-lg)" }}>
             <pre style={{ fontFamily: "serif", fontSize: "0.95rem", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
-              {generateMarkdown()}
+              {getActiveContent()}
             </pre>
           </div>
         )}
@@ -828,10 +985,10 @@ Violations of this Policy may result in disciplinary action up to and including 
               padding: "20px",
             }}
           >
-            <div className="card" style={{ maxWidth: "480px", width: "100%", padding: "28px" }}>
-              <h3 style={{ marginTop: 0, marginBottom: "12px" }}>Prepare Policy Document for Export</h3>
+            <div className="card" style={{ maxWidth: "520px", width: "100%", padding: "28px" }}>
+              <h3 style={{ marginTop: 0, marginBottom: "12px" }}>Prepare Document Package for Export</h3>
               <p style={{ fontSize: "0.9rem", color: "var(--text-secondary)", marginBottom: "20px" }}>
-                Ready to generate printable PDF / Examiner submission package for <strong>{formData.creditUnionName}</strong>.
+                Ready to generate printable PDF / Examiner submission package for <strong>{formData.creditUnionName}</strong> ({viewMode === "preview-plan" ? "6-Stage Operational Plan" : viewMode === "preview-combined" ? "Combined Policy & Operational Package" : "Governance Policy"}).
               </p>
 
               <div style={{ display: "flex", gap: "12px", justifyContent: "flex-end" }}>
