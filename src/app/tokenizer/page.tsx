@@ -3,12 +3,10 @@
 
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import {
-  ArrowLeft,
-  RefreshCw,
-} from "lucide-react";
+import { ArrowLeft, RefreshCw, Radio } from "lucide-react";
+import { useToast } from "@/components/ToastProvider";
 
 export interface ModelPricing {
   id: string;
@@ -22,18 +20,20 @@ export interface ModelPricing {
 
 const DEFAULT_MODELS: ModelPricing[] = [
   { id: "gpt4o", name: "GPT-4o", provider: "OpenAI", inputPrice: 2.50, outputPrice: 10.00, contextWindow: "128k", tier: "Flagship" },
+  { id: "o3_mini", name: "o3-mini Reasoning", provider: "OpenAI", inputPrice: 1.10, outputPrice: 4.40, contextWindow: "200k", tier: "Reasoning" },
   { id: "gpt4o_mini", name: "GPT-4o mini", provider: "OpenAI", inputPrice: 0.15, outputPrice: 0.60, contextWindow: "128k", tier: "Fast / Mini" },
-  { id: "o1", name: "o1 Reasoning", provider: "OpenAI", inputPrice: 15.00, outputPrice: 60.00, contextWindow: "200k", tier: "Reasoning" },
-  { id: "claude_sonnet", name: "Claude 3.5 Sonnet", provider: "Anthropic", inputPrice: 3.00, outputPrice: 15.00, contextWindow: "200k", tier: "Flagship" },
+  { id: "claude_sonnet", name: "Claude 3.7 / 4.5 Sonnet", provider: "Anthropic", inputPrice: 3.00, outputPrice: 15.00, contextWindow: "200k", tier: "Flagship" },
   { id: "claude_haiku", name: "Claude 3.5 Haiku", provider: "Anthropic", inputPrice: 1.00, outputPrice: 5.00, contextWindow: "200k", tier: "Fast / Mini" },
-  { id: "claude_opus", name: "Claude 3 Opus", provider: "Anthropic", inputPrice: 15.00, outputPrice: 75.00, contextWindow: "200k", tier: "Flagship" },
-  { id: "gemini_pro", name: "Gemini 1.5 Pro", provider: "Google", inputPrice: 1.25, outputPrice: 5.00, contextWindow: "2M", tier: "Flagship" },
-  { id: "gemini_flash", name: "Gemini 1.5 Flash", provider: "Google", inputPrice: 0.075, outputPrice: 0.30, contextWindow: "1M", tier: "Fast / Mini" },
-  { id: "deepseek_v3", name: "DeepSeek V3 / R1", provider: "DeepSeek", inputPrice: 0.14, outputPrice: 0.28, contextWindow: "128k", tier: "Open-Weights" },
+  { id: "claude_opus", name: "Claude Opus", provider: "Anthropic", inputPrice: 5.00, outputPrice: 25.00, contextWindow: "200k", tier: "Flagship" },
+  { id: "gemini_pro", name: "Gemini 2.5 Pro", provider: "Google", inputPrice: 1.25, outputPrice: 10.00, contextWindow: "2M", tier: "Flagship" },
+  { id: "gemini_flash", name: "Gemini 3.6 Flash", provider: "Google", inputPrice: 1.50, outputPrice: 7.50, contextWindow: "1M", tier: "Fast / Mini" },
+  { id: "deepseek_flash", name: "DeepSeek-V4 Flash", provider: "DeepSeek", inputPrice: 0.14, outputPrice: 0.28, contextWindow: "128k", tier: "Open-Weights" },
+  { id: "deepseek_pro", name: "DeepSeek-V4 Pro", provider: "DeepSeek", inputPrice: 0.435, outputPrice: 0.87, contextWindow: "128k", tier: "Open-Weights" },
   { id: "llama_33", name: "Llama 3.3 70B (Hosted)", provider: "Meta / Open-Source", inputPrice: 0.35, outputPrice: 0.40, contextWindow: "128k", tier: "Open-Weights" },
 ];
 
 export default function Tokenizer() {
+  const { addToast } = useToast();
   const [inputText, setInputText] = useState(
     "What is the late fee on our member checking accounts? I would like to request a waiver for a $35 fee on my statement balance."
   );
@@ -48,7 +48,50 @@ export default function Tokenizer() {
   const [enablePromptCaching, setEnablePromptCaching] = useState<boolean>(false);
   const [enableBatchAPI, setEnableBatchAPI] = useState<boolean>(false);
 
-  // Load custom pricing overrides from localStorage
+  // Auto-Sync state
+  const [isSyncing, setIsSyncing] = useState<boolean>(false);
+  const [lastSyncedTime, setLastSyncedTime] = useState<string | null>(null);
+
+  // Sync pricing from live API route
+  const fetchLivePricing = useCallback(async (isManual: boolean = false) => {
+    setIsSyncing(true);
+    try {
+      const res = await fetch("/api/models/pricing");
+      const data = await res.json();
+
+      if (data.success && Array.isArray(data.models)) {
+        setModels(data.models);
+        const formattedTime = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+        setLastSyncedTime(formattedTime);
+
+        try {
+          localStorage.setItem("cu_ai_tokenizer_models", JSON.stringify(data.models));
+        } catch {
+          // Ignore
+        }
+
+        if (isManual) {
+          addToast({
+            type: "success",
+            title: "Model Pricing Synced",
+            message: "Successfully fetched latest 2026 flagship model rates.",
+          });
+        }
+      }
+    } catch {
+      if (isManual) {
+        addToast({
+          type: "error",
+          title: "Sync Failed",
+          message: "Using cached 2026 flagship baseline rates.",
+        });
+      }
+    } finally {
+      setIsSyncing(false);
+    }
+  }, [addToast]);
+
+  // Load custom pricing overrides from localStorage & auto-sync once on mount
   useEffect(() => {
     try {
       const saved = localStorage.getItem("cu_ai_tokenizer_models");
@@ -59,9 +102,11 @@ export default function Tokenizer() {
     } catch {
       // Ignore parse errors
     }
-  }, []);
 
-  // Save models to localStorage when edited
+    fetchLivePricing(false);
+  }, [fetchLivePricing]);
+
+  // Save models to localStorage when edited manually
   const updateModelPrice = (id: string, field: "inputPrice" | "outputPrice", value: number) => {
     const updated = models.map((m) => (m.id === id ? { ...m, [field]: Math.max(0, value) } : m));
     setModels(updated);
@@ -75,6 +120,11 @@ export default function Tokenizer() {
   const resetToDefaultPrices = () => {
     setModels(DEFAULT_MODELS);
     localStorage.removeItem("cu_ai_tokenizer_models");
+    addToast({
+      type: "info",
+      title: "Rates Reset",
+      message: "Restored baseline 2026 flagship pricing tiers.",
+    });
   };
 
   // Sub-word Tokenize Simulator Logic
@@ -161,18 +211,50 @@ export default function Tokenizer() {
           <span>Back to Dashboard</span>
         </Link>
 
-        {/* Title */}
-        <div style={{ marginBottom: "30px" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
-            <span className="badge badge-staff">Interactive Activity</span>
-            <span className="badge badge-indigo">2026 LLM Rates</span>
+        {/* Title & Live Sync Header */}
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", flexWrap: "wrap", gap: "16px", marginBottom: "30px" }}>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "8px" }}>
+              <span className="badge badge-staff">Interactive Activity</span>
+              <span className="badge badge-indigo">2026 Flagship LLMs</span>
+            </div>
+            <h1 className="gradient-text" style={{ fontSize: "2.25rem", marginBottom: "8px" }}>
+              LLM Tokenizer & Enterprise Cost Simulator
+            </h1>
+            <p style={{ color: "var(--text-secondary)", maxWidth: "850px" }}>
+              Explore sub-word token parsing, simulate RAG context bloat, model 2026 flagship frontier LLMs (OpenAI o3-mini, GPT-4o, Claude 3.7/4.5 Sonnet, Gemini 2.5 Pro, DeepSeek-V4), and project credit union operational budgets.
+            </p>
           </div>
-          <h1 className="gradient-text" style={{ fontSize: "2.25rem", marginBottom: "8px" }}>
-            LLM Tokenizer & Enterprise Cost Simulator
-          </h1>
-          <p style={{ color: "var(--text-secondary)", maxWidth: "850px" }}>
-            Language models convert characters into integer tokens. Explore prompt tokenization, simulate RAG context bloat, model 10+ frontier & open-source LLMs, and project monthly/annual credit union operational budgets.
-          </p>
+
+          {/* Auto-Sync Live Rates Indicator Badge */}
+          <div
+            className="card"
+            style={{
+              padding: "12px 16px",
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              background: "rgba(16, 185, 129, 0.06)",
+              border: "1px solid rgba(16, 185, 129, 0.3)",
+              borderRadius: "var(--radius-md)",
+            }}
+          >
+            <Radio style={{ width: 18, height: 18, color: "var(--success)" }} className={isSyncing ? "animate-pulse" : ""} />
+            <div>
+              <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block" }}>Live API Rate Sync</span>
+              <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-primary)" }}>
+                {lastSyncedTime ? `Synced at ${lastSyncedTime}` : "Auto-Sync Ready"}
+              </span>
+            </div>
+            <button
+              onClick={() => fetchLivePricing(true)}
+              disabled={isSyncing}
+              className="btn btn-secondary"
+              style={{ padding: "6px 10px", fontSize: "0.75rem", marginLeft: "6px" }}
+            >
+              <RefreshCw style={{ width: 14, height: 14 }} className={isSyncing ? "spin" : ""} />
+            </button>
+          </div>
         </div>
 
         {/* Workspace Layout */}
@@ -436,15 +518,15 @@ export default function Tokenizer() {
           </div>
         </div>
 
-        {/* 10-Model Pricing Matrix & SLA Editor */}
+        {/* 2026 Flagship Pricing Matrix & SLA Editor */}
         <div className="card" style={{ marginBottom: "40px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px", marginBottom: "20px" }}>
             <div>
               <h3 style={{ fontSize: "1.25rem", margin: "0 0 4px 0" }} className="gradient-text-indigo">
-                3. Multi-Model Enterprise Cost Comparison Matrix
+                3. Flagship Model Matrix & Enterprise SLA Overrides
               </h3>
               <p style={{ margin: 0, fontSize: "0.85rem", color: "var(--text-secondary)" }}>
-                Edit rates directly to model custom enterprise SLAs or vendor discounts. Prices per 1,000,000 tokens.
+                Edit rates directly to model custom enterprise SLAs or vendor volume discounts. Prices per 1,000,000 tokens.
               </p>
             </div>
 
@@ -454,7 +536,7 @@ export default function Tokenizer() {
               style={{ padding: "6px 12px", fontSize: "0.8rem", display: "flex", alignItems: "center", gap: "6px" }}
             >
               <RefreshCw style={{ width: 14, height: 14 }} />
-              <span>Reset 2026 Default Rates</span>
+              <span>Reset Flagship Baseline</span>
             </button>
           </div>
 
