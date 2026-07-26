@@ -201,7 +201,7 @@ export default function PipelineBuilder() {
           {/* Builder Canvas */}
           <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
             
-            <div className="card" style={{ minHeight: "400px", padding: "30px", backgroundColor: "rgba(0,0,0,0.2)", border: "1px solid var(--border-color)", display: "flex", flexDirection: "column" }}>
+            <div className="card" style={{ minHeight: "400px", padding: "30px", backgroundColor: "var(--surface-card)", border: "1px solid var(--border-color)", display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "16px" }}>
                 <h3 style={{ margin: 0, fontSize: "1.1rem" }}>Canvas</h3>
                 <button 
@@ -301,7 +301,7 @@ export default function PipelineBuilder() {
                   </div>
                 </div>
 
-                <div style={{ backgroundColor: "rgba(0,0,0,0.2)", borderRadius: "var(--radius-md)", padding: "16px" }}>
+                <div style={{ backgroundColor: "var(--surface-hover)", borderRadius: "var(--radius-md)", padding: "16px" }}>
                   <h4 style={{ fontSize: "0.85rem", color: "var(--text-muted)", textTransform: "uppercase", marginBottom: "12px" }}>Audit Trail</h4>
                   <ul style={{ margin: 0, paddingLeft: "20px", display: "flex", flexDirection: "column", gap: "8px" }}>
                     {results.messages.map((msg, i) => (
