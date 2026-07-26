@@ -289,6 +289,7 @@ h4 { font-size: 1.2rem; }
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
 }
 
 .logo {
@@ -299,6 +300,35 @@ h4 { font-size: 1.2rem; }
   align-items: center;
   gap: 8px;
   color: var(--text-primary);
+  flex-shrink: 0;
+}
+
+.header-utilities {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* Responsive Element Density Controls */
+.header-progress-widget {
+  display: none;
+}
+
+.search-btn-text {
+  display: none;
+}
+
+@media (min-width: 1360px) {
+  .header-progress-widget {
+    display: flex;
+  }
+}
+
+@media (min-width: 1280px) {
+  .search-btn-text {
+    display: inline;
+  }
 }
 
 .nav-links {
