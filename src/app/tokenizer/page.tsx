@@ -597,7 +597,7 @@ export default function Tokenizer() {
                                 padding: "4px 6px",
                                 borderRadius: "4px",
                                 border: "1px solid var(--border-color)",
-                                backgroundColor: "rgba(0,0,0,0.3)",
+                                backgroundColor: "var(--surface-hover)",
                                 color: "var(--text-primary)",
                                 fontSize: "0.85rem",
                               }}
@@ -619,7 +619,7 @@ export default function Tokenizer() {
                                 padding: "4px 6px",
                                 borderRadius: "4px",
                                 border: "1px solid var(--border-color)",
-                                backgroundColor: "rgba(0,0,0,0.3)",
+                                backgroundColor: "var(--surface-hover)",
                                 color: "var(--text-primary)",
                                 fontSize: "0.85rem",
                               }}
