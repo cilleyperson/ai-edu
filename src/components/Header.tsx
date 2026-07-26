@@ -254,13 +254,14 @@ export default function Header() {
           </ul>
         </nav>
 
-        {/* Progress Tracker Widget */}
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+        {/* Right Utility Bar */}
+        <div className="header-utilities">
+          {/* Progress Tracker Widget */}
           <div
+            className="header-progress-widget"
             style={{
               padding: "4px 12px",
               borderRadius: "var(--radius-full)",
-              display: "flex",
               alignItems: "center",
               gap: "8px",
               fontSize: "0.8rem",
@@ -283,14 +284,14 @@ export default function Header() {
               fontSize: "0.8rem",
               display: "flex",
               alignItems: "center",
-              gap: "8px",
+              gap: "6px",
               background: "var(--surface-hover)",
               border: "1px solid var(--border-color)",
               color: "var(--text-secondary)",
             }}
           >
             <Search style={{ width: 14, height: 14 }} />
-            <span>Search</span>
+            <span className="search-btn-text">Search</span>
             <kbd style={{ fontSize: "0.7rem", color: "var(--text-secondary)", background: "var(--surface-elevated)", padding: "1px 5px", borderRadius: "4px" }}>⌘K</kbd>
           </button>
 
@@ -453,7 +454,7 @@ export default function Header() {
 
       {/* Injecting CSS specifically for responsive display toggle since we don't have tailwind config file active */}
       <style jsx global>{`
-        @media (min-width: 1024px) {
+        @media (min-width: 1180px) {
           .desktop-nav {
             display: block !important;
           }
