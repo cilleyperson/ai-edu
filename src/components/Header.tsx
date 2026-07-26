@@ -264,7 +264,7 @@ export default function Header() {
               alignItems: "center",
               gap: "8px",
               fontSize: "0.8rem",
-              background: "rgba(255, 255, 255, 0.04)",
+              background: "var(--surface-hover)",
               border: "1px solid var(--border-color)",
             }}
           >
@@ -284,14 +284,14 @@ export default function Header() {
               display: "flex",
               alignItems: "center",
               gap: "8px",
-              background: "rgba(255, 255, 255, 0.04)",
+              background: "var(--surface-hover)",
               border: "1px solid var(--border-color)",
               color: "var(--text-secondary)",
             }}
           >
             <Search style={{ width: 14, height: 14 }} />
             <span>Search</span>
-            <kbd style={{ fontSize: "0.7rem", opacity: 0.6, background: "rgba(255,255,255,0.1)", padding: "1px 5px", borderRadius: "4px" }}>⌘K</kbd>
+            <kbd style={{ fontSize: "0.7rem", color: "var(--text-secondary)", background: "var(--surface-elevated)", padding: "1px 5px", borderRadius: "4px" }}>⌘K</kbd>
           </button>
 
           {/* Theme Selector Widget */}
@@ -321,18 +321,7 @@ export default function Header() {
       {/* Mobile Navigation Drawer */}
       {isOpen && (
         <div
-          className="animate-fade-in-up"
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            right: 0,
-            background: "rgba(6, 8, 20, 0.98)",
-            backdropFilter: "blur(20px)",
-            borderBottom: "1px solid var(--border-color)",
-            padding: "14px 0",
-            zIndex: 99,
-          }}
+          className="animate-fade-in-up mobile-nav-drawer"
         >
           <ul style={{ display: "flex", flexDirection: "column", gap: "4px", listStyle: "none" }}>
             

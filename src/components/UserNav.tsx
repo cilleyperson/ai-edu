@@ -61,7 +61,7 @@ export default function UserNav() {
             <button
               onClick={() => setShowDropdown(!showDropdown)}
               style={{
-                background: "rgba(255, 255, 255, 0.05)",
+                background: "var(--surface-hover)",
                 border: "1px solid var(--border-color)",
                 borderRadius: "var(--radius-md)",
                 padding: "6px 12px",
@@ -100,10 +100,10 @@ export default function UserNav() {
                   top: "100%",
                   marginTop: "8px",
                   width: "220px",
-                  backgroundColor: "var(--card-bg, #1e1e24)",
+                  backgroundColor: "var(--surface-card)",
                   border: "1px solid var(--border-color)",
                   borderRadius: "var(--radius-md)",
-                  boxShadow: "0 10px 25px rgba(0,0,0,0.5)",
+                  boxShadow: "var(--shadow-lg)",
                   padding: "8px",
                   zIndex: 200,
                 }}
@@ -193,9 +193,9 @@ export default function UserNav() {
               width: "100%",
               maxWidth: "420px",
               padding: "32px",
-              backgroundColor: "var(--card-bg, #18181b)",
+              backgroundColor: "var(--surface-card)",
               border: "1px solid var(--border-color)",
-              boxShadow: "0 20px 40px rgba(0,0,0,0.6)",
+              boxShadow: "var(--shadow-lg)",
             }}
             onClick={(e) => e.stopPropagation()}
           >

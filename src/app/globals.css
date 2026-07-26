@@ -277,11 +277,12 @@ h4 { font-size: 1.2rem; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(7, 9, 19, 0.85);
+  background: var(--surface-card);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--border-color);
   padding: 14px 0;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .header-container {
@@ -340,7 +341,7 @@ h4 { font-size: 1.2rem; }
   left: 50%;
   transform: translateX(-50%) translateY(10px);
   width: 320px;
-  background: rgba(15, 20, 36, 0.96);
+  background: var(--surface-card);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid var(--border-color);
@@ -364,7 +365,7 @@ h4 { font-size: 1.2rem; }
   transform: translateX(-50%);
   border-width: 6px;
   border-style: solid;
-  border-color: transparent transparent rgba(15, 20, 36, 0.96) transparent;
+  border-color: transparent transparent var(--surface-card) transparent;
 }
 
 .nav-category-container:hover .nav-dropdown,
@@ -396,7 +397,7 @@ h4 { font-size: 1.2rem; }
   justify-content: center;
   padding: 6px;
   border-radius: var(--radius-sm);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--surface-hover);
   color: var(--text-muted);
   margin-top: 2px;
   transition: all 0.15s ease;
@@ -454,11 +455,26 @@ h4 { font-size: 1.2rem; }
   background: rgba(255, 255, 255, 0.02);
 }
 
+/* Mobile Navigation Drawer */
+.mobile-nav-drawer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--surface-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 14px 0;
+  z-index: 99;
+  box-shadow: var(--shadow-lg);
+}
+
 .mobile-accordion-content {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  background: rgba(0, 0, 0, 0.15);
+  background: var(--surface-hover);
 }
 
 .mobile-accordion-content.expanded {
