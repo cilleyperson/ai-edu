@@ -289,22 +289,26 @@ h4 { font-size: 1.2rem; }
   margin-bottom: 6px;
 }
 
-.form-input, .form-textarea, .form-select {
-  width: 100%;
-  padding: 10px 14px;
+input, select, textarea, .form-input, .form-textarea, .form-select {
+  font-family: var(--font-sans);
+  color: var(--text-primary);
   background-color: var(--surface-hover);
   border: 1px solid var(--border-color);
   border-radius: var(--radius-md);
-  color: var(--text-primary);
-  font-family: var(--font-sans);
+  padding: 10px 14px;
   font-size: 0.9rem;
   transition: var(--transition-fast);
 }
 
-.form-input:focus, .form-textarea:focus, .form-select:focus {
+input:focus, select:focus, textarea:focus, .form-input:focus, .form-textarea:focus, .form-select:focus {
   outline: none;
   border-color: var(--primary);
   box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+html[data-theme="light"] select option {
+  background-color: #ffffff;
+  color: #0f172a;
 }
 
 /* Header & Nav */

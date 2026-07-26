@@ -65,15 +65,16 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
               pointerEvents: "auto",
               padding: "12px 16px",
               borderRadius: "var(--radius-md)",
-              backgroundColor: "rgba(18, 21, 38, 0.95)",
+              backgroundColor: "var(--surface-card)",
+              color: "var(--text-primary)",
               border: `1px solid ${
                 toast.type === "success"
-                  ? "rgba(16, 185, 129, 0.4)"
+                  ? "var(--success)"
                   : toast.type === "error"
-                  ? "rgba(239, 68, 68, 0.4)"
-                  : "rgba(99, 102, 241, 0.4)"
+                  ? "var(--danger)"
+                  : "var(--primary)"
               }`,
-              boxShadow: "0 10px 25px rgba(0, 0, 0, 0.5)",
+              boxShadow: "var(--shadow-lg)",
               display: "flex",
               alignItems: "flex-start",
               gap: "12px",

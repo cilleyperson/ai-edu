@@ -282,7 +282,7 @@ export default function RedTeamLab() {
                 <input
                   type="text"
                   className="form-input"
-                  style={{ flex: 1, fontFamily: "monospace", fontSize: "0.9rem", border: "1px solid var(--danger)", backgroundColor: "rgba(0,0,0,0.2)" }}
+                  style={{ flex: 1, fontFamily: "monospace", fontSize: "0.9rem", border: "1px solid var(--danger)", backgroundColor: "var(--surface-hover)" }}
                   placeholder="Enter malicious prompt payload..."
                   value={userInput}
                   onChange={(e) => setUserInput(e.target.value)}

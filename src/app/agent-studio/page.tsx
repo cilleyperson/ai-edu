@@ -336,13 +336,13 @@ function getAutoLoanRate() {
               </h3>
             </div>
             
-            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border-color)", backgroundColor: "rgba(0,0,0,0.3)" }}>
+            <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--border-color)", backgroundColor: "var(--surface-hover)" }}>
               <p style={{ margin: 0, fontSize: "0.9rem", color: "var(--text-secondary)", fontFamily: "monospace" }}>
                 <strong style={{ color: "var(--text-primary)" }}>{currentMission.taskPrompt}</strong>
               </p>
             </div>
 
-            <div style={{ flex: 1, padding: "20px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "16px", backgroundColor: "rgba(0,0,0,0.15)" }}>
+            <div style={{ flex: 1, padding: "20px", overflowY: "auto", display: "flex", flexDirection: "column", gap: "16px", backgroundColor: "var(--surface-card)" }}>
               {trace.map((step, idx) => (
                 <div key={idx} className="animate-fade-in-up" style={{ display: "flex", gap: "12px" }}>
                   <div style={{ marginTop: "2px" }}>

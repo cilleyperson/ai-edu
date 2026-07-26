@@ -499,13 +499,13 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
             gap: "16px",
             marginBottom: "30px",
             padding: "16px 20px",
-            backgroundColor: "rgba(255, 255, 255, 0.02)",
+            backgroundColor: "var(--surface-card)",
             border: "1px solid var(--border-color)",
             borderRadius: "var(--radius-lg)",
           }}
         >
           {/* Mode Switcher Buttons */}
-          <div style={{ display: "flex", gap: "6px", background: "rgba(0,0,0,0.4)", padding: "4px", borderRadius: "var(--radius-md)", overflowX: "auto" }}>
+          <div style={{ display: "flex", gap: "6px", background: "var(--surface-hover)", padding: "4px", borderRadius: "var(--radius-md)", overflowX: "auto" }}>
             <button
               onClick={() => setViewMode("edit")}
               className={`btn ${viewMode === "edit" ? "btn-primary" : "btn-secondary"}`}
@@ -614,11 +614,6 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
                       onChange={handleInputChange}
                       style={{
                         width: "100%",
-                        padding: "10px 14px",
-                        borderRadius: "var(--radius-md)",
-                        border: "1px solid var(--border-color)",
-                        backgroundColor: "rgba(0,0,0,0.3)",
-                        color: "var(--text-primary)",
                       }}
                     />
                   </div>
@@ -632,11 +627,6 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
                         onChange={handleInputChange}
                         style={{
                           width: "100%",
-                          padding: "10px 14px",
-                          borderRadius: "var(--radius-md)",
-                          border: "1px solid var(--border-color)",
-                          backgroundColor: "rgba(18, 21, 38, 0.95)",
-                          color: "var(--text-primary)",
                         }}
                       >
                         <option value="Under $100 Million">Under $100 Million</option>
@@ -656,11 +646,6 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
                         onChange={handleInputChange}
                         style={{
                           width: "100%",
-                          padding: "10px 14px",
-                          borderRadius: "var(--radius-md)",
-                          border: "1px solid var(--border-color)",
-                          backgroundColor: "rgba(0,0,0,0.3)",
-                          color: "var(--text-primary)",
                         }}
                       />
                     </div>
@@ -676,11 +661,6 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
                         onChange={handleInputChange}
                         style={{
                           width: "100%",
-                          padding: "10px 14px",
-                          borderRadius: "var(--radius-md)",
-                          border: "1px solid var(--border-color)",
-                          backgroundColor: "rgba(0,0,0,0.3)",
-                          color: "var(--text-primary)",
                         }}
                       />
                     </div>
@@ -694,11 +674,6 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
                         onChange={handleInputChange}
                         style={{
                           width: "100%",
-                          padding: "10px 14px",
-                          borderRadius: "var(--radius-md)",
-                          border: "1px solid var(--border-color)",
-                          backgroundColor: "rgba(18, 21, 38, 0.95)",
-                          color: "var(--text-primary)",
                         }}
                       />
                     </div>
@@ -720,11 +695,6 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
                       onChange={handleInputChange}
                       style={{
                         width: "100%",
-                        padding: "10px 14px",
-                        borderRadius: "var(--radius-md)",
-                        border: "1px solid var(--border-color)",
-                        backgroundColor: "rgba(0,0,0,0.3)",
-                        color: "var(--text-primary)",
                       }}
                     />
                   </div>
@@ -738,11 +708,6 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
                         onChange={handleInputChange}
                         style={{
                           width: "100%",
-                          padding: "10px 14px",
-                          borderRadius: "var(--radius-md)",
-                          border: "1px solid var(--border-color)",
-                          backgroundColor: "rgba(18, 21, 38, 0.95)",
-                          color: "var(--text-primary)",
                         }}
                       >
                         <option value="Chief Risk Officer">Chief Risk Officer (CRO)</option>
@@ -761,11 +726,6 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
                         onChange={handleInputChange}
                         style={{
                           width: "100%",
-                          padding: "10px 14px",
-                          borderRadius: "var(--radius-md)",
-                          border: "1px solid var(--border-color)",
-                          backgroundColor: "rgba(18, 21, 38, 0.95)",
-                          color: "var(--text-primary)",
                         }}
                       >
                         <option value="Quarterly">Quarterly</option>
@@ -795,7 +755,7 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
                         style={{
                           padding: "12px 14px",
                           borderRadius: "var(--radius-md)",
-                          backgroundColor: "rgba(255,255,255,0.02)",
+                          backgroundColor: "var(--surface-hover)",
                           border: "1px solid var(--border-color)",
                           display: "flex",
                           alignItems: "flex-start",
@@ -833,11 +793,6 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
                       onChange={handleInputChange}
                       style={{
                         width: "100%",
-                        padding: "10px 14px",
-                        borderRadius: "var(--radius-md)",
-                        border: "1px solid var(--border-color)",
-                        backgroundColor: "rgba(18, 21, 38, 0.95)",
-                        color: "var(--text-primary)",
                       }}
                     >
                       <option value="Monthly">Monthly</option>
@@ -960,7 +915,7 @@ Operationalize continuous fair lending monitoring, model drift tracking, and sch
           </div>
         ) : (
           /* PREVIEW MODE: Publication-Ready Policy & Implementation Documents */
-          <div className="card" style={{ padding: "40px", backgroundColor: "#fff", color: "#111827", borderRadius: "var(--radius-lg)" }}>
+          <div className="card" style={{ padding: "40px", backgroundColor: "var(--surface-card)", color: "var(--text-primary)", borderRadius: "var(--radius-lg)" }}>
             <pre style={{ fontFamily: "serif", fontSize: "0.95rem", lineHeight: 1.6, whiteSpace: "pre-wrap" }}>
               {getActiveContent()}
             </pre>
